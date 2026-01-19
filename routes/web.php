@@ -14,6 +14,7 @@ use App\Http\Controllers\CollectionController;
 Route::get('/collections', [CollectionController::class, 'index'])->name('collections');
 
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
@@ -21,6 +22,8 @@ Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/success/{orderNumber}', [CheckoutController::class, 'success'])->name('checkout.success');
+
+Route::get('/orders/{orderNumber}', [OrderController::class, 'show'])->name('orders.show');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');

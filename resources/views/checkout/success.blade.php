@@ -15,7 +15,9 @@
         
         <h1 class="text-4xl md:text-5xl font-serif text-white mb-6 fade-in slide-up">Thank You</h1>
         <p class="text-xl text-gray-300 mb-2 slide-up delay-100">Your order has been placed successfully.</p>
-        <p class="text-moon-gold font-bold text-lg mb-12 slide-up delay-100">Order #{{ $orderNumber }}</p>
+        <div class="mb-12 slide-up delay-100">
+            <a href="{{ route('orders.show', $orderNumber) }}" class="text-moon-gold font-bold text-lg hover:text-white transition-colors border-b-2 border-moon-gold hover:border-white pb-1">Order #{{ $orderNumber }}</a>
+        </div>
         
         <div class="bg-gray-800/30 p-8 rounded-sm border border-gray-800 mb-12 slide-up delay-200">
             <p class="text-gray-400 mb-4">We have received your order and sent a confirmation email to your inbox.</p>
