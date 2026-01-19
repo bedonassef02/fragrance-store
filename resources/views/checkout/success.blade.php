@@ -3,7 +3,7 @@
 @section('title', 'Order Confirmed | MOON')
 
 @section('content')
-<div class="bg-moon-dark pt-32 pb-24 min-h-screen flex items-center justify-center">
+<div class="bg-moon-dark pt-44 pb-24 min-h-screen flex items-center justify-center">
     <div class="container mx-auto px-4 max-w-2xl text-center">
         <div class="mb-8 flex justify-center fade-in">
              <div class="w-20 h-20 rounded-full bg-moon-gold/10 flex items-center justify-center border-2 border-moon-gold">

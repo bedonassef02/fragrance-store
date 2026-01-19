@@ -3,7 +3,7 @@
 @section('title', 'Shopping Cart | MOON')
 
 @section('content')
-    <div class="pt-32 pb-24 bg-moon-dark min-h-screen">
+    <div class="pt-44 pb-24 bg-moon-dark min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 class="text-4xl font-serif text-white mb-12 text-center">Shopping Bag</h1>
 
@@ -55,8 +55,14 @@
                             </div>
                             <div class="flex justify-between">
                                 <span>Shipping</span>
-                                <span class="text-white">{{ number_format($shipping) }} LE</span>
+                                <span class="text-white">{{ $shipping > 0 ? number_format($shipping) . ' LE' : 'Free' }}</span>
                             </div>
+                            @if($shipping > 0)
+                                @php $threshold = \App\Models\Setting::getValue('free_shipping_threshold', 2000); @endphp
+                                @if($subtotal < $threshold)
+                                <p class="text-xs text-gray-500 mt-1">Spend <span class="text-moon-gold">{{ number_format($threshold - $subtotal) }} LE</span> more for free shipping</p>
+                                @endif
+                            @endif
                             <!-- Discount functionality -->
                             @if(isset($discount) && $discount > 0)
                             <div class="flex justify-between text-moon-gold">

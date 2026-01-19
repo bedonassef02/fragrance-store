@@ -3,7 +3,7 @@
 @section('title', 'Checkout | MOON')
 
 @section('content')
-<div class="bg-moon-dark pt-32 pb-24 min-h-screen">
+<div class="bg-moon-dark pt-44 pb-24 min-h-screen">
     <div class="container mx-auto px-4 max-w-6xl">
         <h1 class="text-4xl font-serif text-white mb-12 text-center fade-in">Checkout</h1>
 
@@ -100,7 +100,7 @@
                         </div>
                          <div class="flex justify-between text-gray-400">
                             <span>Shipping</span>
-                            <span>{{ number_format($shipping) }} LE</span>
+                            <span>{{ $shipping > 0 ? number_format($shipping) . ' LE' : 'Free' }}</span>
                         </div>
                         @if(isset($discount) && $discount > 0)
                         <div class="flex justify-between text-moon-gold">

@@ -3,7 +3,7 @@
 @section('title', $product['name'] . ' | MOON')
 
 @section('content')
-    <div class="pt-32 pb-24 bg-moon-dark min-h-screen">
+    <div class="pt-44 pb-24 bg-moon-dark min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Breadcrumbs -->
             <nav class="text-sm mb-8 text-gray-500 font-light">

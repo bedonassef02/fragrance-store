@@ -19,7 +19,12 @@ class CartService
 
     public function getShipping()
     {
-        return $this->getSubtotal() > 0 ? 150 : 0;
+        $threshold = \App\Models\Setting::getValue('free_shipping_threshold', 2000);
+        
+        if ($this->getSubtotal() >= $threshold) {
+             return 0;
+        }
+        return 150;
     }
 
     public function getCoupon()

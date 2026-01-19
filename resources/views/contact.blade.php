@@ -3,7 +3,7 @@
 @section('title', 'Contact Us | MOON')
 
 @section('content')
-    <div class="pt-32 pb-24 bg-moon-dark min-h-screen">
+    <div class="pt-44 pb-24 bg-moon-dark min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 class="text-4xl md:text-5xl font-serif text-white mb-16 text-center">Get in Touch</h1>
 

@@ -3,7 +3,7 @@
 @section('title', 'Shop | MOON')
 
 @section('content')
-    <div class="pt-32 pb-16 bg-moon-dark min-h-screen">
+    <div class="pt-44 pb-16 bg-moon-dark min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header (Centered) -->
             <div class="text-center mb-12 border-b border-gray-800 pb-10">

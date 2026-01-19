@@ -3,7 +3,7 @@
 @section('title', 'Order ' . $order->order_number . ' | MOON')
 
 @section('content')
-<div class="bg-moon-dark pt-32 pb-24 min-h-screen">
+<div class="bg-moon-dark pt-44 pb-24 min-h-screen">
     <div class="container mx-auto px-4 max-w-5xl">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 fade-in">
             <div>
@@ -52,9 +52,13 @@
                             <span>Subtotal</span>
                             <span>{{ number_format($order->subtotal ?? ($order->total_amount + ($order->discount_amount ?? 0) - 150)) }} LE</span>
                         </div>
+                        @php
+                            $calculatedSubtotal = $order->subtotal ?? ($order->total_amount + ($order->discount_amount ?? 0) - 150);
+                            $calculatedShipping = $order->total_amount - $calculatedSubtotal + ($order->discount_amount ?? 0);
+                        @endphp
                          <div class="flex justify-between">
                             <span>Shipping</span>
-                            <span>150 LE</span>
+                            <span>{{ $calculatedShipping > 0 ? number_format($calculatedShipping) . ' LE' : 'Free' }}</span>
                         </div>
                         @if($order->discount_amount > 0)
                         <div class="flex justify-between text-moon-gold">
