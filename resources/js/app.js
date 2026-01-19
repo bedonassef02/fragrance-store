@@ -3,6 +3,7 @@ import './shop';
 import './product';
 import './cart';
 import './quick-add';
+import './size-guide';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Mobile Menu

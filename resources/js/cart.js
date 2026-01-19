@@ -45,8 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
     removeBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const key = btn.dataset.key;
-            if (!confirm('Remove this item?')) return;
-
             fetch('/cart/remove', {
                 method: 'DELETE',
                 headers: {

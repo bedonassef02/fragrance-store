@@ -2,9 +2,11 @@
 
 <div class="group relative fade-in">
     <div class="relative overflow-hidden aspect-[4/5] mb-4 bg-gray-800">
-        <img src="{{ $product['image'] }}" 
-             loading="lazy"
-             class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="{{ $product['name'] }}">
+        <a href="{{ route('product.show', $product['id']) }}" class="block w-full h-full">
+            <img src="{{ $product['image'] }}" 
+                 loading="lazy"
+                 class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="{{ $product['name'] }}">
+        </a>
         
         @if(isset($product['badge']) && $product['badge'])
         <span class="absolute top-4 left-4 {{ $product['badge_color'] ?? 'bg-moon-gold' }} text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">{{ $product['badge'] }}</span>

@@ -45,7 +45,7 @@
                         <div>
                             <div class="flex justify-between mb-2">
                                 <label class="text-xs uppercase tracking-widest text-white">Size</label>
-                                <a href="#" class="text-xs text-gray-500 underline hover:text-moon-gold">Size Guide</a>
+                                <a href="#" class="size-guide-trigger text-xs text-gray-500 underline hover:text-moon-gold">Size Guide</a>
                             </div>
                             <div class="flex space-x-3">
                                 <button class="product-size-btn w-12 h-12 flex items-center justify-center border border-gray-700 text-gray-400 hover:border-moon-gold hover:text-moon-gold transition-all" data-size="S">S</button>
