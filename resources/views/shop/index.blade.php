@@ -112,7 +112,7 @@
                                      loading="lazy"
                                      class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="Royal Black Abaya">
                                 <span class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">-20%</span>
-                                <a href="{{ route('product.show') }}" class="absolute bottom-0 w-full bg-moon-gold text-center text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</a>
+                                <button class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
                                 <a href="{{ route('product.show') }}" class="block">
@@ -131,7 +131,7 @@
                                 <img src="https://images.pexels.com/photos/28905393/pexels-photo-28905393/free-photo-of-elegant-woman-in-red-traditional-dress-in-marrakech.jpeg?auto=compress&cs=tinysrgb&w=800" 
                                      loading="lazy"
                                      class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="Crimson Velvet Kaftan">
-                                <a href="{{ route('product.show') }}" class="absolute bottom-0 w-full bg-moon-gold text-center text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</a>
+                                <button class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
                                 <a href="{{ route('product.show') }}" class="block">
@@ -148,7 +148,7 @@
                                      loading="lazy"
                                      class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" alt="Embossed Leather Clutch">
                                 <span class="absolute top-4 left-4 bg-moon-gold text-black text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">New</span>
-                                <a href="{{ route('product.show') }}" class="absolute bottom-0 w-full bg-moon-gold text-center text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</a>
+                                <button class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
                                 <a href="{{ route('product.show') }}" class="block">
@@ -164,7 +164,7 @@
                                 <img src="https://images.pexels.com/photos/16848560/pexels-photo-16848560/free-photo-of-woman-in-dress-in-desert.jpeg?auto=compress&cs=tinysrgb&w=800" 
                                      loading="lazy"
                                      class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="Desert Rose Dress">
-                                <a href="{{ route('product.show') }}" class="absolute bottom-0 w-full bg-moon-gold text-center text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</a>
+                                <button class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
                                 <a href="{{ route('product.show') }}" class="block">
@@ -180,7 +180,7 @@
                                 <img src="https://images.pexels.com/photos/20344409/pexels-photo-20344409/free-photo-of-woman-in-long-coat-posing-in-passage.jpeg?auto=compress&cs=tinysrgb&w=800" 
                                      loading="lazy"
                                      class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="Midnight Silk Abaya">
-                                <a href="{{ route('product.show') }}" class="absolute bottom-0 w-full bg-moon-gold text-center text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</a>
+                                <button class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
                                 <a href="{{ route('product.show') }}" class="block">
@@ -197,7 +197,7 @@
                                      loading="lazy"
                                      class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" alt="Gold Chain Satchel">
                                 <span class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">-15%</span>
-                                <a href="{{ route('product.show') }}" class="absolute bottom-0 w-full bg-moon-gold text-center text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</a>
+                                <button class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
                                 <a href="{{ route('product.show') }}" class="block">
@@ -224,8 +224,41 @@
         </div>
     </div>
 
-    <!-- Backdrop for mobile filter -->
-    <div id="filter-backdrop" class="fixed inset-0 bg-black/80 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity opacity-0"></div>
+    <!-- Backdrop for mobile filter & modal -->
+    <div id="backdrop" class="fixed inset-0 bg-black/80 z-40 hidden backdrop-blur-sm transition-opacity opacity-0"></div>
+
+    <!-- Quick Add Modal -->
+    <div id="quick-add-modal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-moon-dark border border-gray-700 p-8 z-50 w-full max-w-md hidden opacity-0 transition-all duration-300 scale-95 shadow-2xl">
+        <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        
+        <h3 id="modal-product-title" class="text-2xl font-serif text-white mb-2">Product Name</h3>
+        <p id="modal-product-price" class="text-moon-gold font-bold mb-6">0 LE</p>
+        
+        <div class="mb-8">
+            <label class="block text-xs uppercase tracking-widest text-gray-400 mb-3">Select Size</label>
+            <div class="flex gap-3">
+                <button class="size-btn w-10 h-10 border border-gray-600 text-gray-400 hover:border-moon-gold hover:text-white transition-colors focus:bg-moon-gold focus:text-black focus:border-moon-gold">S</button>
+                <button class="size-btn w-10 h-10 border border-gray-600 text-gray-400 hover:border-moon-gold hover:text-white transition-colors focus:bg-moon-gold focus:text-black focus:border-moon-gold">M</button>
+                <button class="size-btn w-10 h-10 border border-gray-600 text-gray-400 hover:border-moon-gold hover:text-white transition-colors focus:bg-moon-gold focus:text-black focus:border-moon-gold">L</button>
+                <button class="size-btn w-10 h-10 border border-gray-600 text-gray-400 hover:border-moon-gold hover:text-white transition-colors focus:bg-moon-gold focus:text-black focus:border-moon-gold">XL</button>
+            </div>
+        </div>
+
+        <button id="confirm-add-to-bag" class="w-full bg-moon-gold text-moon-dark font-bold uppercase tracking-widest py-4 hover:bg-white transition-colors">
+            Add to Bag
+        </button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-8 right-8 bg-white text-black px-6 py-4 shadow-2xl transform translate-y-20 opacity-0 transition-all duration-500 z-50 flex items-center gap-3 border-l-4 border-moon-gold">
+        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <div>
+            <h4 class="font-bold text-sm uppercase tracking-wider">Added to Bag</h4>
+            <p class="text-xs text-gray-500">The item has been added to your cart.</p>
+        </div>
+    </div>
 
     @push('scripts')
     <script>
@@ -233,32 +266,121 @@
             const filterToggle = document.getElementById('filter-toggle');
             const filterClose = document.getElementById('filter-close');
             const sidebar = document.getElementById('shop-sidebar');
-            const backdrop = document.getElementById('filter-backdrop');
+            const backdrop = document.getElementById('backdrop');
             const applyBtn = document.getElementById('apply-filters');
+            
+            // Modal Elements
+            const modal = document.getElementById('quick-add-modal');
+            const closeModalBtn = document.getElementById('close-modal');
+            const modalTitle = document.getElementById('modal-product-title');
+            const modalPrice = document.getElementById('modal-product-price');
+            const addToBagBtns = document.querySelectorAll('.quick-add-btn');
+            const confirmBtn = document.getElementById('confirm-add-to-bag');
+            const toast = document.getElementById('toast');
+            const sizeBtns = document.querySelectorAll('.size-btn');
 
+            // Toggle Mobile Filter
             function openFilters() {
                 sidebar.classList.remove('-translate-x-full');
-                backdrop.classList.remove('hidden');
-                // Small delay to allow display block to apply before opacity transition
-                setTimeout(() => {
-                    backdrop.classList.remove('opacity-0');
-                }, 10);
+                showBackdrop();
                 document.body.style.overflow = 'hidden';
             }
 
             function closeFilters() {
                 sidebar.classList.add('-translate-x-full');
+                hideBackdrop();
+                document.body.style.overflow = '';
+            }
+
+            // Modal Logic
+            function openModal(title, price) {
+                modalTitle.textContent = title;
+                modalPrice.textContent = price;
+                modal.classList.remove('hidden');
+                showBackdrop();
+                // Animation frame
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0', 'scale-95');
+                    modal.classList.add('opacity-100', 'scale-100');
+                }, 10);
+            }
+
+            function closeModal() {
+                modal.classList.remove('opacity-100', 'scale-100');
+                modal.classList.add('opacity-0', 'scale-95');
+                hideBackdrop();
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+
+            function showBackdrop() {
+                backdrop.classList.remove('hidden');
+                setTimeout(() => {
+                    backdrop.classList.remove('opacity-0');
+                }, 10);
+            }
+
+            function hideBackdrop() {
                 backdrop.classList.add('opacity-0');
                 setTimeout(() => {
                     backdrop.classList.add('hidden');
                 }, 300);
-                document.body.style.overflow = '';
             }
 
+            function showToast() {
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                setTimeout(() => {
+                    toast.classList.add('translate-y-20', 'opacity-0');
+                }, 3000);
+            }
+
+            // Event Listeners
             if (filterToggle) filterToggle.addEventListener('click', openFilters);
             if (filterClose) filterClose.addEventListener('click', closeFilters);
-            if (backdrop) backdrop.addEventListener('click', closeFilters);
             if (applyBtn) applyBtn.addEventListener('click', closeFilters);
+            
+            // Shared Backdrop Click
+            if (backdrop) backdrop.addEventListener('click', () => {
+                closeFilters();
+                closeModal();
+            });
+
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+
+            addToBagBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation(); // Prevent going to product page
+                    const productCard = btn.closest('.group');
+                    const title = productCard.querySelector('h3').innerText;
+                    // Find price
+                    const priceElement = productCard.querySelector('.text-moon-gold') || productCard.querySelector('.text-gray-400'); 
+                    const price = priceElement ? priceElement.innerText : 'Price';
+                    
+                    openModal(title, price);
+                });
+            });
+
+            // Size Selection
+            sizeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    sizeBtns.forEach(b => b.classList.remove('bg-moon-gold', 'text-black', 'border-moon-gold'));
+                    btn.classList.add('bg-moon-gold', 'text-black', 'border-moon-gold');
+                    btn.classList.remove('text-gray-400', 'border-gray-600');
+                });
+            });
+
+            if (confirmBtn) confirmBtn.addEventListener('click', () => {
+                closeModal();
+                showToast();
+                // Logic to update cart count could go here
+                const cartCount = document.querySelector('.bg-moon-gold.rounded-full');
+                if (cartCount) {
+                    let count = parseInt(cartCount.innerText);
+                    cartCount.innerText = count + 1;
+                }
+            });
         });
     </script>
     @endpush
