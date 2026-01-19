@@ -12,14 +12,27 @@
         <span class="absolute top-4 left-4 {{ $product['badge_color'] ?? 'bg-moon-gold' }} text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">{{ $product['badge'] }}</span>
         @endif
 
+        @php
+            $hasMultipleColors = $product->variants->pluck('color_id')->unique()->count() > 1;
+            $firstColor = $product->variants->first()?->color;
+        @endphp
+
+        @if($hasMultipleColors)
+        <a href="{{ route('product.show', $product['slug']) }}" 
+            class="absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10 flex items-center justify-center">
+            Select Option
+        </a>
+        @else
         <button 
             data-id="{{ $product['id'] }}" 
             data-name="{{ $product['name'] }}"
             data-price="{{ number_format($product['price']) }} LE"
-            data-sizes="{{ $product->sizes->pluck('size')->join(',') }}"
+            data-sizes="{{ $product->variants->pluck('size')->unique()->implode(',') }}"
+            data-color="{{ $firstColor?->name }}"
             class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">
             Add to Bag
         </button>
+        @endif
     </div>
     <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
         <a href="{{ route('product.show', $product['slug']) }}" class="block">

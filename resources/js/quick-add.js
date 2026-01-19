@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let selectedProductId = null;
     let selectedSize = null;
+    let selectedColor = null;
 
     function openModal(title, price) {
         modalTitle.textContent = title;
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const name = btn.dataset.name || 'Product';
             const price = btn.dataset.price || '';
             const sizesStr = btn.dataset.sizes || '';
+            selectedColor = btn.dataset.color || null;
 
             // Set content
             modalTitle.textContent = name;
@@ -158,6 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify({
                 product_id: selectedProductId,
                 size: selectedSize,
+                color: selectedColor,
                 quantity: 1
             })
         })

@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductSize;
 use Illuminate\Support\Str;
 
 class ShopSeeder extends Seeder
@@ -97,33 +96,44 @@ class ShopSeeder extends Seeder
 
             $product = Product::create($p);
 
-            // Add sizes if not Bag?
+            // Variants (Colors + Sizes)
             if ($categoryName !== 'Bags') {
-                $sizes = ['S', 'M', 'L', 'XL'];
-                foreach ($sizes as $size) {
-                    ProductSize::create([
+                $selectedColors = \App\Models\Color::inRandomOrder()->take(2)->get();
+                $sizes = ['S', 'M', 'L'];
+                
+                foreach ($selectedColors as $color) {
+                    foreach ($sizes as $size) {
+                        \App\Models\ProductVariant::create([
+                            'product_id' => $product->id,
+                            'color_id' => $color->id,
+                            'size' => $size,
+                            'quantity' => 20
+                        ]);
+                    }
+
+                    // Add Specific Image for this color
+                     \App\Models\ProductImage::create([
                         'product_id' => $product->id,
-                        'size' => $size
+                        'image_path' => "https://placehold.co/800x1200/1a1a1a/c6a87c?text=" . urlencode($color->name) . "+Detail",
+                        'color_id' => $color->id
                     ]);
                 }
-            }
-
-            // Seed Gallery Images
-            // Add Main Image as first gallery image? No, main is separate usually. 
-            // But usually Gallery Loop includes Main.
-            // I'll add 3 extra images.
-            $extraImages = [
-                'https://placehold.co/800x1200/1a1a1a/c6a87c?text=Detail+1',
-                'https://placehold.co/800x1200/1a1a1a/c6a87c?text=Detail+2',
-                'https://placehold.co/800x1200/1a1a1a/c6a87c?text=Side+View'
-            ];
-            
-            foreach ($extraImages as $img) {
-                \App\Models\ProductImage::create([
+            } else {
+                // Bags: 1 Color (Random)
+                $color = \App\Models\Color::inRandomOrder()->first();
+                \App\Models\ProductVariant::create([
                     'product_id' => $product->id,
-                    'image_path' => $img
+                    'color_id' => $color->id,
+                    'size' => 'One Size',
+                    'quantity' => 10
                 ]);
             }
+
+            // General Gallery Images (No specific color)
+            \App\Models\ProductImage::create([
+                'product_id' => $product->id,
+                'image_path' => 'https://placehold.co/800x1200/1a1a1a/c6a87c?text=General+Detail'
+            ]);
         }
     }
 }

@@ -24,9 +24,9 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function sizes()
+    public function variants()
     {
-        return $this->hasMany(ProductSize::class);
+        return $this->hasMany(ProductVariant::class);
     }
 
     public function images()

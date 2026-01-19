@@ -22,7 +22,12 @@
                                     <h3 class="text-white font-serif text-lg">{{ $item['name'] }}</h3>
                                     <span class="text-moon-gold font-bold">{{ number_format($item['price']) }} LE</span>
                                 </div>
-                                <p class="text-gray-500 text-sm mt-1">Size: {{ $item['size'] }}</p>
+                                <p class="text-gray-500 text-sm mt-1">
+                                    Size: {{ $item['size'] }} 
+                                    @if(isset($item['color']) && $item['color'])
+                                    <span class="mx-2">|</span> {{ $item['color'] }}
+                                    @endif
+                                </p>
                             </div>
                             
                             <div class="flex justify-between items-center">

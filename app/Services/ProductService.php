@@ -15,7 +15,7 @@ class ProductService
      */
     public function getFilteredProducts(array $filters): LengthAwarePaginator
     {
-        $query = Product::with(['category', 'sizes']);
+        $query = Product::with(['category', 'variants.color']);
 
         // Search
         if (!empty($filters['search'])) {
@@ -53,7 +53,7 @@ class ProductService
         // Sizes
         if (!empty($filters['sizes'])) {
             $sizes = is_array($filters['sizes']) ? $filters['sizes'] : explode(',', $filters['sizes']);
-            $query->whereHas('sizes', function ($q) use ($sizes) {
+            $query->whereHas('variants', function ($q) use ($sizes) {
                 $q->whereIn('size', $sizes);
             });
         }

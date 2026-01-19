@@ -32,11 +32,13 @@ class CartController extends Controller
             'product_id' => 'required|integer',
             'product_title' => 'nullable|string', 
             'size' => 'required|string',
+            'color' => 'nullable|string',
             'quantity' => 'nullable|integer|min:1'
         ]);
 
         $productId = $request->product_id;
         $size = $request->size;
+        $colorName = $request->input('color');
         $quantity = $request->quantity ?? 1;
 
         // Lookup Product (DB)
@@ -46,8 +48,39 @@ class CartController extends Controller
             return response()->json(['error' => 'Product not found'], 404);
         }
 
+        // Validate Variant Logic
+        $color = null;
+        if ($colorName) {
+            $color = \App\Models\Color::where('name', $colorName)->first();
+        }
+        
+        $variantQuery = \App\Models\ProductVariant::where('product_id', $product->id)
+                        ->where('size', $size);
+        
+        if ($color) {
+            $variantQuery->where('color_id', $color->id);
+        }
+
+        $variant = $variantQuery->first();
+
+        // Stock Check (Optional strictness, warn user)
+        if ($variant && $variant->quantity < $quantity) {
+             return response()->json(['error' => "Only {$variant->quantity} items left in stock for this selection."], 400);
+        }
+
         $cart = session()->get('cart', []);
-        $key = $productId . '-' . $size;
+        
+        // Unique Key: ID-Color-Size
+        $key = $productId . '-' . ($colorName ? \Illuminate\Support\Str::slug($colorName) . '-' : '') . $size;
+
+        // Determine Image
+        $image = $product->image;
+        if ($color) {
+            $colorImage = $product->images()->where('color_id', $color->id)->first();
+            if ($colorImage) {
+                $image = $colorImage->image_path;
+            }
+        }
 
         if (isset($cart[$key])) {
             $cart[$key]['quantity'] += $quantity;
@@ -57,8 +90,9 @@ class CartController extends Controller
                 'product_id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
-                'image' => $product->image,
+                'image' => $image,
                 'size' => $size,
+                'color' => $colorName, // Store Name
                 'quantity' => $quantity
             ];
         }

@@ -31,7 +31,11 @@
                              </div>
                              <div class="flex-1">
                                  <h3 class="text-white font-bold">{{ $item->product->name }}</h3>
-                                 <p class="text-sm text-gray-400">Size: {{ $item->size }} | Qty: {{ $item->quantity }}</p>
+                                 <p class="text-sm text-gray-400">
+                                     Size: {{ $item->size }} 
+                                     @if($item->color) | Color: {{ $item->color }} @endif
+                                     | Qty: {{ $item->quantity }}
+                                 </p>
                              </div>
                              <div class="text-right">
                                  <p class="text-moon-gold">{{ number_format($item->price * $item->quantity) }} LE</p>

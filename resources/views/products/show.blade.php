@@ -27,11 +27,15 @@
                     </div>
                     
                     <!-- Thumbnails -->
+                    <!-- Thumbnails -->
                     @if($product->images->count() > 0)
                     <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                         <img src="{{ $product->image }}" class="gallery-thumb w-20 h-24 object-cover border-2 border-moon-gold cursor-pointer hover:opacity-80 transition-all">
+                         <img src="{{ $product->image }}" class="gallery-thumb w-20 h-24 object-cover border-2 border-moon-gold cursor-pointer hover:opacity-80 transition-all" data-color="all">
                          @foreach($product->images as $img)
-                         <img src="{{ $img->image_path }}" class="gallery-thumb w-20 h-24 object-cover border-2 border-transparent hover:border-moon-gold cursor-pointer hover:opacity-80 transition-all">
+                         <img src="{{ $img->image_path }}" 
+                              class="gallery-thumb w-20 h-24 object-cover border-2 border-transparent hover:border-moon-gold cursor-pointer hover:opacity-80 transition-all"
+                              data-color="{{ $img->color ? $img->color->name : 'all' }}"
+                              >
                          @endforeach
                     </div>
                     @endif
@@ -54,18 +58,48 @@
 
                     <div class="space-y-8 mb-12">
                          <!-- Size Selector -->
-                        @if($product->sizes->count() > 0)
+                        <!-- Color & Size -->
+                        @php
+                            $uniqueColors = $product->variants->pluck('color')->unique('id')->filter()->values();
+                            $allSizes = $product->variants->pluck('size')->unique();
+                        @endphp
+                        
+                        <div id="product-variants-data" data-variants="{{ json_encode($product->variants->map(fn($v) => ['color' => $v->color?->name, 'size' => $v->size, 'qty' => $v->quantity])) }}" class="hidden"></div>
+
+                        @if($uniqueColors->isNotEmpty())
+                        <div class="mb-8">
+                             <label class="block text-xs uppercase tracking-widest text-white font-bold mb-4">Select Color: <span id="selected-color-name" class="font-normal text-moon-gold ml-2"></span></label>
+                             <div class="flex gap-4">
+                                @foreach($uniqueColors as $idx => $color)
+                                <button type="button" 
+                                        class="color-btn w-10 h-10 rounded-full border-2 p-1 transition-all {{ $idx===0 ? 'border-moon-gold' : 'border-transparent' }}"
+                                        style="background-color: {{ $color->hex_code }}"
+                                        data-color="{{ $color->name }}"
+                                        title="{{ $color->name }}">
+                                </button>
+                                @endforeach
+                             </div>
+                        </div>
+                        @endif
+
+                        @if($allSizes->count() > 0)
                         <div>
                             <div class="flex justify-between mb-4">
                                 <label class="text-xs uppercase tracking-widest text-white font-bold">Select Size</label>
                                 <a href="#" class="size-guide-trigger text-xs text-gray-500 underline hover:text-moon-gold transition-colors">Size Guide</a>
                             </div>
-                            <div class="flex flex-wrap gap-3">
-                                @foreach($product->sizes as $size)
-                                <button class="product-size-btn w-12 h-12 flex items-center justify-center border border-gray-700 text-gray-400 font-bold hover:border-moon-gold hover:text-white transition-all duration-300 hover:scale-110 focus:bg-moon-gold focus:text-black focus:border-moon-gold" data-size="{{ $size->size }}">{{ $size->size }}</button>
+                            <div class="flex flex-wrap gap-3" id="size-container">
+                                @foreach($allSizes as $size)
+                                <button class="product-size-btn w-12 h-12 flex items-center justify-center border border-gray-700 text-gray-400 font-bold hover:border-moon-gold hover:text-white transition-all duration-300 hover:scale-110 focus:bg-moon-gold focus:text-black focus:border-moon-gold" 
+                                    data-size="{{ $size }}">
+                                    {{ $size }}
+                                </button>
                                 @endforeach
                             </div>
                         </div>
+                        @else
+                          <!-- One Size / No Size Logic -->
+                          <input type="hidden" id="selected-size" value="One Size">
                         @endif
 
                         <!-- Quantity & Add -->
@@ -129,68 +163,4 @@
     </div>
 @endsection
 
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', () => { 
-        // Gallery Swap
-        const mainImg = document.getElementById('main-image');
-        const thumbs = document.querySelectorAll('.gallery-thumb');
-        
-        thumbs.forEach(thumb => {
-            thumb.addEventListener('click', function() {
-                const src = this.getAttribute('src');
-                if(!mainImg) return;
-                
-                mainImg.style.opacity = '0.7';
-                setTimeout(() => {
-                    mainImg.src = src;
-                    mainImg.style.opacity = '1';
-                }, 150);
 
-                thumbs.forEach(t => t.classList.remove('border-moon-gold', 'border-2'));
-                thumbs.forEach(t => t.classList.add('border-transparent', 'border-2'));
-                
-                this.classList.remove('border-transparent');
-                this.classList.add('border-moon-gold');
-            });
-        });
-
-        // Zoom Logic
-        const zoomModal = document.getElementById('zoom-modal');
-        const zoomImg = document.getElementById('zoom-img-full');
-        const closeBtn = document.getElementById('close-zoom');
-
-        if(mainImg && zoomModal) {
-            mainImg.addEventListener('click', () => {
-                zoomImg.src = mainImg.src;
-                zoomModal.classList.remove('hidden');
-                zoomModal.style.display = 'flex'; // Force flex
-                
-                // Trigger reflow
-                void zoomModal.offsetWidth; 
-                
-                zoomModal.classList.remove('opacity-0');
-                zoomImg.classList.remove('scale-90');
-                zoomImg.classList.add('scale-100');
-            });
-
-            const closeZoom = () => {
-                zoomModal.classList.add('opacity-0');
-                zoomImg.classList.remove('scale-100');
-                zoomImg.classList.add('scale-90');
-                
-                setTimeout(() => {
-                    zoomModal.classList.add('hidden');
-                    zoomModal.style.display = 'none';
-                }, 300);
-            };
-
-            zoomModal.addEventListener('click', (e) => {
-                if(e.target === zoomModal || e.target === closeBtn) closeZoom();
-            });
-            
-            closeBtn.addEventListener('click', closeZoom);
-        }
-    });
-</script>
-@endpush
