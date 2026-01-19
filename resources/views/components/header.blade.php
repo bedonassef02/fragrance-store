@@ -25,17 +25,13 @@
 
             <!-- Actions -->
             <div class="flex items-center space-x-4">
-                <button class="text-white hover:text-moon-gold transition-colors p-2">
-                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </button>
-                <button class="text-white hover:text-moon-gold transition-colors p-2 relative group">
-                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
-                    <span class="absolute top-1 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-black bg-moon-gold rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-300">2</span>
-                </button>
+              <a href="{{ route('shop') }}" class="text-gray-300 hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </a>
+            <a href="{{ route('cart') }}" class="text-gray-300 hover:text-white transition-colors relative">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                <span class="absolute -top-1 -right-1 bg-moon-gold text-moon-dark text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">2</span>
+            </a>
             </div>
         </div>
     </div>

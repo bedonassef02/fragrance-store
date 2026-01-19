@@ -112,10 +112,12 @@
                                      loading="lazy"
                                      class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="Royal Black Abaya">
                                 <span class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">-20%</span>
-                                <button class="absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
+                                <a href="{{ route('product.show') }}" class="absolute bottom-0 w-full bg-moon-gold text-center text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</a>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-                                <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Royal Black Abaya</h3>
+                                <a href="{{ route('product.show') }}" class="block">
+                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Royal Black Abaya</h3>
+                                </a>
                                 <p class="text-sm font-bold text-gray-400">
                                     <span class="line-through text-gray-600 mr-2 font-normal">3,500 LE</span>
                                     <span class="text-moon-gold">2,800 LE</span>
@@ -129,10 +131,12 @@
                                 <img src="https://images.pexels.com/photos/28905393/pexels-photo-28905393/free-photo-of-elegant-woman-in-red-traditional-dress-in-marrakech.jpeg?auto=compress&cs=tinysrgb&w=800" 
                                      loading="lazy"
                                      class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="Crimson Velvet Kaftan">
-                                <button class="absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
+                                <a href="{{ route('product.show') }}" class="absolute bottom-0 w-full bg-moon-gold text-center text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</a>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-                                <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Crimson Velvet Kaftan</h3>
+                                <a href="{{ route('product.show') }}" class="block">
+                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Crimson Velvet Kaftan</h3>
+                                </a>
                                 <p class="text-sm font-bold text-gray-400">4,200 LE</p>
                             </div>
                         </div>
@@ -144,10 +148,12 @@
                                      loading="lazy"
                                      class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" alt="Embossed Leather Clutch">
                                 <span class="absolute top-4 left-4 bg-moon-gold text-black text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">New</span>
-                                <button class="absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
+                                <a href="{{ route('product.show') }}" class="absolute bottom-0 w-full bg-moon-gold text-center text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</a>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-                                <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Embossed Leather Clutch</h3>
+                                <a href="{{ route('product.show') }}" class="block">
+                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Embossed Leather Clutch</h3>
+                                </a>
                                 <p class="text-sm font-bold text-gray-400">1,850 LE</p>
                             </div>
                         </div>
@@ -158,10 +164,12 @@
                                 <img src="https://images.pexels.com/photos/16848560/pexels-photo-16848560/free-photo-of-woman-in-dress-in-desert.jpeg?auto=compress&cs=tinysrgb&w=800" 
                                      loading="lazy"
                                      class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="Desert Rose Dress">
-                                <button class="absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
+                                <a href="{{ route('product.show') }}" class="absolute bottom-0 w-full bg-moon-gold text-center text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</a>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-                                <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Desert Rose Dress</h3>
+                                <a href="{{ route('product.show') }}" class="block">
+                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Desert Rose Dress</h3>
+                                </a>
                                 <p class="text-sm font-bold text-gray-400">3,100 LE</p>
                             </div>
                         </div>
@@ -172,10 +180,12 @@
                                 <img src="https://images.pexels.com/photos/20344409/pexels-photo-20344409/free-photo-of-woman-in-long-coat-posing-in-passage.jpeg?auto=compress&cs=tinysrgb&w=800" 
                                      loading="lazy"
                                      class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="Midnight Silk Abaya">
-                                <button class="absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
+                                <a href="{{ route('product.show') }}" class="absolute bottom-0 w-full bg-moon-gold text-center text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</a>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-                                <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Midnight Silk Abaya</h3>
+                                <a href="{{ route('product.show') }}" class="block">
+                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Midnight Silk Abaya</h3>
+                                </a>
                                 <p class="text-sm font-bold text-gray-400">2,950 LE</p>
                             </div>
                         </div>
@@ -187,10 +197,12 @@
                                      loading="lazy"
                                      class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" alt="Gold Chain Satchel">
                                 <span class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">-15%</span>
-                                <button class="absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
+                                <a href="{{ route('product.show') }}" class="absolute bottom-0 w-full bg-moon-gold text-center text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</a>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-                                <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Gold Chain Satchel</h3>
+                                <a href="{{ route('product.show') }}" class="block">
+                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Gold Chain Satchel</h3>
+                                </a>
                                 <p class="text-sm font-bold text-gray-400">
                                     <span class="line-through text-gray-600 mr-2 font-normal">2,200 LE</span>
                                     <span class="text-moon-gold">1,870 LE</span>

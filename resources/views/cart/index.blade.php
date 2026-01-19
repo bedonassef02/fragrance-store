@@ -1,0 +1,105 @@
+@extends('layouts.app')
+
+@section('title', 'Shopping Cart | MOON')
+
+@section('content')
+    <div class="pt-32 pb-24 bg-moon-dark min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-serif text-white mb-12 text-center">Shopping Bag</h1>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <!-- Cart Items -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Item 1 -->
+                    <div class="flex gap-6 border-b border-gray-800 pb-8">
+                        <div class="w-32 h-40 bg-gray-800 flex-shrink-0">
+                            <img src="https://images.pexels.com/photos/9940866/pexels-photo-9940866.jpeg?auto=compress&cs=tinysrgb&w=400" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start">
+                                    <h3 class="text-white font-serif text-lg">Royal Black Abaya</h3>
+                                    <span class="text-moon-gold font-bold">2,800 LE</span>
+                                </div>
+                                <p class="text-gray-500 text-sm mt-1">Size: M</p>
+                                <p class="text-gray-500 text-sm">Medina Silk</p>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center border border-gray-700">
+                                    <button class="px-3 py-1 text-gray-400 hover:text-white">-</button>
+                                    <span class="px-2 text-white text-sm">1</span>
+                                    <button class="px-3 py-1 text-gray-400 hover:text-white">+</button>
+                                </div>
+                                <button class="text-gray-500 text-xs uppercase tracking-widest hover:text-red-500 transition-colors">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="flex gap-6 border-b border-gray-800 pb-8">
+                        <div class="w-32 h-40 bg-gray-800 flex-shrink-0">
+                             <img src="https://images.pexels.com/photos/1117272/pexels-photo-1117272.jpeg?auto=compress&cs=tinysrgb&w=400" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1 flex flex-col justify-between">
+                             <div>
+                                <div class="flex justify-between items-start">
+                                    <h3 class="text-white font-serif text-lg">Onyx Clutch</h3>
+                                    <span class="text-moon-gold font-bold">1,400 LE</span>
+                                </div>
+                                <p class="text-gray-500 text-sm mt-1">One Size</p>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center border border-gray-700">
+                                    <button class="px-3 py-1 text-gray-400 hover:text-white">-</button>
+                                    <span class="px-2 text-white text-sm">1</span>
+                                    <button class="px-3 py-1 text-gray-400 hover:text-white">+</button>
+                                </div>
+                                <button class="text-gray-500 text-xs uppercase tracking-widest hover:text-red-500 transition-colors">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white/5 p-8 border border-white/10 sticky top-32">
+                        <h3 class="text-white font-serif text-xl mb-6">Order Summary</h3>
+                        
+                        <div class="space-y-4 mb-8 text-sm text-gray-400">
+                            <div class="flex justify-between">
+                                <span>Subtotal</span>
+                                <span class="text-white">4,200 LE</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Shipping</span>
+                                <span class="text-white">150 LE</span>
+                            </div>
+                            <div class="flex justify-between text-moon-gold">
+                                <span>Discount</span>
+                                <span>-0 LE</span>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-gray-700 pt-6 mb-8">
+                            <div class="flex justify-between items-end">
+                                <span class="text-white font-serif text-lg">Total</span>
+                                <span class="text-2xl font-bold text-white">4,350 LE</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2 text-right">Including VAT</p>
+                        </div>
+
+                        <button class="w-full bg-moon-gold text-moon-dark font-bold uppercase tracking-widest py-4 hover:bg-white transition-colors mb-4">
+                            Proceed to Checkout
+                        </button>
+                        
+                        <a href="{{ route('shop') }}" class="block text-center text-gray-400 text-xs uppercase tracking-widest hover:text-moon-gold transition-colors">
+                            Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
