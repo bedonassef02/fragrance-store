@@ -11,12 +11,12 @@ class ProductController extends Controller
     {
         $product = Product::with('category', 'sizes')->findOrFail($id);
 
-        $related = Product::where('category_id', $product->category_id)
+        $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->inRandomOrder()
             ->take(3)
             ->get();
 
-        return view('products.show', compact('product', 'related'));
+        return view('products.show', compact('product', 'relatedProducts'));
     }
 }

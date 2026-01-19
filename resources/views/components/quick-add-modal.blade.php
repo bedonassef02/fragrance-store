@@ -6,13 +6,10 @@
     <h3 id="modal-product-title" class="text-2xl font-serif text-white mb-2">Product Name</h3>
     <p id="modal-product-price" class="text-moon-gold font-bold mb-6">0 LE</p>
     
-    <div class="mb-8">
-        <label class="block text-xs uppercase tracking-widest text-gray-400 mb-3">Select Size</label>
-        <div class="flex gap-3">
-            <button class="size-btn w-10 h-10 border border-gray-600 text-gray-400 hover:border-moon-gold hover:text-white transition-colors focus:bg-moon-gold focus:text-black focus:border-moon-gold">S</button>
-            <button class="size-btn w-10 h-10 border border-gray-600 text-gray-400 hover:border-moon-gold hover:text-white transition-colors focus:bg-moon-gold focus:text-black focus:border-moon-gold">M</button>
-            <button class="size-btn w-10 h-10 border border-gray-600 text-gray-400 hover:border-moon-gold hover:text-white transition-colors focus:bg-moon-gold focus:text-black focus:border-moon-gold">L</button>
-            <button class="size-btn w-10 h-10 border border-gray-600 text-gray-400 hover:border-moon-gold hover:text-white transition-colors focus:bg-moon-gold focus:text-black focus:border-moon-gold">XL</button>
+    <div id="modal-size-container" class="mb-8 hidden">
+        <label class="block text-center text-xs uppercase tracking-widest text-gray-400 mb-4 font-bold">Select Size</label>
+        <div id="modal-size-buttons" class="flex gap-4 justify-center flex-wrap">
+            <!-- Appended via JS -->
         </div>
     </div>
 

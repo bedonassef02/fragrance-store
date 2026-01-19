@@ -30,9 +30,8 @@ class CartController extends Controller
         $size = $request->size;
         $quantity = $request->quantity ?? 1;
 
-        // Lookup Product (Mock DB)
-        $products = ShopController::getProducts();
-        $product = collect($products)->firstWhere('id', $productId);
+        // Lookup Product (DB)
+        $product = \App\Models\Product::find($productId);
 
         if (!$product) {
             return response()->json(['error' => 'Product not found'], 404);
@@ -46,10 +45,10 @@ class CartController extends Controller
         } else {
             $cart[$key] = [
                 'key' => $key,
-                'product_id' => $product['id'],
-                'name' => $product['name'],
-                'price' => $product['price'],
-                'image' => $product['image'],
+                'product_id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'image' => $product->image,
                 'size' => $size,
                 'quantity' => $quantity
             ];

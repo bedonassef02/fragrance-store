@@ -74,44 +74,68 @@ document.addEventListener('DOMContentLoaded', function () {
     // Actually, adding multiple listeners to backdrop is fine.
     if (backdrop) backdrop.addEventListener('click', closeModal);
 
+    const sizeContainer = document.getElementById('modal-size-container');
+    const sizeButtonsContainer = document.getElementById('modal-size-buttons');
+
     addToBagBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            e.stopPropagation(); // Prevent going to product page
+            e.stopPropagation();
 
             selectedProductId = btn.dataset.id;
-            selectedSize = null; // Reset size
+            const name = btn.dataset.name || 'Product';
+            const price = btn.dataset.price || '';
+            const sizesStr = btn.dataset.sizes || '';
 
-            // Reset visual state
-            sizeBtns.forEach(b => b.classList.remove('bg-moon-gold', 'text-black', 'border-moon-gold'));
-            sizeBtns.forEach(b => b.classList.add('text-gray-400', 'border-gray-600'));
+            // Set content
+            modalTitle.textContent = name;
+            modalPrice.textContent = price;
 
-            // Find product info from card
-            const productCard = btn.closest('.group');
-            if (productCard) {
-                // Try to find title
-                // We refined component: h3 is title.
-                const titleEl = productCard.querySelector('h3');
-                const title = titleEl ? titleEl.innerText : 'Product';
+            // Reset Sizes
+            sizeButtonsContainer.innerHTML = '';
+            selectedSize = null;
 
-                // Find price
-                const moonGoldPrice = productCard.querySelector('.text-moon-gold');
-                const price = moonGoldPrice ? moonGoldPrice.innerText : 'Price';
+            if (sizesStr) {
+                sizeContainer.classList.remove('hidden');
+                const sizes = sizesStr.split(',');
 
-                openModal(title, price);
+                sizes.forEach(size => {
+                    const sBtn = document.createElement('button');
+                    sBtn.className = 'size-btn w-12 h-12 border border-gray-600 text-gray-400 font-bold hover:border-moon-gold hover:text-white transition-all hover:scale-110 rounded-sm';
+                    sBtn.innerText = size;
+
+                    sBtn.addEventListener('click', () => {
+                        // Deactivate all
+                        const allBtns = sizeButtonsContainer.querySelectorAll('.size-btn');
+                        allBtns.forEach(b => {
+                            b.classList.remove('bg-moon-gold', 'text-black', 'border-moon-gold');
+                            b.classList.add('text-gray-400', 'border-gray-600');
+                        });
+                        // Activate clicked
+                        sBtn.classList.remove('text-gray-400', 'border-gray-600');
+                        sBtn.classList.add('bg-moon-gold', 'text-black', 'border-moon-gold');
+                        selectedSize = size;
+                    });
+
+                    sizeButtonsContainer.appendChild(sBtn);
+                });
+            } else {
+                // No sizes (e.g. Bags)
+                sizeContainer.classList.add('hidden');
+                selectedSize = 'One Size';
             }
+
+            // Open Modal
+            modal.classList.remove('hidden');
+            showBackdrop();
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'scale-95');
+                modal.classList.add('opacity-100', 'scale-100');
+            }, 10);
         });
     });
 
-    // Size Selection
-    sizeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            sizeBtns.forEach(b => b.classList.remove('bg-moon-gold', 'text-black', 'border-moon-gold'));
-            btn.classList.add('bg-moon-gold', 'text-black', 'border-moon-gold');
-            btn.classList.remove('text-gray-400', 'border-gray-600');
-            selectedSize = btn.innerText;
-        });
-    });
+    // Removed static sizeBtns listener as they are now dynamic
 
     if (confirmBtn) confirmBtn.addEventListener('click', () => {
         if (!selectedSize) {

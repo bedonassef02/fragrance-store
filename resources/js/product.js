@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const qtyMinus = document.getElementById('qty-minus');
     const qtyPlus = document.getElementById('qty-plus');
     const addToBagBtn = document.getElementById('add-to-bag-btn');
-    let selectedSize = null;
+    // If no size buttons, default to 'One Size'
+    let selectedSize = sizeBtns.length === 0 ? 'One Size' : null;
 
     if (!addToBagBtn) return;
 

@@ -12,7 +12,14 @@
         <span class="absolute top-4 left-4 {{ $product['badge_color'] ?? 'bg-moon-gold' }} text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">{{ $product['badge'] }}</span>
         @endif
 
-        <button data-id="{{ $product['id'] }}" class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
+        <button 
+            data-id="{{ $product['id'] }}" 
+            data-name="{{ $product['name'] }}"
+            data-price="{{ number_format($product['price']) }} LE"
+            data-sizes="{{ $product->sizes->pluck('size')->join(',') }}"
+            class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">
+            Add to Bag
+        </button>
     </div>
     <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
         <a href="{{ route('product.show', $product['id']) }}" class="block">
