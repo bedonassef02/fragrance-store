@@ -7,9 +7,9 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
-    public function show($id)
+    public function show($slug)
     {
-        $product = Product::with('category', 'sizes')->findOrFail($id);
+        $product = Product::with('category', 'sizes', 'images')->where('slug', $slug)->firstOrFail();
 
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)

@@ -43,8 +43,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add to Bag Logic
     addToBagBtn.addEventListener('click', () => {
         if (!selectedSize) {
-            alert('Please select a size');
-            return;
+            // Check buttons
+            if (sizeBtns.length === 0) {
+                selectedSize = 'One Size';
+            } else {
+                alert('Please select a size');
+                return;
+            }
         }
 
         const originalText = addToBagBtn.innerText;
@@ -52,11 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
         addToBagBtn.disabled = true;
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-        // We need product ID. 
-        // Best way: data attribute on the button. 
-        // I will need to update the blade view to add data-id property to the button, 
-        // or parse it from URL (less reliable) or a hidden input.
-        // I will assume I will add `data-id` to the button in the blade file.
         const productId = addToBagBtn.dataset.id;
 
         fetch('/cart/add', {
@@ -77,7 +77,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 addToBagBtn.disabled = false;
 
                 if (data.success) {
-                    alert('Added to Bag!');
+                    // Show Toast or Alert
+                    // We can reuse the Toast from quick-add if available globally?
+                    // quick-add.js handles its own toast.
+                    // Simple alert for now or implement toast.
+                    const toast = document.getElementById('toast');
+                    if (toast) {
+                        toast.classList.remove('translate-y-20', 'opacity-0');
+                        setTimeout(() => {
+                            toast.classList.add('translate-y-20', 'opacity-0');
+                        }, 3000);
+                    } else {
+                        alert('Added to Bag!');
+                    }
                     updateCartBadge(data.cartCount);
                 } else {
                     alert(data.error || 'Something went wrong');
@@ -89,4 +101,51 @@ document.addEventListener('DOMContentLoaded', function () {
                 addToBagBtn.disabled = false;
             });
     });
+
+    // Gallery Logic
+    const mainImage = document.getElementById('main-image');
+    const thumbs = document.querySelectorAll('.gallery-thumb');
+    const zoomModal = document.getElementById('zoom-modal');
+    const zoomImg = document.getElementById('zoom-img-full');
+
+    if (mainImage && thumbs.length > 0) {
+        thumbs.forEach(thumb => {
+            thumb.addEventListener('click', () => {
+                const src = thumb.dataset.src || thumb.src;
+                // Fade effect?
+                mainImage.style.opacity = '0.5';
+                setTimeout(() => {
+                    mainImage.src = src;
+                    mainImage.style.opacity = '1';
+                }, 150);
+
+                // Active state
+                thumbs.forEach(t => t.classList.remove('border-moon-gold'));
+                thumb.classList.add('border-moon-gold');
+            });
+        });
+    }
+
+    // Zoom Logic
+    if (mainImage && zoomModal && zoomImg) {
+        mainImage.addEventListener('click', () => {
+            zoomImg.src = mainImage.src;
+            zoomModal.classList.remove('hidden');
+            zoomModal.classList.add('flex');
+            // Animation
+            setTimeout(() => {
+                zoomImg.classList.remove('scale-90', 'opacity-0');
+                zoomImg.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        });
+
+        zoomModal.addEventListener('click', () => {
+            zoomImg.classList.remove('scale-100', 'opacity-100');
+            zoomImg.classList.add('scale-90', 'opacity-0');
+            setTimeout(() => {
+                zoomModal.classList.remove('flex');
+                zoomModal.classList.add('hidden');
+            }, 300);
+        });
+    }
 });

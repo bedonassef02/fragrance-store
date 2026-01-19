@@ -105,6 +105,23 @@ class ShopSeeder extends Seeder
                     ]);
                 }
             }
+
+            // Seed Gallery Images
+            // Add Main Image as first gallery image? No, main is separate usually. 
+            // But usually Gallery Loop includes Main.
+            // I'll add 3 extra images.
+            $extraImages = [
+                'https://placehold.co/800x1200/1a1a1a/c6a87c?text=Detail+1',
+                'https://placehold.co/800x1200/1a1a1a/c6a87c?text=Detail+2',
+                'https://placehold.co/800x1200/1a1a1a/c6a87c?text=Side+View'
+            ];
+            
+            foreach ($extraImages as $img) {
+                \App\Models\ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => $img
+                ]);
+            }
         }
     }
 }

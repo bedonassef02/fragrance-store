@@ -2,7 +2,7 @@
 
 <div class="group relative fade-in">
     <div class="relative overflow-hidden aspect-[4/5] mb-4 bg-gray-800">
-        <a href="{{ route('product.show', $product['id']) }}" class="block w-full h-full">
+        <a href="{{ route('product.show', $product['slug']) }}" class="block w-full h-full">
             <img src="{{ $product['image'] }}" 
                  loading="lazy"
                  class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="{{ $product['name'] }}">
@@ -22,7 +22,7 @@
         </button>
     </div>
     <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-        <a href="{{ route('product.show', $product['id']) }}" class="block">
+        <a href="{{ route('product.show', $product['slug']) }}" class="block">
             <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">{{ $product['name'] }}</h3>
         </a>
         <p class="text-sm font-bold text-gray-400">
