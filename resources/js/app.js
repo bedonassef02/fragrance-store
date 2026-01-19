@@ -1,4 +1,8 @@
 import './bootstrap';
+import './shop';
+import './product';
+import './cart';
+import './quick-add';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Mobile Menu
