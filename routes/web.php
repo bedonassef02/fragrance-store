@@ -5,13 +5,13 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+use App\Http\Controllers\HomeController;
 
-Route::get('/collections', function () {
-    return view('collections.index');
-})->name('collections');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+use App\Http\Controllers\CollectionController;
+
+Route::get('/collections', [CollectionController::class, 'index'])->name('collections');
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 Route::get('/product/{id?}', [ProductController::class, 'show'])->name('product.show');
