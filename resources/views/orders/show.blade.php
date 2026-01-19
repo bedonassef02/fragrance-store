@@ -50,12 +50,18 @@
                     <div class="space-y-3 text-sm text-gray-400">
                          <div class="flex justify-between">
                             <span>Subtotal</span>
-                            <span>{{ number_format($order->total_amount - 150) }} LE</span>
+                            <span>{{ number_format($order->subtotal ?? ($order->total_amount + ($order->discount_amount ?? 0) - 150)) }} LE</span>
                         </div>
                          <div class="flex justify-between">
                             <span>Shipping</span>
                             <span>150 LE</span>
                         </div>
+                        @if($order->discount_amount > 0)
+                        <div class="flex justify-between text-moon-gold">
+                            <span>Discount <small class="text-gray-500">({{ $order->coupon_code }})</small></span>
+                            <span>-{{ number_format($order->discount_amount) }} LE</span>
+                        </div>
+                        @endif
                          <div class="flex justify-between text-white text-lg font-bold pt-4 border-t border-gray-700 mt-2">
                             <span>Total</span>
                             <span>{{ number_format($order->total_amount) }} LE</span>

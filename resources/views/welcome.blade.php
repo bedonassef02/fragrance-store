@@ -40,6 +40,27 @@
     </header>
 
     <!-- Featured Section Preview -->
+    <!-- Trending Section -->
+    @if($trending->isNotEmpty())
+    <section class="py-24 bg-moon-dark border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12">
+                <h2 class="text-3xl md:text-4xl font-serif text-white">Trending Now</h2>
+                <a href="{{ route('shop') }}?sort=price_desc" class="hidden md:inline-block text-moon-gold uppercase tracking-widest text-xs font-bold hover:text-white transition-colors">View All</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($trending as $product)
+                    <x-product-card :product="$product" />
+                @endforeach
+            </div>
+            <div class="mt-8 text-center md:hidden">
+                <a href="{{ route('shop') }}" class="text-moon-gold uppercase tracking-widest text-xs font-bold hover:text-white transition-colors">View All</a>
+            </div>
+        </div>
+    </section>
+    @endif
+
+    <!-- Collections Preview -->
     <section class="py-24 bg-moon-dark">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl md:text-4xl font-serif text-white mb-6">Discover Our World</h2>
@@ -55,4 +76,18 @@
             </div>
         </div>
     </section>
+
+    <!-- Featured Section -->
+    @if($featured->isNotEmpty())
+    <section class="py-24 bg-moon-dark border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-serif text-white mb-12 text-center">Curated For You</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($featured as $product)
+                    <x-product-card :product="$product" />
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
 @endsection

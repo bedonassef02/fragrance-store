@@ -92,6 +92,8 @@ class ShopSeeder extends Seeder
             unset($p['category']);
             $p['slug'] = Str::slug($p['name']);
             $p['category_id'] = $catIds[$categoryName] ?? null;
+            $p['is_featured'] = rand(0, 10) > 6; // 40% chance
+            $p['is_trending'] = rand(0, 10) > 7; // 30% chance
 
             $product = Product::create($p);
 

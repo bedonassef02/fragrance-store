@@ -57,7 +57,32 @@
                                 <span>Shipping</span>
                                 <span class="text-white">{{ number_format($shipping) }} LE</span>
                             </div>
-                            <!-- Discount functionality pending backend logic -->
+                            <!-- Discount functionality -->
+                            @if(isset($discount) && $discount > 0)
+                            <div class="flex justify-between text-moon-gold">
+                                <span>Discount</span>
+                                <span id="cart-discount">-{{ number_format($discount) }} LE</span>
+                            </div>
+                            @endif
+                        </div>
+                        
+                        <!-- Coupon Input -->
+                        <div class="mb-6 pt-4 border-t border-gray-800">
+                             @if(session('coupon'))
+                                <div class="flex justify-between items-center bg-green-900/30 border border-green-800 p-3 rounded">
+                                    <span class="text-green-400 text-sm font-mono">{{ session('coupon.code') }}</span>
+                                    <form action="{{ route('cart.coupon.remove') }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="text-gray-400 hover:text-white text-xs uppercase tracking-wider">Remove</button>
+                                    </form>
+                                </div>
+                            @else
+                                <form action="{{ route('cart.coupon.apply') }}" method="POST" class="flex gap-2">
+                                    @csrf
+                                    <input type="text" name="code" placeholder="Promo Code" class="flex-1 bg-black/50 border border-gray-700 px-4 py-3 text-sm text-white focus:border-moon-gold outline-none transition-colors">
+                                    <button type="submit" class="bg-gray-800 border border-gray-700 text-white px-6 py-3 text-xs uppercase tracking-widest hover:bg-gray-700 hover:border-gray-600 transition-colors">Apply</button>
+                                </form>
+                            @endif
                         </div>
 
                         <div class="border-t border-gray-700 pt-6 mb-8">

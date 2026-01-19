@@ -2,19 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CartService;
 use Illuminate\Http\Request;
+use App\Models\Coupon;
 
 class CartController extends Controller
 {
+    protected $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
+
     public function index()
     {
-        $cartItems = session()->get('cart', []);
-        
-        $subtotal = collect($cartItems)->sum(fn($item) => $item['price'] * $item['quantity']);
-        $shipping = $subtotal > 0 ? 150 : 0; 
-        $total = $subtotal + $shipping;
+        $cartItems = $this->cartService->getCart();
+        $subtotal = $this->cartService->getSubtotal();
+        $shipping = $this->cartService->getShipping();
+        $discount = $this->cartService->getDiscount();
+        $total = $this->cartService->getTotal();
 
-        return view('cart.index', compact('cartItems', 'subtotal', 'shipping', 'total'));
+        return view('cart.index', compact('cartItems', 'subtotal', 'shipping', 'discount', 'total'));
     }
 
     public function add(Request $request)
@@ -71,14 +80,11 @@ class CartController extends Controller
                 $cart[$request->id]['quantity'] = $request->quantity;
                 session()->put('cart', $cart);
                 
-                $subtotal = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
-                $shipping = 150;
-                $total = $subtotal + $shipping;
-
                 return response()->json([
                     'success' => true, 
-                    'subtotal' => number_format($subtotal),
-                    'total' => number_format($total)
+                    'subtotal' => number_format($this->cartService->getSubtotal()),
+                    'discount' => number_format($this->cartService->getDiscount()),
+                    'total' => number_format($this->cartService->getTotal())
                 ]);
             }
         }
@@ -96,5 +102,34 @@ class CartController extends Controller
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false], 400);
+    }
+
+    public function applyCoupon(Request $request)
+    {
+        $code = $request->input('code');
+        $coupon = Coupon::where('code', $code)->first();
+
+        if (!$coupon || !$coupon->isValid()) {
+             return back()->with('error', 'Invalid or expired coupon.');
+        }
+
+        if ($coupon->min_order_amount && $this->cartService->getSubtotal() < $coupon->min_order_amount) {
+             return back()->with('error', 'Order amount must be at least ' . number_format($coupon->min_order_amount));
+        }
+
+        session()->put('coupon', [
+            'code' => $coupon->code,
+            'type' => $coupon->type,
+            'value' => $coupon->value,
+            'max_discount_amount' => $coupon->max_discount_amount
+        ]);
+
+        return back()->with('success', 'Coupon applied successfully!');
+    }
+
+    public function removeCoupon()
+    {
+        session()->forget('coupon');
+        return back()->with('success', 'Coupon removed.');
     }
 }

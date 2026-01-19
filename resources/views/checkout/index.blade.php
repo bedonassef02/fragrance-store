@@ -102,6 +102,12 @@
                             <span>Shipping</span>
                             <span>{{ number_format($shipping) }} LE</span>
                         </div>
+                        @if(isset($discount) && $discount > 0)
+                        <div class="flex justify-between text-moon-gold">
+                            <span>Discount</span>
+                            <span>-{{ number_format($discount) }} LE</span>
+                        </div>
+                        @endif
                          <div class="flex justify-between text-white text-xl font-serif font-bold pt-4 border-t border-gray-700 mt-2">
                             <span>Total</span>
                             <span>{{ number_format($total) }} LE</span>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -11,18 +12,26 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
+    protected $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
+
     public function index()
     {
-        $cart = session('cart', []);
+        $cart = $this->cartService->getCart();
         if (empty($cart)) {
             return redirect()->route('cart');
         }
 
-        $subtotal = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
-        $shipping = 150; // Fixed shipping for now
-        $total = $subtotal + $shipping;
+        $subtotal = $this->cartService->getSubtotal();
+        $shipping = $this->cartService->getShipping(); 
+        $discount = $this->cartService->getDiscount();
+        $total = $this->cartService->getTotal();
 
-        return view('checkout.index', compact('cart', 'subtotal', 'shipping', 'total'));
+        return view('checkout.index', compact('cart', 'subtotal', 'shipping', 'discount', 'total'));
     }
 
     public function store(Request $request)
@@ -36,15 +45,15 @@ class CheckoutController extends Controller
             'phone'      => 'required|string|max:20',
         ]);
 
-        $cart = session('cart', []);
+        $cart = $this->cartService->getCart();
 
         if (empty($cart)) {
             return redirect()->route('cart')->with('error', 'Your cart is empty');
         }
 
-        $subtotal = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
-        $shipping = 150;
-        $total    = $subtotal + $shipping;
+        $total = $this->cartService->getTotal();
+        $discount = $this->cartService->getDiscount();
+        $couponCode = session('coupon.code');
 
         DB::beginTransaction();
 
@@ -59,6 +68,8 @@ class CheckoutController extends Controller
                 'city'           => $request->city,
                 'phone'          => $request->phone,
                 'total_amount'   => $total,
+                'discount_amount'=> $discount,
+                'coupon_code'    => $couponCode,
                 'payment_method' => 'cod',
                 'status'         => 'pending',
             ]);
@@ -73,10 +84,15 @@ class CheckoutController extends Controller
                 ]);
             }
 
+            // Coupon Usage Increment
+            if ($couponCode) {
+                \App\Models\Coupon::where('code', $couponCode)->increment('used_count');
+            }
+
             DB::commit();
 
-            // Clear Cart
-            session()->forget('cart');
+            // Clear Cart and Coupon
+            session()->forget(['cart', 'coupon']);
 
             return redirect()->route('checkout.success', $order->order_number);
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\View\View;
 use App\Models\Collection;
+use App\Models\Product;
 
 class HomeController extends Controller
 {
@@ -26,7 +27,9 @@ class HomeController extends Controller
         ];
 
         $collections = Collection::orderBy('sort_order')->take(3)->get();
+        $featured = Product::where('is_featured', true)->take(8)->get();
+        $trending = Product::where('is_trending', true)->take(8)->get();
 
-        return view('welcome', compact('hero', 'collections'));
+        return view('welcome', compact('hero', 'collections', 'featured', 'trending'));
     }
 }
