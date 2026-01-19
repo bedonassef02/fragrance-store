@@ -6,9 +6,9 @@
         <!-- Background Overlay -->
         <div class="absolute inset-0 z-0">
             <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-moon-dark"></div>
-            <img src="https://images.unsplash.com/photo-1590735213920-68192a487bc2?q=80&w=2070&auto=format&fit=crop" 
+            <img src="https://images.pexels.com/photos/18269632/pexels-photo-18269632/free-photo-of-woman-in-hijab-posing-on-desert.jpeg?auto=compress&cs=tinysrgb&w=2000" 
                  alt="Luxury Abaya Background" 
-                 class="w-full h-full object-cover object-center animate-kenburns opacity-60">
+                 class="w-full h-full object-cover object-center animate-kenburns opacity-70">
         </div>
 
         <!-- Content -->
@@ -38,25 +38,25 @@
         </div>
     </header>
 
-    <!-- Featured Section Preview (Shortened for Welcome) -->
+    <!-- Featured Section Preview -->
     <section class="py-24 bg-moon-dark">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl md:text-4xl font-serif text-white mb-6">Discover Our World</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-                <a href="{{ route('shop') }}?category=abayas" class="group relative h-96 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?q=80&w=800" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Abayas">
+                <a href="{{ route('shop') }}" class="group relative h-96 overflow-hidden">
+                    <img src="https://images.pexels.com/photos/15865612/pexels-photo-15865612/free-photo-of-brunette-in-abaya.jpeg?auto=compress&cs=tinysrgb&w=800" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Abayas">
                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
                         <h3 class="text-2xl font-serif text-white border-b border-moon-gold pb-2 hover:text-moon-gold">Abayas</h3>
                     </div>
                 </a>
                 <a href="{{ route('collections') }}" class="group relative h-96 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1628045620958-8671607590d9?q=80&w=1000" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Collections">
+                    <img src="https://images.pexels.com/photos/13758155/pexels-photo-13758155.jpeg?auto=compress&cs=tinysrgb&w=800" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Collections">
                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
                         <h3 class="text-2xl font-serif text-white border-b border-moon-gold pb-2 hover:text-moon-gold">Collections</h3>
                     </div>
                 </a>
-                <a href="{{ route('shop') }}?category=bags" class="group relative h-96 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=800" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Bags">
+                <a href="{{ route('shop') }}" class="group relative h-96 overflow-hidden">
+                    <img src="https://images.pexels.com/photos/1117272/pexels-photo-1117272.jpeg?auto=compress&cs=tinysrgb&w=800" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Bags">
                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
                         <h3 class="text-2xl font-serif text-white border-b border-moon-gold pb-2 hover:text-moon-gold">Bags</h3>
                     </div>
