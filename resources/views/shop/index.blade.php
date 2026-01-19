@@ -12,7 +12,7 @@
             </div>
             
             <!-- Controls Bar -->
-            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 sticky top-20 z-30 bg-moon-dark/95 py-4 backdrop-blur-md">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 relative py-4">
                  <!-- Mobile Filter Toggle -->
                  <button id="filter-toggle" class="lg:hidden w-full md:w-auto flex justify-center items-center text-moon-gold uppercase tracking-widest text-xs font-bold border border-moon-gold px-8 py-3 hover:bg-moon-gold hover:text-black transition-colors duration-300">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
@@ -34,7 +34,7 @@
 
             <div class="flex flex-col lg:flex-row gap-12 relative">
                 <!-- Sidebar Filters -->
-                <aside id="shop-sidebar" class="fixed inset-0 z-50 bg-moon-dark p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 lg:relative lg:translate-x-0 lg:w-64 lg:inset-auto lg:p-0 lg:overflow-visible lg:bg-transparent lg:block">
+                <aside id="shop-sidebar" class="fixed inset-0 z-50 lg:z-0 bg-moon-dark p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 lg:relative lg:translate-x-0 lg:w-64 lg:inset-auto lg:p-0 lg:overflow-visible lg:bg-transparent lg:block">
                      <!-- Mobile Close Button -->
                     <div class="lg:hidden flex justify-between items-center mb-8 border-b border-gray-800 pb-4">
                         <span class="text-white font-serif text-xl">Filters</span>

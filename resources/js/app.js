@@ -27,11 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const nav = document.getElementById('main-nav');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
-            nav.classList.add('bg-moon-dark/95', 'py-0', 'shadow-lg');
-            nav.classList.remove('py-4'); // If we had padding
+            nav.classList.add('py-0', 'shadow-lg');
+            nav.classList.remove('py-4');
         } else {
-            nav.classList.remove('bg-moon-dark/95', 'shadow-lg');
-            // nav.classList.add('py-4');
+            nav.classList.remove('shadow-lg');
+            nav.classList.add('py-4');
         }
     });
 

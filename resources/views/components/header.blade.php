@@ -1,4 +1,4 @@
-<nav class="fixed w-full z-50 bg-moon-dark/95 backdrop-blur-md border-b border-white/5 transition-all duration-300" id="main-nav">
+<nav class="fixed w-full z-50 bg-black border-b border-white/5 transition-all duration-300" id="main-nav">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
             <!-- Mobile Menu Button -->
