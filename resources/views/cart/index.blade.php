@@ -68,9 +68,9 @@
                             <p class="text-xs text-gray-500 mt-2 text-right">Including VAT</p>
                         </div>
 
-                        <button class="w-full bg-moon-gold text-moon-dark font-bold uppercase tracking-widest py-4 hover:bg-white transition-colors mb-4">
+                        <a href="{{ route('checkout.index') }}" class="block text-center w-full bg-moon-gold text-moon-dark font-bold uppercase tracking-widest py-4 hover:bg-white transition-colors mb-4">
                             Proceed to Checkout
-                        </button>
+                        </a>
                         
                         <a href="{{ route('shop') }}" class="block text-center text-gray-400 text-xs uppercase tracking-widest hover:text-moon-gold transition-colors">
                             Continue Shopping
