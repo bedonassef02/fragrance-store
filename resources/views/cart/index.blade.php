@@ -10,56 +10,37 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                 <!-- Cart Items -->
                 <div class="lg:col-span-2 space-y-8">
-                    <!-- Item 1 -->
-                    <div class="flex gap-6 border-b border-gray-800 pb-8">
+                    @forelse($cartItems as $item)
+                    <!-- Item -->
+                    <div class="cart-item-row flex gap-6 border-b border-gray-800 pb-8" id="row-{{ $item['key'] }}">
                         <div class="w-32 h-40 bg-gray-800 flex-shrink-0">
-                            <img src="https://images.pexels.com/photos/9940866/pexels-photo-9940866.jpeg?auto=compress&cs=tinysrgb&w=400" class="w-full h-full object-cover">
+                            <img src="{{ $item['image'] }}" class="w-full h-full object-cover">
                         </div>
                         <div class="flex-1 flex flex-col justify-between">
                             <div>
                                 <div class="flex justify-between items-start">
-                                    <h3 class="text-white font-serif text-lg">Royal Black Abaya</h3>
-                                    <span class="text-moon-gold font-bold">2,800 LE</span>
+                                    <h3 class="text-white font-serif text-lg">{{ $item['name'] }}</h3>
+                                    <span class="text-moon-gold font-bold">{{ number_format($item['price']) }} LE</span>
                                 </div>
-                                <p class="text-gray-500 text-sm mt-1">Size: M</p>
-                                <p class="text-gray-500 text-sm">Medina Silk</p>
+                                <p class="text-gray-500 text-sm mt-1">Size: {{ $item['size'] }}</p>
                             </div>
                             
                             <div class="flex justify-between items-center">
                                 <div class="flex items-center border border-gray-700">
-                                    <button class="px-3 py-1 text-gray-400 hover:text-white">-</button>
-                                    <span class="px-2 text-white text-sm">1</span>
-                                    <button class="px-3 py-1 text-gray-400 hover:text-white">+</button>
+                                    <button class="cart-qty-btn px-3 py-1 text-gray-400 hover:text-white" data-action="decrease" data-key="{{ $item['key'] }}">-</button>
+                                    <span class="cart-qty-display px-2 text-white text-sm" id="qty-{{ $item['key'] }}">{{ $item['quantity'] }}</span>
+                                    <button class="cart-qty-btn px-3 py-1 text-gray-400 hover:text-white" data-action="increase" data-key="{{ $item['key'] }}">+</button>
                                 </div>
-                                <button class="text-gray-500 text-xs uppercase tracking-widest hover:text-red-500 transition-colors">Remove</button>
+                                <button class="cart-remove-btn text-gray-500 text-xs uppercase tracking-widest hover:text-red-500 transition-colors" data-key="{{ $item['key'] }}">Remove</button>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Item 2 -->
-                    <div class="flex gap-6 border-b border-gray-800 pb-8">
-                        <div class="w-32 h-40 bg-gray-800 flex-shrink-0">
-                             <img src="https://images.pexels.com/photos/1117272/pexels-photo-1117272.jpeg?auto=compress&cs=tinysrgb&w=400" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1 flex flex-col justify-between">
-                             <div>
-                                <div class="flex justify-between items-start">
-                                    <h3 class="text-white font-serif text-lg">Onyx Clutch</h3>
-                                    <span class="text-moon-gold font-bold">1,400 LE</span>
-                                </div>
-                                <p class="text-gray-500 text-sm mt-1">One Size</p>
-                            </div>
-                            
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center border border-gray-700">
-                                    <button class="px-3 py-1 text-gray-400 hover:text-white">-</button>
-                                    <span class="px-2 text-white text-sm">1</span>
-                                    <button class="px-3 py-1 text-gray-400 hover:text-white">+</button>
-                                </div>
-                                <button class="text-gray-500 text-xs uppercase tracking-widest hover:text-red-500 transition-colors">Remove</button>
-                            </div>
-                        </div>
+                    @empty
+                    <div class="text-center py-12">
+                        <p class="text-gray-400 mb-4">Your cart is empty.</p>
+                        <a href="{{ route('shop') }}" class="text-moon-gold underline">Continue Shopping</a>
                     </div>
+                    @endforelse
                 </div>
 
                 <!-- Order Summary -->
@@ -70,22 +51,19 @@
                         <div class="space-y-4 mb-8 text-sm text-gray-400">
                             <div class="flex justify-between">
                                 <span>Subtotal</span>
-                                <span class="text-white">4,200 LE</span>
+                                <span class="text-white" id="cart-subtotal">{{ number_format($subtotal) }} LE</span>
                             </div>
                             <div class="flex justify-between">
                                 <span>Shipping</span>
-                                <span class="text-white">150 LE</span>
+                                <span class="text-white">{{ number_format($shipping) }} LE</span>
                             </div>
-                            <div class="flex justify-between text-moon-gold">
-                                <span>Discount</span>
-                                <span>-0 LE</span>
-                            </div>
+                            <!-- Discount functionality pending backend logic -->
                         </div>
 
                         <div class="border-t border-gray-700 pt-6 mb-8">
                             <div class="flex justify-between items-end">
                                 <span class="text-white font-serif text-lg">Total</span>
-                                <span class="text-2xl font-bold text-white">4,350 LE</span>
+                                <span class="text-2xl font-bold text-white" id="cart-total">{{ number_format($total) }} LE</span>
                             </div>
                             <p class="text-xs text-gray-500 mt-2 text-right">Including VAT</p>
                         </div>
@@ -102,4 +80,87 @@
             </div>
         </div>
     </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const qtyBtns = document.querySelectorAll('.cart-qty-btn');
+            const removeBtns = document.querySelectorAll('.cart-remove-btn');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const totalEl = document.getElementById('cart-total');
+
+            // Format helper
+            const formatMoney = (amount) => {
+                // Determine format
+                return amount + ' LE';
+            };
+
+            qtyBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const key = btn.dataset.key;
+                    const action = btn.dataset.action;
+                    const qtyDisplay = document.getElementById('qty-' + key);
+                    let currentQty = parseInt(qtyDisplay.innerText);
+                    let newQty = action === 'increase' ? currentQty + 1 : currentQty - 1;
+
+                    if (newQty < 1) return;
+
+                    // Optimistic UI update
+                    qtyDisplay.innerText = newQty;
+
+                    fetch('{{ route('cart.update') }}', {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            id: key,
+                            quantity: newQty
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            subtotalEl.innerText = data.subtotal + ' LE';
+                            totalEl.innerText = data.total + ' LE';
+                        }
+                    });
+                });
+            });
+
+            removeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const key = btn.dataset.key;
+                    if (!confirm('Remove this item?')) return;
+
+                    fetch('{{ route('cart.remove') }}', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            id: key
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const row = document.getElementById('row-' + key);
+                            row.remove();
+                            // Reload to update totals cleanly or handle local calc logic?
+                            // For simplicity, reload if cart might be empty, 
+                            // but ideally we ask controller for new totals on remove too.
+                            // Currently Remove Controller returns {success: true} only.
+                            // Let's reload the page to refresh everything cleanly.
+                            window.location.reload();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+    @endpush
 @endsection

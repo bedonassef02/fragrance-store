@@ -105,110 +105,32 @@
                 <!-- Product Grid -->
                 <div class="flex-1">
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
-                        <!-- Product Item 1: Abaya (Sale) -->
+                        @foreach($products as $product)
                         <div class="group relative fade-in">
                             <div class="relative overflow-hidden aspect-[4/5] mb-4 bg-gray-800">
-                                <img src="https://images.pexels.com/photos/9940866/pexels-photo-9940866.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                                <img src="{{ $product['image'] }}" 
                                      loading="lazy"
-                                     class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="Royal Black Abaya">
-                                <span class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">-20%</span>
-                                <button class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
+                                     class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="{{ $product['name'] }}">
+                                
+                                @if(isset($product['badge']) && $product['badge'])
+                                <span class="absolute top-4 left-4 {{ $product['badge_color'] ?? 'bg-moon-gold' }} text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">{{ $product['badge'] }}</span>
+                                @endif
+
+                                <button data-id="{{ $product['id'] }}" class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
                             </div>
                             <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-                                <a href="{{ route('product.show') }}" class="block">
-                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Royal Black Abaya</h3>
+                                <a href="{{ route('product.show', $product['id']) }}" class="block">
+                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">{{ $product['name'] }}</h3>
                                 </a>
                                 <p class="text-sm font-bold text-gray-400">
-                                    <span class="line-through text-gray-600 mr-2 font-normal">3,500 LE</span>
-                                    <span class="text-moon-gold">2,800 LE</span>
+                                    @if(isset($product['original_price']) && $product['original_price'])
+                                    <span class="line-through text-gray-600 mr-2 font-normal">{{ number_format($product['original_price']) }} LE</span>
+                                    @endif
+                                    <span class="text-moon-gold">{{ number_format($product['price']) }} LE</span>
                                 </p>
                             </div>
                         </div>
-
-                         <!-- Product Item 2: Kaftan -->
-                        <div class="group relative fade-in delay-75">
-                            <div class="relative overflow-hidden aspect-[4/5] mb-4 bg-gray-800">
-                                <img src="https://images.pexels.com/photos/28905393/pexels-photo-28905393/free-photo-of-elegant-woman-in-red-traditional-dress-in-marrakech.jpeg?auto=compress&cs=tinysrgb&w=800" 
-                                     loading="lazy"
-                                     class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="Crimson Velvet Kaftan">
-                                <button class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
-                            </div>
-                            <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-                                <a href="{{ route('product.show') }}" class="block">
-                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Crimson Velvet Kaftan</h3>
-                                </a>
-                                <p class="text-sm font-bold text-gray-400">4,200 LE</p>
-                            </div>
-                        </div>
-
-                        <!-- Product Item 3: Bag (Sale) -->
-                        <div class="group relative fade-in delay-150">
-                            <div class="relative overflow-hidden aspect-[4/5] mb-4 bg-gray-800">
-                                <img src="https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800" 
-                                     loading="lazy"
-                                     class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" alt="Embossed Leather Clutch">
-                                <span class="absolute top-4 left-4 bg-moon-gold text-black text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">New</span>
-                                <button class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
-                            </div>
-                            <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-                                <a href="{{ route('product.show') }}" class="block">
-                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Embossed Leather Clutch</h3>
-                                </a>
-                                <p class="text-sm font-bold text-gray-400">1,850 LE</p>
-                            </div>
-                        </div>
-
-                        <!-- Product Item 4: Dress -->
-                        <div class="group relative fade-in">
-                            <div class="relative overflow-hidden aspect-[4/5] mb-4 bg-gray-800">
-                                <img src="https://images.pexels.com/photos/16848560/pexels-photo-16848560/free-photo-of-woman-in-dress-in-desert.jpeg?auto=compress&cs=tinysrgb&w=800" 
-                                     loading="lazy"
-                                     class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="Desert Rose Dress">
-                                <button class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
-                            </div>
-                            <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-                                <a href="{{ route('product.show') }}" class="block">
-                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Desert Rose Dress</h3>
-                                </a>
-                                <p class="text-sm font-bold text-gray-400">3,100 LE</p>
-                            </div>
-                        </div>
-
-                        <!-- Product Item 5: Abaya -->
-                        <div class="group relative fade-in delay-75">
-                            <div class="relative overflow-hidden aspect-[4/5] mb-4 bg-gray-800">
-                                <img src="https://images.pexels.com/photos/20344409/pexels-photo-20344409/free-photo-of-woman-in-long-coat-posing-in-passage.jpeg?auto=compress&cs=tinysrgb&w=800" 
-                                     loading="lazy"
-                                     class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="Midnight Silk Abaya">
-                                <button class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
-                            </div>
-                            <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-                                <a href="{{ route('product.show') }}" class="block">
-                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Midnight Silk Abaya</h3>
-                                </a>
-                                <p class="text-sm font-bold text-gray-400">2,950 LE</p>
-                            </div>
-                        </div>
-
-                        <!-- Product Item 6: Handbag -->
-                        <div class="group relative fade-in delay-150">
-                            <div class="relative overflow-hidden aspect-[4/5] mb-4 bg-gray-800">
-                                <img src="https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg?auto=compress&cs=tinysrgb&w=800" 
-                                     loading="lazy"
-                                     class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" alt="Gold Chain Satchel">
-                                <span class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">-15%</span>
-                                <button class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">Add to Bag</button>
-                            </div>
-                            <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
-                                <a href="{{ route('product.show') }}" class="block">
-                                    <h3 class="text-lg font-serif mb-2 text-white group-hover:text-moon-gold transition-colors cursor-pointer">Gold Chain Satchel</h3>
-                                </a>
-                                <p class="text-sm font-bold text-gray-400">
-                                    <span class="line-through text-gray-600 mr-2 font-normal">2,200 LE</span>
-                                    <span class="text-moon-gold">1,870 LE</span>
-                                </p>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
 
                     <!-- Pagination -->
@@ -335,6 +257,9 @@
                 }, 3000);
             }
 
+            let selectedProductId = null;
+            let selectedSize = null;
+
             // Event Listeners
             if (filterToggle) filterToggle.addEventListener('click', openFilters);
             if (filterClose) filterClose.addEventListener('click', closeFilters);
@@ -352,6 +277,13 @@
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation(); // Prevent going to product page
+                    
+                    selectedProductId = btn.dataset.id;
+                    selectedSize = null; // Reset size
+                    // Reset size buttons visual state
+                    sizeBtns.forEach(b => b.classList.remove('bg-moon-gold', 'text-black', 'border-moon-gold'));
+                    sizeBtns.forEach(b => b.classList.add('text-gray-400', 'border-gray-600'));
+
                     const productCard = btn.closest('.group');
                     const title = productCard.querySelector('h3').innerText;
                     // Find price
@@ -368,18 +300,61 @@
                     sizeBtns.forEach(b => b.classList.remove('bg-moon-gold', 'text-black', 'border-moon-gold'));
                     btn.classList.add('bg-moon-gold', 'text-black', 'border-moon-gold');
                     btn.classList.remove('text-gray-400', 'border-gray-600');
+                    selectedSize = btn.innerText;
                 });
             });
 
             if (confirmBtn) confirmBtn.addEventListener('click', () => {
-                closeModal();
-                showToast();
-                // Logic to update cart count could go here
-                const cartCount = document.querySelector('.bg-moon-gold.rounded-full');
-                if (cartCount) {
-                    let count = parseInt(cartCount.innerText);
-                    cartCount.innerText = count + 1;
+                if (!selectedSize) {
+                    alert('Please select a size');
+                    return;
                 }
+
+                confirmBtn.innerText = 'Adding...';
+                confirmBtn.disabled = true;
+
+                fetch('{{ route('cart.add') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        product_id: selectedProductId,
+                        size: selectedSize,
+                        quantity: 1
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    confirmBtn.innerText = 'Add to Bag';
+                    confirmBtn.disabled = false;
+                    
+                    if (data.success) {
+                        closeModal();
+                        showToast();
+                        
+                        const cartCount = document.querySelector('.cart-count-badge'); // We will add this class to header
+                        if (cartCount) {
+                            cartCount.innerText = data.cartCount;
+                            cartCount.classList.remove('hidden');
+                        } else {
+                            // Fallback to searching by style if class not added yet
+                            const oldBadges = document.querySelectorAll('.bg-moon-gold.rounded-full');
+                            oldBadges.forEach(badge => {
+                                badge.innerText = data.cartCount;
+                                badge.classList.remove('hidden');
+                            });
+                        }
+                    } else {
+                        alert(data.error || 'Something went wrong');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    confirmBtn.innerText = 'Add to Bag';
+                    confirmBtn.disabled = false;
+                });
             });
         });
     </script>

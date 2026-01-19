@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -10,17 +13,12 @@ Route::get('/collections', function () {
     return view('collections.index');
 })->name('collections');
 
-Route::get('/shop', function () {
-    return view('shop.index');
-})->name('shop');
-
-Route::get('/product', function () {
-    return view('products.show');
-})->name('product.show');
-
-Route::get('/cart', function () {
-    return view('cart.index');
-})->name('cart');
+Route::get('/shop', [ShopController::class, 'index'])->name('shop');
+Route::get('/product/{id?}', [ProductController::class, 'show'])->name('product.show');
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::patch('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 
 Route::get('/about', function () {
     return view('about');
