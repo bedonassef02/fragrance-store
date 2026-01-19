@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\View\View;
+use App\Models\Collection;
 
 class HomeController extends Controller
 {
@@ -24,23 +25,7 @@ class HomeController extends Controller
             ]
         ];
 
-        $collections = [
-            [
-                'image' => 'https://images.pexels.com/photos/15865612/pexels-photo-15865612/free-photo-of-brunette-in-abaya.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'title' => 'Abayas',
-                'route' => 'shop',
-            ],
-            [
-                'image' => 'https://images.pexels.com/photos/13758155/pexels-photo-13758155.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'title' => 'Collections',
-                'route' => 'collections',
-            ],
-            [
-                'image' => 'https://images.pexels.com/photos/1117272/pexels-photo-1117272.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'title' => 'Bags',
-                'route' => 'shop',
-            ],
-        ];
+        $collections = Collection::orderBy('sort_order')->take(3)->get();
 
         return view('welcome', compact('hero', 'collections'));
     }

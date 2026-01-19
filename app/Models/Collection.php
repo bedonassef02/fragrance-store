@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Collection extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'title', 'subtitle', 'image', 'route', 'cta_text', 'cta_class', 'layout_class', 'sort_order'
+    ];
+}
