@@ -2,34 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Product;
 use App\Models\Category;
+use App\Services\ProductService;
+use App\Http\Requests\ProductFilterRequest;
 
 class ShopController extends Controller
 {
-    public function index(Request $request)
+    protected $productService;
+
+    public function __construct(ProductService $productService)
     {
-        $query = Product::with('category');
+        $this->productService = $productService;
+    }
 
-        // Basic Filtering Example
-        if ($request->has('category')) {
-            $categories = is_array($request->category) ? $request->category : explode(',', $request->category);
-            $query->whereHas('category', function($q) use ($categories) {
-                $q->whereIn('slug', $categories);
-            });
-        }
-
-        if ($request->has('min_price')) {
-            $query->where('price', '>=', $request->min_price);
-        }
-
-        if ($request->has('max_price')) {
-            $query->where('price', '<=', $request->max_price);
-        }
-
-        $products = $query->get();
-        $categories = Category::all(); // For sidebar if needed
+    public function index(ProductFilterRequest $request)
+    {
+        $products = $this->productService->getFilteredProducts($request->validated());
+        $categories = Category::all();
 
         return view('shop.index', compact('products', 'categories'));
     }
