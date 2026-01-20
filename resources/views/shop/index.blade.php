@@ -81,13 +81,11 @@
                                 </h3>
                                 <div class="space-y-3">
                                     @foreach($categories as $category)
-                                    <label class="flex items-center space-x-3 cursor-pointer group">
-                                        <div class="relative flex items-center">
-                                            <input type="checkbox" name="category[]" value="{{ $category->slug }}" {{ in_array($category->slug, (array)request('category', [])) ? 'checked' : '' }} class="peer h-4 w-4 appearance-none border border-gray-600 rounded-sm checked:bg-moon-gold checked:border-moon-gold transition-all">
-                                            <svg class="absolute w-3 h-3 text-black hidden peer-checked:block pointer-events-none left-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
-                                        </div>
-                                        <span class="text-sm text-gray-400 group-hover:text-moon-gold transition-colors">{{ $category->name }}</span>
-                                    </label>
+                                        <x-forms.checkbox 
+                                            name="category[]" 
+                                            :value="$category->slug" 
+                                            :label="$category->name" 
+                                            :checked="in_array($category->slug, (array)request('category', []))" />
                                     @endforeach
                                 </div>
                             </div>
@@ -124,47 +122,17 @@
                             <!-- Availability -->
                             <div>
                                 <h3 class="text-white font-serif text-lg mb-4">Availability</h3>
-                                 <label class="flex items-center space-x-3 cursor-pointer group">
-                                    <div class="relative flex items-center">
-                                        <input type="checkbox" name="in_stock" value="1" {{ request('in_stock') ? 'checked' : '' }} class="peer h-4 w-4 appearance-none border border-gray-600 rounded-sm checked:bg-moon-gold checked:border-moon-gold transition-all">
-                                        <svg class="absolute w-3 h-3 text-black hidden peer-checked:block pointer-events-none left-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
-                                    </div>
-                                    <span class="text-sm text-gray-400 group-hover:text-moon-gold transition-colors">In Stock Only</span>
-                                </label>
+                                 <x-forms.checkbox name="in_stock" value="1" label="In Stock Only" :checked="request('in_stock')" />
                             </div>
 
                             <!-- Price Range -->
                             <div>
                                 <h3 class="text-white font-serif text-lg mb-4">Price Range</h3>
                                 <div class="space-y-3 text-sm text-gray-400">
-                                    <label class="flex items-center space-x-3 cursor-pointer group">
-                                        <div class="relative flex items-center">
-                                            <input type="checkbox" name="price_range[]" value="0-1500" {{ in_array('0-1500', (array)request('price_range', [])) ? 'checked' : '' }} class="peer h-4 w-4 appearance-none border border-gray-600 rounded-sm checked:bg-moon-gold checked:border-moon-gold transition-all">
-                                            <svg class="absolute w-3 h-3 text-black hidden peer-checked:block pointer-events-none left-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
-                                        </div>
-                                        <span class="group-hover:text-gray-300 transition-colors">Under 1500 LE</span>
-                                    </label>
-                                    <label class="flex items-center space-x-3 cursor-pointer group">
-                                        <div class="relative flex items-center">
-                                            <input type="checkbox" name="price_range[]" value="1500-3000" {{ in_array('1500-3000', (array)request('price_range', [])) ? 'checked' : '' }} class="peer h-4 w-4 appearance-none border border-gray-600 rounded-sm checked:bg-moon-gold checked:border-moon-gold transition-all">
-                                            <svg class="absolute w-3 h-3 text-black hidden peer-checked:block pointer-events-none left-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
-                                        </div>
-                                        <span class="group-hover:text-gray-300 transition-colors">1500 LE - 3000 LE</span>
-                                    </label>
-                                    <label class="flex items-center space-x-3 cursor-pointer group">
-                                        <div class="relative flex items-center">
-                                            <input type="checkbox" name="price_range[]" value="3000-5000" {{ in_array('3000-5000', (array)request('price_range', [])) ? 'checked' : '' }} class="peer h-4 w-4 appearance-none border border-gray-600 rounded-sm checked:bg-moon-gold checked:border-moon-gold transition-all">
-                                            <svg class="absolute w-3 h-3 text-black hidden peer-checked:block pointer-events-none left-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
-                                        </div>
-                                        <span class="group-hover:text-gray-300 transition-colors">3000 LE - 5000 LE</span>
-                                    </label>
-                                     <label class="flex items-center space-x-3 cursor-pointer group">
-                                        <div class="relative flex items-center">
-                                            <input type="checkbox" name="price_range[]" value="5000+" {{ in_array('5000+', (array)request('price_range', [])) ? 'checked' : '' }} class="peer h-4 w-4 appearance-none border border-gray-600 rounded-sm checked:bg-moon-gold checked:border-moon-gold transition-all">
-                                            <svg class="absolute w-3 h-3 text-black hidden peer-checked:block pointer-events-none left-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
-                                        </div>
-                                        <span class="group-hover:text-gray-300 transition-colors">Above 5000 LE</span>
-                                    </label>
+                                    <x-forms.checkbox name="price_range[]" value="0-1500" label="Under 1500 LE" :checked="in_array('0-1500', (array)request('price_range', []))" />
+                                    <x-forms.checkbox name="price_range[]" value="1500-3000" label="1500 LE - 3000 LE" :checked="in_array('1500-3000', (array)request('price_range', []))" />
+                                    <x-forms.checkbox name="price_range[]" value="3000-5000" label="3000 LE - 5000 LE" :checked="in_array('3000-5000', (array)request('price_range', []))" />
+                                    <x-forms.checkbox name="price_range[]" value="5000+" label="Above 5000 LE" :checked="in_array('5000+', (array)request('price_range', []))" />
                                 </div>
                             </div>
                         </div>

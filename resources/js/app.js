@@ -4,6 +4,8 @@ import './product';
 import './cart';
 import './quick-add';
 import './size-guide';
+import './image-zoom';
+import './admin';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Mobile Menu

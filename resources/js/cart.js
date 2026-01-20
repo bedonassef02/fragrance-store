@@ -1,5 +1,6 @@
 import apiService from './apiService';
 import { updateCartBadge } from './cart-utils';
+import { showToast } from './ui-helpers';
 
 document.addEventListener('DOMContentLoaded', function () {
     const cartContainer = document.querySelector('.cart-container');
@@ -67,9 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.innerText = 'Apply';
 
             if (success) {
-                // Update totals
                 updateTotals(data.totals);
-                // Reload to show correct coupon UI state (simplest for now, or rebuild DOM)
+                // Reload to show correct coupon UI state (simplest for now)
                 window.location.reload();
             } else {
                 const msgEl = document.getElementById('coupon-message');
@@ -77,6 +77,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     msgEl.innerText = error || 'Invalid coupon code';
                     msgEl.className = 'mt-2 text-xs font-medium text-red-500 fade-in';
                     msgEl.classList.remove('hidden');
+                } else {
+                    showToast(error || 'Invalid coupon code', true);
                 }
             }
         });
@@ -99,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
             updateTotals(data.totals);
             window.location.reload();
         } else {
+            showToast(error || 'Failed to remove coupon', true);
             btn.disabled = false;
             btn.innerText = 'Remove';
         }
@@ -129,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
             updateCartBadge(data.cartCount);
         } else {
             qtyDisplay.innerText = currentQty;
+            showToast(error || 'Failed to update quantity', true);
         }
     }
 
@@ -151,6 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } else {
             setLoadingState(row, false);
+            showToast(error || 'Failed to remove item', true);
         }
     }
 });

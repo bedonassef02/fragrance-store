@@ -92,18 +92,16 @@
                         <td class="px-8 py-4">{{ $order->created_at->format('M d, Y') }}<br><span class="text-xs opacity-60">{{ $order->created_at->format('h:i A') }}</span></td>
                         <td class="px-8 py-4">
                             @php
-                                $statusStyles = [
-                                    'pending' => 'bg-amber-500/10 text-amber-500 border-amber-500/20',
-                                    'processing' => 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-                                    'shipped' => 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20',
-                                    'delivered' => 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
-                                    'completed' => 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
-                                    'cancelled' => 'bg-rose-500/10 text-rose-500 border-rose-500/20',
+                                $statusColors = [
+                                    'pending' => 'amber',
+                                    'processing' => 'blue',
+                                    'shipped' => 'blue',
+                                    'delivered' => 'emerald',
+                                    'completed' => 'emerald',
+                                    'cancelled' => 'rose',
                                 ];
                             @endphp
-                            <span class="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wide border {{ $statusStyles[$order->status] ?? 'bg-slate-800 text-slate-400 border-slate-700' }}">
-                                {{ $order->status }}
-                            </span>
+                            <x-admin.ui.badge :color="$statusColors[$order->status] ?? 'slate'" :label="$order->status" />
                         </td>
                         <td class="px-8 py-4 text-right font-bold text-white">{{ number_format($order->total_amount) }} LE</td>
                         <td class="px-8 py-4 text-right">

@@ -33,16 +33,8 @@
 
                 <!-- Image -->
                 <div class="col-span-2">
-                    <label class="block text-sm font-medium text-slate-400 mb-2">Cover Image</label>
-                    <input type="file" name="image" class="block w-full text-sm text-slate-400
-                        file:mr-4 file:py-2.5 file:px-4
-                        file:rounded-lg file:border-0
-                        file:text-sm file:font-semibold
-                        file:bg-blue-600/10 file:text-blue-400
-                        hover:file:bg-blue-600/20
-                    " accept="image/*">
+                    <x-admin.ui.file-input name="image" label="Cover Image" />
                     <p class="mt-1 text-xs text-slate-500">Recommended size: 1200x600px</p>
-                    @error('image') <span class="text-red-400 text-xs mt-1">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Layout Class -->

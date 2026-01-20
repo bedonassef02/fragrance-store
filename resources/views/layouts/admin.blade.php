@@ -6,32 +6,8 @@
     <title>@yield('title', 'Dashboard') | MOON Admin</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .sidebar-link {
-            position: relative;
-            transition: all 0.2s ease-in-out;
-        }
-        .sidebar-link.active {
-            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
-            border-left: 3px solid #3b82f6;
-            color: #93c5fd;
-        }
-        .sidebar-link.active svg {
-            color: #60a5fa;
-        }
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-    </style>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('moon-icon.svg') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 </head>
 <body class="bg-[#0f172a] text-slate-300 antialiased min-h-screen flex selection:bg-blue-500 selection:text-white">
 
@@ -39,13 +15,18 @@
     <aside class="fixed inset-y-0 left-0 w-72 bg-[#1e293b]/50 border-r border-[#334155] z-50 flex flex-col backdrop-blur-xl transition-transform duration-300 transform lg:translate-x-0 -translate-x-full" id="sidebar">
         <!-- Logo Area -->
         <div class="h-20 flex items-center px-8 border-b border-[#334155]">
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
-                    M
+            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group w-full">
+                <!-- Moon Icon -->
+                <div class="relative w-8 h-8 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-full h-full text-moon-gold drop-shadow-lg transform -rotate-12 group-hover:rotate-0 transition-transform duration-500">
+                        <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd" />
+                    </svg>
+                    <!-- Glow effect -->
+                    <div class="absolute inset-0 bg-moon-gold/20 blur-md rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
                 <div>
-                    <h1 class="text-white font-bold text-lg tracking-tight group-hover:text-blue-400 transition-colors">MOON</h1>
-                    <span class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Admin Space</span>
+                    <h1 class="text-xl font-serif tracking-[0.2em] font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-moon-gold to-white drop-shadow-sm group-hover:via-moon-gold/80 transition-all">MÒÓN</h1>
+                    <span class="text-[10px] text-slate-500 font-medium uppercase tracking-wider block -mt-1">Admin Space</span>
                 </div>
             </a>
         </div>
@@ -125,7 +106,7 @@
          <!-- Navbar (Mobile) -->
          <header class="h-16 lg:hidden flex items-center justify-between px-4 bg-[#1e293b]/80 border-b border-[#334155] backdrop-blur-md sticky top-0 z-40">
             <div class="font-bold text-white text-lg">MOON</div>
-             <button onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')" class="text-white p-2">
+             <button id="sidebar-toggle-btn" class="text-white p-2">
                  <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
              </button>
          </header>

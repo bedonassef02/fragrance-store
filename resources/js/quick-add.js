@@ -1,8 +1,10 @@
 import { updateCartBadge } from './cart-utils';
 import apiService from './apiService';
+import { showToast, toggleModal, setLoading } from './ui-helpers';
 
 document.addEventListener('DOMContentLoaded', function () {
-    const modal = document.getElementById('quick-add-modal');
+    const modalId = 'quick-add-modal';
+    const modal = document.getElementById(modalId);
     if (!modal) return;
 
     // --- DOM Elements ---
@@ -12,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalPrice = document.getElementById('modal-product-price');
     const confirmBtn = document.getElementById('confirm-add-to-bag');
     const optionsContainer = document.getElementById('modal-options-container');
-    const toast = document.getElementById('toast');
 
     // --- State ---
     let state = {
@@ -26,38 +27,10 @@ document.addEventListener('DOMContentLoaded', function () {
         openModal(title, price) {
             modalTitle.textContent = title;
             modalPrice.textContent = price;
-            modal.classList.remove('hidden');
-            this.showBackdrop();
-            setTimeout(() => modal.classList.add('opacity-100', 'scale-100'), 10);
+            toggleModal(modalId, true);
         },
         closeModal() {
-            modal.classList.remove('opacity-100', 'scale-100');
-            this.hideBackdrop();
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        },
-        showBackdrop() {
-            if (!backdrop) return;
-            backdrop.classList.remove('hidden');
-            setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
-        },
-        hideBackdrop() {
-            if (!backdrop) return;
-            backdrop.classList.add('opacity-0');
-            setTimeout(() => backdrop.classList.add('hidden'), 300);
-        },
-        showToast(message, isError = false) {
-            if (!toast) return;
-            toast.textContent = message;
-            toast.className = `fixed bottom-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 ${isError ? 'bg-red-600' : 'bg-green-600'}`;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        },
-        setLoading(isLoading) {
-            if (!confirmBtn) return;
-            confirmBtn.disabled = isLoading;
-            confirmBtn.innerText = isLoading ? 'Adding...' : 'Add to Bag';
+            toggleModal(modalId, false);
         },
     };
 
@@ -70,8 +43,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    closeModalBtn?.addEventListener('click', ui.closeModal.bind(ui));
-    backdrop?.addEventListener('click', ui.closeModal.bind(ui));
+    closeModalBtn?.addEventListener('click', ui.closeModal);
+    backdrop?.addEventListener('click', ui.closeModal);
     confirmBtn?.addEventListener('click', handleConfirmAddToCart);
 
     // --- Main Logic ---
@@ -81,33 +54,36 @@ document.addEventListener('DOMContentLoaded', function () {
         state.selectedSize = null;
 
         const inStockVariants = state.variants.filter(v => v.qty > 0);
-        
+
         // If there's only one variant total and it's in stock, add it directly without showing the modal.
         if (state.variants.length === 1 && inStockVariants.length === 1) {
             handleDirectAddToCart(inStockVariants[0].id);
             return;
         }
 
-        // --- New Default Selection Logic ---
+        // --- Default Selection Logic ---
         if (inStockVariants.length > 0) {
             const firstAvailable = inStockVariants[0];
             state.selectedColor = firstAvailable.color;
             state.selectedSize = firstAvailable.size;
+        } else if (state.variants.length > 0) {
+            // Fallback for out of stock - select first to show options
+            state.selectedColor = state.variants[0].color;
+            state.selectedSize = state.variants[0].size;
         }
-        // --- End of New Logic ---
 
         ui.openModal(button.dataset.name, button.dataset.price);
         renderOptions();
     }
 
     async function handleDirectAddToCart(variantId) {
-        ui.showToast('Adding to bag...');
+        showToast('Adding to bag...');
         const { success, data, error } = await apiService.addToCart(variantId, 1);
         if (success) {
-            ui.showToast('Item added to bag!');
+            showToast('Item added to bag!');
             updateCartBadge(data.cartCount);
         } else {
-            ui.showToast(error, true);
+            showToast(error, true);
         }
     }
 
@@ -116,11 +92,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const uniqueSizes = [...new Set(state.variants.map(v => v.size).filter(v => v && v !== 'One Size'))];
 
         if (uniqueColors.length > 0 && !state.selectedColor) {
-            ui.showToast('Please select a color.', true);
+            showToast('Please select a color.', true);
             return;
         }
         if (uniqueSizes.length > 0 && !state.selectedSize) {
-            ui.showToast('Please select a size.', true);
+            showToast('Please select a size.', true);
             return;
         }
 
@@ -131,23 +107,28 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         if (!selectedVariant) {
-            ui.showToast('This combination is not available.', true);
+            showToast('This combination is not available.', true);
             return;
         }
 
-        ui.setLoading(true);
+        if (selectedVariant.qty <= 0) {
+            showToast('This item is out of stock.', true);
+            return;
+        }
+
+        setLoading(confirmBtn, true, 'Adding...', 'Add to Bag');
         const { success, data, error } = await apiService.addToCart(selectedVariant.id, 1);
-        ui.setLoading(false);
+        setLoading(confirmBtn, false);
 
         if (success) {
             ui.closeModal();
-            ui.showToast('Item added to bag!');
+            showToast('Item added to bag!');
             updateCartBadge(data.cartCount);
         } else {
-            ui.showToast(error, true);
+            showToast(error, true);
         }
     }
-    
+
     function renderOptions() {
         optionsContainer.innerHTML = '';
         const uniqueColors = [...new Set(state.variants.map(v => v.color).filter(Boolean))];
@@ -160,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
             optionsContainer.appendChild(createSizeButtons(uniqueSizes));
         }
     }
-    
+
     function createColorSwatches(colors) {
         const container = document.createElement('div');
         container.innerHTML = `<p class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Select Color</p>`;
@@ -170,20 +151,26 @@ document.addEventListener('DOMContentLoaded', function () {
         colors.forEach(color => {
             const isOutOfStock = !state.variants.some(v => v.color === color && v.qty > 0);
             const variant = state.variants.find(v => v.color === color);
-            
+
             const btn = document.createElement('button');
             btn.className = 'w-10 h-10 rounded-full border-2 transition-all relative disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105';
             btn.style.backgroundColor = variant?.color_hex || '#000';
             btn.title = color + (isOutOfStock ? ' (Sold Out)' : '');
             btn.dataset.color = color;
+            // Don't disable color buttons completely, just style them? 
+            // Original code disabled them. Let's keep that for now but usually you want to see out of stock colors.
+            // Actually original code: btn.disabled = isOutOfStock; 
+            // I'll keep it.
             btn.disabled = isOutOfStock;
-            
+
             btn.addEventListener('click', () => {
                 state.selectedColor = color;
                 // If the current size is not available with the new color, reset it.
                 const isSizeAvailable = state.variants.some(v => v.color === state.selectedColor && v.size === state.selectedSize && v.qty > 0);
                 if (!isSizeAvailable) {
-                    state.selectedSize = null;
+                    // Try to auto-select first available size
+                    const firstAvailSize = state.variants.find(v => v.color === state.selectedColor && v.qty > 0);
+                    state.selectedSize = firstAvailSize ? firstAvailSize.size : null;
                 }
                 renderOptions();
             });
@@ -203,10 +190,21 @@ document.addEventListener('DOMContentLoaded', function () {
         sizesDiv.className = 'flex flex-wrap gap-2';
 
         sizes.forEach(size => {
-            const isAvailableForColor = !state.selectedColor || state.variants.some(v => v.color === state.selectedColor && v.size === size);
-            const variantForStockCheck = state.variants.find(v => v.size === size && (!state.selectedColor || v.color === state.selectedColor));
-            const isOutOfStock = !variantForStockCheck || variantForStockCheck.qty === 0;
-            const isDisabled = !isAvailableForColor || isOutOfStock;
+            // Check if this size is available for the selected color
+            const isAvailableForColor = !state.selectedColor || state.variants.some(v => v.color === state.selectedColor && v.size === size && v.qty > 0);
+
+            // Check if this size exists at all (global stock check for size?) 
+            // Original Logic: variantForStockCheck = find(v.size == size && (!selectedColor || v.color == selectedColor))
+            // The logic should be: Is there a variant with (Selected Color + This Size) that has Qty > 0?
+            // If no color selected is yet, is there ANY variant with This Size and Qty > 0?
+
+            const variant = state.variants.find(v => v.size === size && (!state.selectedColor || v.color === state.selectedColor));
+            const isOutOfStock = !variant || variant.qty <= 0;
+
+            // If we strictly enforce color selection first, sizes might look disabled until color is picked.
+            // But we auto-select color usually.
+
+            const isDisabled = isOutOfStock;
 
             const btn = document.createElement('button');
             btn.className = 'size-btn w-12 h-12 border text-gray-400 font-bold transition-all rounded-sm relative disabled:opacity-50 disabled:cursor-not-allowed';

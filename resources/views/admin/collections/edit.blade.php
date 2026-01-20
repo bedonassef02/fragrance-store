@@ -34,20 +34,12 @@
 
                 <!-- Image -->
                 <div class="col-span-2">
-                    <label class="block text-sm font-medium text-slate-400 mb-2">Cover Image</label>
                     @if($collection->image)
                         <div class="mb-4">
                             <img src="{{ Str::startsWith($collection->image, ['http','https']) ? $collection->image : asset('storage/' . $collection->image) }}" alt="Current Image" class="h-32 rounded-lg border border-slate-700">
                         </div>
                     @endif
-                    <input type="file" name="image" class="block w-full text-sm text-slate-400
-                        file:mr-4 file:py-2.5 file:px-4
-                        file:rounded-lg file:border-0
-                        file:text-sm file:font-semibold
-                        file:bg-blue-600/10 file:text-blue-400
-                        hover:file:bg-blue-600/20
-                    " accept="image/*">
-                    @error('image') <span class="text-red-400 text-xs mt-1">{{ $message }}</span> @enderror
+                    <x-admin.ui.file-input name="image" label="Cover Image" />
                 </div>
 
                 <!-- Layout Class -->

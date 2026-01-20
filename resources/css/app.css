@@ -44,26 +44,40 @@
 }
 
 /* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 6px;
-}
+.dark ::-webkit-scrollbar-track { background: #0f172a; }
+.dark ::-webkit-scrollbar-thumb { background: #334155; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-::-webkit-scrollbar-track {
-    background: #0f0f0f;
-}
+/* General Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #888; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
 
-::-webkit-scrollbar-thumb {
-    background: #333;
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #c6a87c;
-}
 
 /* Utilities */
 .nav-link {
     position: relative;
+}
+.dark body {
+    font-family: 'Inter', sans-serif;
+}
+.glass-panel {
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.sidebar-link {
+    position: relative;
+    transition: all 0.2s ease-in-out;
+}
+.sidebar-link.active {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
+    border-left: 3px solid #3b82f6;
+    color: #93c5fd;
+}
+.sidebar-link.active svg {
+    color: #60a5fa;
 }
 
 .nav-link::after {
@@ -79,4 +93,15 @@
 
 .nav-link:hover::after {
     width: 100%;
+}
+
+/* Hide number input spinners */
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.no-spinner {
+    -moz-appearance: textfield;
 }

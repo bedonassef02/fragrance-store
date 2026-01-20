@@ -1,5 +1,6 @@
 import { updateCartBadge } from './cart-utils';
 import apiService from './apiService';
+import { showToast, setLoading } from './ui-helpers';
 
 document.addEventListener('DOMContentLoaded', function () {
     const variantsDataEl = document.getElementById('product-variants-data');
@@ -13,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const mainImage = document.getElementById('main-image');
     const galleryThumbs = document.querySelectorAll('.gallery-thumb');
     const qtyInput = document.getElementById('quantity-input');
-    const toast = document.getElementById('toast');
 
     // --- State ---
     let state = {
@@ -57,20 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 galleryThumbs.forEach(t => t.classList.remove('border-moon-gold'));
                 variantImage.classList.add('border-moon-gold');
             }
-        },
-        setLoading(isLoading) {
-            if (!addToBagBtn) return;
-            addToBagBtn.disabled = isLoading;
-            addToBagBtn.innerText = isLoading ? 'Adding...' : 'Add to Bag';
-        },
-        showToast(message, isError = false) {
-            if (!toast) return;
-            toast.textContent = message;
-            toast.className = `fixed bottom-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 ${isError ? 'bg-red-600' : 'bg-green-600'}`;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
         },
         updateAll() {
             this.updateColorSwatches();
@@ -123,28 +109,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
     addToBagBtn?.addEventListener('click', async () => {
         if (!state.selectedVariant) {
-            ui.showToast('Please make a valid selection.', true);
+            showToast('Please make a valid selection.', true);
             return;
         }
         if (state.selectedVariant.qty === 0) {
-            ui.showToast('This item is out of stock.', true);
+            showToast('This item is out of stock.', true);
             return;
         }
 
-        ui.setLoading(true);
+        setLoading(addToBagBtn, true, 'Adding...', 'Add to Bag');
         const quantity = parseInt(qtyInput.value) || 1;
         const { success, data, error } = await apiService.addToCart(state.selectedVariant.id, quantity);
-        ui.setLoading(false);
+        setLoading(addToBagBtn, false);
 
         if (success) {
-            ui.showToast('Item added to bag!');
+            showToast('Item added to bag!');
             updateCartBadge(data.cartCount);
         } else {
-            ui.showToast(error, true);
+            showToast(error, true);
         }
     });
 
-    // --- New/Restored Gallery & Zoom Logic ---
+    // --- Gallery & Zoom Logic ---
     const qtyMinus = document.getElementById('qty-minus');
     const qtyPlus = document.getElementById('qty-plus');
     const zoomModal = document.getElementById('zoom-modal');
@@ -195,8 +181,6 @@ document.addEventListener('DOMContentLoaded', function () {
             zoomModal.classList.remove('flex');
         }, 300);
     });
-    // --- End of New/Restored Logic ---
-
 
     // --- Initialization ---
     function initialize() {

@@ -32,35 +32,30 @@
                     <!-- Contact -->
                     <div class="space-y-4 mb-10">
                         <h2 class="text-xl font-serif text-white mb-4 border-b border-gray-800 pb-2">Contact Information</h2>
-                        <input type="email" name="email" placeholder="Email Address" required 
-                               class="w-full bg-gray-900 border border-gray-700 text-white p-4 focus:border-moon-gold focus:ring-0 outline-none transition-colors rounded-sm placeholder-gray-500"
-                               value="{{ old('email', auth()->check() ? auth()->user()->email : '') }}">
+                        <x-forms.text-input type="email" name="email" placeholder="Email Address" required 
+                               value="{{ old('email', auth()->check() ? auth()->user()->email : '') }}" />
                     </div>
 
                     <!-- Shipping -->
                     <div class="space-y-4 mb-10">
                         <h2 class="text-xl font-serif text-white mb-4 border-b border-gray-800 pb-2">Shipping Address</h2>
                         <div class="grid grid-cols-2 gap-4">
-                            <input type="text" name="first_name" placeholder="First Name" required 
-                                   class="w-full bg-gray-900 border border-gray-700 text-white p-4 focus:border-moon-gold focus:ring-0 outline-none transition-colors rounded-sm placeholder-gray-500"
-                                   value="{{ old('first_name', auth()->check() ? explode(' ', auth()->user()->name)[0] : '') }}">
-                            <input type="text" name="last_name" placeholder="Last Name" required 
-                                   class="w-full bg-gray-900 border border-gray-700 text-white p-4 focus:border-moon-gold focus:ring-0 outline-none transition-colors rounded-sm placeholder-gray-500"
-                                   value="{{ old('last_name') }}">
+                            <x-forms.text-input name="first_name" placeholder="First Name" required 
+                                   value="{{ old('first_name', auth()->check() ? explode(' ', auth()->user()->name)[0] : '') }}" />
+                            <x-forms.text-input name="last_name" placeholder="Last Name" required 
+                                   value="{{ old('last_name') }}" />
                         </div>
-                        <input type="text" name="address" placeholder="Address" required 
-                               class="w-full bg-gray-900 border border-gray-700 text-white p-4 focus:border-moon-gold focus:ring-0 outline-none transition-colors rounded-sm placeholder-gray-500"
-                               value="{{ old('address') }}">
+                        <x-forms.text-input name="address" placeholder="Address" required 
+                               value="{{ old('address') }}" />
                         <div class="grid grid-cols-2 gap-4">
-                            <input type="text" name="city" placeholder="City" required 
-                                   class="w-full bg-gray-900 border border-gray-700 text-white p-4 focus:border-moon-gold focus:ring-0 outline-none transition-colors rounded-sm placeholder-gray-500"
-                                   value="{{ old('city') }}">
+                            <x-forms.text-input name="city" placeholder="City" required 
+                                   value="{{ old('city') }}" />
                             <div class="relative">
                                 <span class="absolute left-4 top-4 text-gray-500 select-none border-r border-gray-700 pr-3">+20</span>
-                                <input type="text" name="phone" placeholder="01xxxxxxxxx" required 
-                                       class="w-full bg-gray-900 border border-gray-700 text-white p-4 pl-20 focus:border-moon-gold focus:ring-0 outline-none transition-colors rounded-sm placeholder-gray-600"
+                                <x-forms.text-input name="phone" placeholder="01xxxxxxxxx" required 
+                                       class="pl-20"
                                        value="{{ old('phone') }}"
-                                       maxlength="11">
+                                       maxlength="11" />
                             </div>
                         </div>
                     </div>

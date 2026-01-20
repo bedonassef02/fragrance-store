@@ -1,3 +1,5 @@
+import { toggleBackdrop } from './ui-helpers';
+
 document.addEventListener('DOMContentLoaded', function () {
     const filterToggle = document.getElementById('filter-toggle');
     const filterClose = document.getElementById('filter-close');
@@ -9,32 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function openFilters() {
         sidebar.classList.remove('-translate-x-full');
-        showBackdrop();
-        document.body.style.overflow = 'hidden';
+        toggleBackdrop(true);
     }
 
     function closeFilters() {
         sidebar.classList.add('-translate-x-full');
-        hideBackdrop();
-        document.body.style.overflow = '';
-    }
-
-    function showBackdrop() {
-        if (backdrop) {
-            backdrop.classList.remove('hidden');
-            setTimeout(() => {
-                backdrop.classList.remove('opacity-0');
-            }, 10);
-        }
-    }
-
-    function hideBackdrop() {
-        if (backdrop) {
-            backdrop.classList.add('opacity-0');
-            setTimeout(() => {
-                backdrop.classList.add('hidden');
-            }, 300);
-        }
+        toggleBackdrop(false);
     }
 
     filterToggle.addEventListener('click', openFilters);
