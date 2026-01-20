@@ -3,20 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Services\CartService;
+use App\Services\OrderService;
+use App\Http\Requests\StoreOrderRequest;
 use Illuminate\Http\Request;
-use App\Models\Order;
-use App\Models\OrderItem;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
     protected $cartService;
+    protected $orderService;
 
-    public function __construct(CartService $cartService)
+    public function __construct(CartService $cartService, OrderService $orderService)
     {
         $this->cartService = $cartService;
+        $this->orderService = $orderService;
     }
 
     public function index()
@@ -34,72 +33,14 @@ class CheckoutController extends Controller
         return view('checkout.index', compact('cart', 'subtotal', 'shipping', 'discount', 'total'));
     }
 
-    public function store(Request $request)
+    public function store(StoreOrderRequest $request)
     {
-        $request->validate([
-            'email'      => 'required|email',
-            'first_name' => 'required|string|max:255',
-            'last_name'  => 'required|string|max:255',
-            'address'    => 'required|string|max:255',
-            'city'       => 'required|string|max:255',
-            'phone'      => 'required|string|max:20',
-        ]);
-
-        $cart = $this->cartService->getCart();
-
-        if (empty($cart)) {
-            return redirect()->route('cart')->with('error', 'Your cart is empty');
-        }
-
-        $total = $this->cartService->getTotal();
-        $discount = $this->cartService->getDiscount();
-        $couponCode = session('coupon.code');
-
-        DB::beginTransaction();
-
         try {
-            $order = Order::create([
-                'order_number'   => 'ORD-' . strtoupper(uniqid()),
-                'user_id'        => Auth::id(), // Nullable
-                'email'          => $request->email,
-                'first_name'     => $request->first_name,
-                'last_name'      => $request->last_name,
-                'address'        => $request->address,
-                'city'           => $request->city,
-                'phone'          => $request->phone,
-                'total_amount'   => $total,
-                'discount_amount'=> $discount,
-                'coupon_code'    => $couponCode,
-                'payment_method' => 'cod',
-                'status'         => 'pending',
-            ]);
-
-            foreach ($cart as $item) {
-                OrderItem::create([
-                    'order_id'   => $order->id,
-                    'product_id' => $item['product_id'],
-                    'size'       => $item['size'],
-                    'color'      => $item['color'] ?? null,
-                    'quantity'   => $item['quantity'],
-                    'price'      => $item['price'],
-                ]);
-            }
-
-            // Coupon Usage Increment
-            if ($couponCode) {
-                \App\Models\Coupon::where('code', $couponCode)->increment('used_count');
-            }
-
-            DB::commit();
-
-            // Clear Cart and Coupon
-            session()->forget(['cart', 'coupon']);
-
+            $order = $this->orderService->createOrder($request->validated());
             return redirect()->route('checkout.success', $order->order_number);
 
         } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Order processing failed. Please try again. ' . $e->getMessage());
+            return back()->with('error', 'Order processing failed: ' . $e->getMessage())->withInput();
         }
     }
 

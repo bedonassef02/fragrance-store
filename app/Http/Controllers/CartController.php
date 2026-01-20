@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 use App\Models\Coupon;
+use App\Http\Requests\AddToCartRequest;
 
 class CartController extends Controller
 {
@@ -26,134 +27,28 @@ class CartController extends Controller
         return view('cart.index', compact('cartItems', 'subtotal', 'shipping', 'discount', 'total'));
     }
 
-    public function add(Request $request)
+    public function add(AddToCartRequest $request)
     {
-        $request->validate([
-            'product_id' => 'required|integer',
-            'product_title' => 'nullable|string', 
-            'size' => 'nullable|string',
-            'color' => 'nullable|string',
-            'quantity' => 'nullable|integer|min:1'
-        ]);
-
-        $productId = $request->product_id;
-        $size = $request->size;
-        $colorName = $request->input('color');
-        $quantity = $request->quantity ?? 1;
-
-        // Lookup Product (DB)
-        $product = \App\Models\Product::find($productId);
-
-        if (!$product) {
-            return response()->json(['error' => 'Product not found'], 404);
-        }
-
-        // Validate Variant Logic
-        $color = null;
-        if ($colorName) {
-            $color = \App\Models\Color::where('name', $colorName)->first();
+        $result = $this->cartService->addToCart($request->validated());
+        
+        if ($result['success']) {
+            return response()->json([
+                'success' => true,
+                'message' => $result['message'],
+                'cartCount' => $result['cartCount']
+            ]);
         }
         
-        $variantQuery = \App\Models\ProductVariant::where('product_id', $product->id);
-
-        // If Size is provided, filter by it.
-        if ($size) {
-            $variantQuery->where('size', $size);
-        }
-        
-        if ($color) {
-            $variantQuery->where('color_id', $color->id);
-        }
-
-        $variant = $variantQuery->first();
-
-        // Strict Validation: If user selected options, we must match a variant.
-        // If no options selected, checks if product REQUIRES options.
-        
-        $allVariants = $product->variants;
-        $hasColors = $allVariants->whereNotNull('color_id')->count() > 0;
-        $hasSizes = $allVariants->where('size', '!=', 'One Size')->count() > 0;
-
-        if (!$variant) {
-            // Case 1: User requested specific options but they don't exist
-            if ($size || $color) {
-                 return response()->json(['error' => 'Selected combination is unavailable.'], 400);
-            }
-
-            // Case 2: User sent NOTHING, but product HAS options
-            if ($hasColors || $hasSizes) {
-                return response()->json(['error' => 'Please select options.'], 400);
-            }
-
-            // Case 3: Simple Product (No specific variants or just 'One Size' default)
-            $variant = $allVariants->first();
-            if (!$variant) {
-                 // Should not happen if seeded correctly, but fallback
-                 // Create dummy or error?
-                 // Error implies data issue.
-                 return response()->json(['error' => 'Product unavailable.'], 400);
-            }
-            // Auto-fill defaults
-            $size = $variant->size;
-        }
-
-        // Stock Check (Optional strictness, warn user)
-        if ($variant && $variant->quantity < $quantity) {
-             return response()->json(['error' => "Only {$variant->quantity} items left in stock for this selection."], 400);
-        }
-
-        $cart = session()->get('cart', []);
-        
-        // Unique Key: ID-Color-Size
-        $key = $productId . '-' . ($colorName ? \Illuminate\Support\Str::slug($colorName) . '-' : '') . $size;
-
-        // Determine Image
-        $image = $product->image;
-        if ($color) {
-            $colorImage = $product->images()->where('color_id', $color->id)->first();
-            if ($colorImage) {
-                $image = $colorImage->image_path;
-            }
-        }
-
-        if (isset($cart[$key])) {
-            $cart[$key]['quantity'] += $quantity;
-        } else {
-            $cart[$key] = [
-                'key' => $key,
-                'product_id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'image' => $image,
-                'size' => $size,
-                'color' => $colorName, // Store Name
-                'quantity' => $quantity
-            ];
-        }
-
-        session()->put('cart', $cart);
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Item added to bag',
-            'cartCount' => count($cart)
-        ]);
+        return response()->json(['error' => $result['message']], $result['status'] ?? 400);
     }
 
     public function update(Request $request)
     {
         if ($request->id && $request->quantity) {
-            $cart = session()->get('cart');
-            if (isset($cart[$request->id])) {
-                $cart[$request->id]['quantity'] = $request->quantity;
-                session()->put('cart', $cart);
-                
-                return response()->json([
-                    'success' => true, 
-                    'subtotal' => number_format($this->cartService->getSubtotal()),
-                    'discount' => number_format($this->cartService->getDiscount()),
-                    'total' => number_format($this->cartService->getTotal())
-                ]);
+            $result = $this->cartService->updateQuantity($request->id, $request->quantity);
+            
+            if ($result['success']) {
+                return response()->json($result);
             }
         }
         return response()->json(['success' => false], 400);
@@ -162,11 +57,7 @@ class CartController extends Controller
     public function remove(Request $request)
     {
         if ($request->id) {
-            $cart = session()->get('cart');
-            if (isset($cart[$request->id])) {
-                unset($cart[$request->id]);
-                session()->put('cart', $cart);
-            }
+            $this->cartService->removeItem($request->id);
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false], 400);
@@ -174,30 +65,18 @@ class CartController extends Controller
 
     public function applyCoupon(Request $request)
     {
-        $code = $request->input('code');
-        $coupon = Coupon::where('code', $code)->first();
+        $result = $this->cartService->applyCoupon($request->input('code'));
 
-        if (!$coupon || !$coupon->isValid()) {
-             return back()->with('error', 'Invalid or expired coupon.');
+        if ($result['success']) {
+            return back()->with('success', $result['message']);
         }
 
-        if ($coupon->min_order_amount && $this->cartService->getSubtotal() < $coupon->min_order_amount) {
-             return back()->with('error', 'Order amount must be at least ' . number_format($coupon->min_order_amount));
-        }
-
-        session()->put('coupon', [
-            'code' => $coupon->code,
-            'type' => $coupon->type,
-            'value' => $coupon->value,
-            'max_discount_amount' => $coupon->max_discount_amount
-        ]);
-
-        return back()->with('success', 'Coupon applied successfully!');
+        return back()->with('error', $result['message']);
     }
 
     public function removeCoupon()
     {
-        session()->forget('coupon');
-        return back()->with('success', 'Coupon removed.');
+        $result = $this->cartService->removeCoupon();
+        return back()->with('success', $result['message']);
     }
 }
