@@ -27,6 +27,7 @@
     <div id="backdrop" class="fixed inset-0 bg-black/80 z-40 hidden backdrop-blur-sm transition-opacity opacity-0"></div>
     <x-quick-add-modal />
     <x-size-guide-modal />
+    <x-whatsapp-button />
     
     @stack('scripts')
 </body>

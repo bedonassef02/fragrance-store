@@ -14,5 +14,6 @@ class SettingSeeder extends Seeder
     {
         \App\Models\Setting::setValue('free_shipping_threshold', 2000);
         \App\Models\Setting::setValue('home_hero_image', 'images/hero_generated.png');
+        \App\Models\Setting::setValue('whatsapp_number', '201xxxxxxxxx'); // Placeholder
     }
 }

@@ -1,5 +1,6 @@
 @props([
     'subtotal',
+    'originalSubtotal' => 0,
     'shipping',
     'discount' => 0,
     'total',
@@ -12,6 +13,17 @@
     <h3 class="text-white font-serif text-xl mb-6">Order Summary</h3>
     
     <div class="space-y-4 mb-8 text-sm text-gray-400">
+        @if($originalSubtotal > $subtotal)
+        <div class="flex justify-between">
+            <span>Value of Items</span>
+            <span class="text-gray-500 line-through">{{ number_format($originalSubtotal) }} LE</span>
+        </div>
+        <div class="flex justify-between text-moon-gold">
+            <span>Product Discounts</span>
+            <span>-{{ number_format($originalSubtotal - $subtotal) }} LE</span>
+        </div>
+        @endif
+
         <div class="flex justify-between">
             <span>Subtotal</span>
             <span class="text-white" id="cart-subtotal">{{ number_format($subtotal) }} LE</span>
@@ -25,8 +37,8 @@
         @endif
         
         @if(isset($discount) && $discount > 0)
-        <div class="flex justify-between text-moon-gold">
-            <span>Discount</span>
+        <div class="flex justify-between text-green-400">
+            <span>Coupon Discount</span>
             <span id="cart-discount">-{{ number_format($discount) }} LE</span>
         </div>
         @endif

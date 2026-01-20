@@ -111,6 +111,7 @@ class CartService
                 'name'       => $variant->product->name,
                 'slug'       => $variant->product->slug,
                 'price'      => $variant->product->price,
+                'original_price' => $variant->product->original_price, // Added field
                 'image'      => $image,
                 'size'       => $variant->size,
                 'color'      => $variant->color?->name,
@@ -121,6 +122,11 @@ class CartService
         Session::put(self::SESSION_KEY, $cart);
         
         return ['success' => true, 'message' => 'Item added to bag', 'cartCount' => count($cart)];
+    }
+
+    public function getOriginalSubtotal(): float
+    {
+        return collect($this->getCart())->sum(fn($item) => ($item['original_price'] ?? $item['price']) * $item['quantity']);
     }
 
     public function updateQuantity(string $variantId, int $quantity)

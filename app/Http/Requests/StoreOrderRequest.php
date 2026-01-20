@@ -27,7 +27,7 @@ class StoreOrderRequest extends FormRequest
             'last_name'  => ['required', 'string', 'max:255', 'regex:/^[\pL\s\-]+$/u'],
             'address'    => 'required|string|max:255',
             'city'       => ['required', 'string', 'max:255', 'regex:/^[\pL\s\-]+$/u'],
-            'phone'      => ['required', 'string', 'regex:/^01[0-2,5]{1}[0-9]{8}$/'],
+            'phone'      => ['required', 'string', 'regex:/^01[0125][0-9]{8}$/'],
         ];
     }
 }

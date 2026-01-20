@@ -23,6 +23,9 @@
                                         <h3 class="text-white font-serif text-lg hover:text-moon-gold transition-colors">{{ $item['name'] }}</h3>
                                     </a>
                                     <span class="text-moon-gold font-bold">{{ number_format($item['price']) }} LE</span>
+                                    @if(isset($item['original_price']) && $item['original_price'] > $item['price'])
+                                        <span class="text-gray-500 line-through text-sm ml-2">{{ number_format($item['original_price']) }} LE</span>
+                                    @endif
                                 </div>
                                 <p class="text-gray-500 text-sm mt-1">
                                     Size: {{ $item['size'] }} 
@@ -54,6 +57,7 @@
                 <div class="lg:col-span-1">
                     <x-order-summary 
                         :subtotal="$subtotal" 
+                        :originalSubtotal="$originalSubtotal ?? 0"
                         :shipping="$shipping"
                         :discount="$discount"
                         :total="$total"

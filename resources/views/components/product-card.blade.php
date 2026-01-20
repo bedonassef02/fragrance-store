@@ -8,8 +8,10 @@
                  class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="{{ $product['name'] }}">
         </a>
         
-        @if(isset($product['badge']) && $product['badge'])
-        <span class="absolute top-4 left-4 {{ $product['badge_color'] ?? 'bg-moon-gold' }} text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">{{ $product['badge'] }}</span>
+        @if($product->isOutOfStock())
+            <span class="absolute top-4 left-4 bg-gray-500 text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">Sold Out</span>
+        @elseif(isset($product['badge']) && $product['badge'])
+            <span class="absolute top-4 left-4 {{ $product['badge_color'] ?? 'bg-moon-gold' }} text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">{{ $product['badge'] }}</span>
         @endif
 
         @php
@@ -25,6 +27,7 @@
             ]);
         @endphp
 
+        @if(!$product->isOutOfStock())
         <button 
             data-id="{{ $product['id'] }}" 
             data-name="{{ $product['name'] }}"
@@ -33,6 +36,11 @@
             class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-0 opacity-100 md:opacity-0 md:translate-y-full md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-300 hover:bg-white border-t border-moon-dark/10">
             Add to Bag
         </button>
+        @else
+        <button disabled class="absolute bottom-0 w-full bg-gray-800 text-gray-400 py-4 font-bold uppercase text-xs tracking-widest cursor-not-allowed border-t border-white/5">
+            Sold Out
+        </button>
+        @endif
     </div>
     <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
         <a href="{{ route('product.show', $product['slug']) }}" class="block">

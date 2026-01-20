@@ -23,8 +23,21 @@
             <div class="lg:col-span-2 space-y-8">
                 <div class="bg-gray-800/20 border border-gray-800 p-8 rounded-sm">
                     <h2 class="text-xl font-serif text-white mb-6 border-b border-gray-700 pb-4">Items</h2>
-                    <div class="space-y-6">
+                     <div class="space-y-6">
+                        @php
+                            $orderOriginalSubtotal = 0;
+                        @endphp
                         @foreach($order->items as $item)
+                        @php
+                             // Try to get original price from current product state
+                             $currentOriginalPrice = $item->variant?->product?->original_price;
+                             $hasDiscount = $currentOriginalPrice && $currentOriginalPrice > $item->unit_price;
+                             if($hasDiscount) {
+                                $orderOriginalSubtotal += $currentOriginalPrice * $item->quantity;
+                             } else {
+                                $orderOriginalSubtotal += $item->unit_price * $item->quantity;
+                             }
+                        @endphp
                         <div class="flex gap-6 items-center">
                              <div class="w-20 h-24 bg-gray-700 flex-shrink-0 overflow-hidden border border-gray-700">
                                  @php
@@ -43,7 +56,11 @@
                              </div>
                              <div class="text-right">
                                  <p class="text-moon-gold">{{ number_format($item->total) }} LE</p>
-                                 <p class="text-xs text-gray-500">{{ number_format($item->unit_price) }} LE / unit</p>
+                                 @if($hasDiscount)
+                                     <p class="text-xs text-gray-500 line-through">{{ number_format($currentOriginalPrice) }} LE</p>
+                                 @else
+                                     <p class="text-xs text-gray-500">{{ number_format($item->unit_price) }} LE / unit</p>
+                                 @endif
                              </div>
                         </div>
                         @endforeach
@@ -57,17 +74,33 @@
                 <div class="bg-gray-800/20 border border-gray-800 p-8 rounded-sm">
                     <h2 class="text-xl font-serif text-white mb-6 border-b border-gray-700 pb-4">Summary</h2>
                      <div class="space-y-3 text-sm text-gray-400">
+                        @php
+                            $actualSubtotal = $order->subtotal > 0 ? $order->subtotal : $order->items->sum('total');
+                            $calculatedShipping = $order->total_amount - ($actualSubtotal - $order->discount_amount);
+                        @endphp
+
+                        @if($orderOriginalSubtotal > $actualSubtotal)
+                        <div class="flex justify-between">
+                            <span>Value of Items</span>
+                            <span class="text-gray-500 line-through">{{ number_format($orderOriginalSubtotal) }} LE</span>
+                        </div>
+                        <div class="flex justify-between text-moon-gold">
+                            <span>Product Discounts</span>
+                            <span>-{{ number_format($orderOriginalSubtotal - $actualSubtotal) }} LE</span>
+                        </div>
+                        @endif
+
                          <div class="flex justify-between">
                             <span>Subtotal</span>
-                            <span>{{ number_format($order->subtotal) }} LE</span>
+                            <span>{{ number_format($actualSubtotal) }} LE</span>
                         </div>
                          <div class="flex justify-between">
                             <span>Shipping</span>
-                            <span>{{ ($order->total_amount - $order->subtotal + $order->discount_amount) > 0 ? number_format($order->total_amount - $order->subtotal + $order->discount_amount) . ' LE' : 'Free' }}</span>
+                            <span>{{ $calculatedShipping > 0 ? number_format($calculatedShipping) . ' LE' : 'Free' }}</span>
                         </div>
                         @if($order->discount_amount > 0)
-                        <div class="flex justify-between text-moon-gold">
-                            <span>Discount <small class="text-gray-500">({{ $order->coupon_code }})</small></span>
+                        <div class="flex justify-between text-green-400">
+                            <span>Coupon Discount <small class="text-gray-500">({{ $order->coupon_code }})</small></span>
                             <span>-{{ number_format($order->discount_amount) }} LE</span>
                         </div>
                         @endif

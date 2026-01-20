@@ -43,4 +43,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
+
+    public function isOutOfStock()
+    {
+        return $this->variants->sum('quantity') <= 0;
+    }
 }

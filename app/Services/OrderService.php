@@ -56,6 +56,7 @@ class OrderService
                 'city'            => $data['city'],
                 'phone'           => $data['phone'],
                 'total_amount'    => $this->cartService->getTotal(),
+                'subtotal'        => $this->cartService->getSubtotal(),
                 'discount_amount' => $this->cartService->getDiscount(),
                 'coupon_code'     => $this->cartService->getCoupon()['code'] ?? null,
                 'payment_method'  => 'cod',
