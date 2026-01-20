@@ -10,16 +10,18 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 cart-container">
                 <!-- Cart Items -->
                 <div class="lg:col-span-2 space-y-8" id="cart-items">
-                    @forelse($cartItems as $item)
+                    @forelse($cartItems as $variantId => $item)
                     <!-- Item -->
-                    <div class="cart-item-row flex gap-6 border-b border-gray-800 pb-8" id="row-{{ $item['variant_id'] }}">
-                        <div class="w-32 h-40 bg-gray-800 flex-shrink-0">
+                    <div class="cart-item-row flex gap-6 border-b border-gray-800 pb-8" id="row-{{ $variantId }}">
+                        <a href="{{ route('product.show', $item['slug']) }}" class="w-32 h-40 bg-gray-800 flex-shrink-0 block">
                             <img src="{{ $item['image'] }}" class="w-full h-full object-cover">
-                        </div>
+                        </a>
                         <div class="flex-1 flex flex-col justify-between">
                             <div>
                                 <div class="flex justify-between items-start">
-                                    <h3 class="text-white font-serif text-lg">{{ $item['name'] }}</h3>
+                                    <a href="{{ route('product.show', $item['slug']) }}">
+                                        <h3 class="text-white font-serif text-lg hover:text-moon-gold transition-colors">{{ $item['name'] }}</h3>
+                                    </a>
                                     <span class="text-moon-gold font-bold">{{ number_format($item['price']) }} LE</span>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-1">
@@ -32,11 +34,11 @@
                             
                             <div class="flex justify-between items-center">
                                 <div class="flex items-center border border-gray-700">
-                                    <button class="cart-qty-btn px-3 py-1 text-gray-400 hover:text-white" data-action="decrease" data-id="{{ $item['variant_id'] }}">-</button>
-                                    <span class="cart-qty-display px-2 text-white text-sm" id="qty-{{ $item['variant_id'] }}">{{ $item['quantity'] }}</span>
-                                    <button class="cart-qty-btn px-3 py-1 text-gray-400 hover:text-white" data-action="increase" data-id="{{ $item['variant_id'] }}">+</button>
+                                    <button class="cart-qty-btn px-3 py-1 text-gray-400 hover:text-white" data-action="decrease" data-id="{{ $variantId }}">-</button>
+                                    <span class="cart-qty-display px-2 text-white text-sm" id="qty-{{ $variantId }}">{{ $item['quantity'] }}</span>
+                                    <button class="cart-qty-btn px-3 py-1 text-gray-400 hover:text-white" data-action="increase" data-id="{{ $variantId }}">+</button>
                                 </div>
-                                <button class="cart-remove-btn text-gray-500 text-xs uppercase tracking-widest hover:text-red-500 transition-colors" data-id="{{ $item['variant_id'] }}">Remove</button>
+                                <button class="cart-remove-btn text-gray-500 text-xs uppercase tracking-widest hover:text-red-500 transition-colors" data-id="{{ $variantId }}">Remove</button>
                             </div>
                         </div>
                     </div>
@@ -50,60 +52,15 @@
 
                 <!-- Order Summary -->
                 <div class="lg:col-span-1">
-                    <div class="bg-white/5 p-8 border border-white/10 sticky top-32">
-                        <h3 class="text-white font-serif text-xl mb-6">Order Summary</h3>
-                        
-                        <div class="space-y-4 mb-8 text-sm text-gray-400">
-                            <div class="flex justify-between">
-                                <span>Subtotal</span>
-                                <span class="text-white" id="cart-subtotal">{{ number_format($subtotal) }} LE</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>Shipping</span>
-                                <span class="text-white">{{ $shipping > 0 ? number_format($shipping) . ' LE' : 'Free' }}</span>
-                            </div>
-                            @if($shipping > 0)
-                                @php $threshold = \App\Models\Setting::getValue('free_shipping_threshold', 2000); @endphp
-                                @if($subtotal < $threshold)
-                                <p class="text-xs text-gray-500 mt-1">Spend <span class="text-moon-gold">{{ number_format($threshold - $subtotal) }} LE</span> more for free shipping</p>
-                                @endif
-                            @endif
-                            <!-- Discount functionality -->
-                            @if(isset($discount) && $discount > 0)
-                            <div class="flex justify-between text-moon-gold">
-                                <span>Discount</span>
-                                <span id="cart-discount">-{{ number_format($discount) }} LE</span>
-                            </div>
-                            @endif
-                        </div>
-                        
-                        <!-- Coupon Input -->
-                        <div class="mb-6 pt-4 border-t border-gray-800">
-                             @if(session('coupon'))
-                                <div class="flex justify-between items-center bg-green-900/30 border border-green-800 p-3 rounded">
-                                    <span class="text-green-400 text-sm font-mono">{{ session('coupon.code') }}</span>
-                                    <form action="{{ route('cart.coupon.remove') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="text-gray-400 hover:text-white text-xs uppercase tracking-wider">Remove</button>
-                                    </form>
-                                </div>
-                            @else
-                                <form action="{{ route('cart.coupon.apply') }}" method="POST" class="flex gap-2">
-                                    @csrf
-                                    <input type="text" name="code" placeholder="Promo Code" class="flex-1 bg-black/50 border border-gray-700 px-4 py-3 text-sm text-white focus:border-moon-gold outline-none transition-colors">
-                                    <button type="submit" class="bg-gray-800 border border-gray-700 text-white px-6 py-3 text-xs uppercase tracking-widest hover:bg-gray-700 hover:border-gray-600 transition-colors">Apply</button>
-                                </form>
-                            @endif
-                        </div>
-
-                        <div class="border-t border-gray-700 pt-6 mb-8">
-                            <div class="flex justify-between items-end">
-                                <span class="text-white font-serif text-lg">Total</span>
-                                <span class="text-2xl font-bold text-white" id="cart-total">{{ number_format($total) }} LE</span>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-2 text-right">Including VAT</p>
-                        </div>
-
+                    <x-order-summary 
+                        :subtotal="$subtotal" 
+                        :shipping="$shipping"
+                        :discount="$discount"
+                        :total="$total"
+                        :threshold="$shippingThreshold"
+                        :coupon="session('coupon')"
+                        :showCouponForm="true"
+                    >
                         <a href="{{ route('checkout.index') }}" class="block text-center w-full bg-moon-gold text-moon-dark font-bold uppercase tracking-widest py-4 hover:bg-white transition-colors mb-4">
                             Proceed to Checkout
                         </a>
@@ -111,6 +68,6 @@
                         <a href="{{ route('shop') }}" class="block text-center text-gray-400 text-xs uppercase tracking-widest hover:text-moon-gold transition-colors">
                             Continue Shopping
                         </a>
-                    </div>
+                    </x-order-summary>
                 </div>
 @endsection

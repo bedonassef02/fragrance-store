@@ -1,320 +1,195 @@
 import { updateCartBadge } from './cart-utils';
+import apiService from './apiService';
 
 document.addEventListener('DOMContentLoaded', function () {
-    const sizeContainer = document.getElementById('size-container');
-    const qtyInput = document.getElementById('quantity-input');
-    const qtyMinus = document.getElementById('qty-minus');
-    const qtyPlus = document.getElementById('qty-plus');
-    const addToBagBtn = document.getElementById('add-to-bag-btn');
-
-    // Variant Logic
     const variantsDataEl = document.getElementById('product-variants-data');
-    const variants = variantsDataEl ? JSON.parse(variantsDataEl.dataset.variants || '[]') : [];
+    if (!variantsDataEl) return;
 
-    // Color Logic
-    const colorBtns = document.querySelectorAll('.color-btn');
+    // --- DOM Elements ---
+    const colorSwatches = document.querySelectorAll('.color-btn');
+    const sizeContainer = document.getElementById('size-container');
+    const addToBagBtn = document.getElementById('add-to-bag-btn');
     const colorNameDisplay = document.getElementById('selected-color-name');
-    let selectedColor = null;
+    const mainImage = document.getElementById('main-image');
+    const galleryThumbs = document.querySelectorAll('.gallery-thumb');
+    const qtyInput = document.getElementById('quantity-input');
+    const toast = document.getElementById('toast');
 
-    let selectedSize = null;
-    const hiddenSize = document.getElementById('selected-size');
-    if (hiddenSize) selectedSize = hiddenSize.value;
+    // --- State ---
+    let state = {
+        variants: JSON.parse(variantsDataEl.dataset.variants || '[]'),
+        selectedColor: null,
+        selectedSize: null,
+        selectedVariant: null,
+    };
 
-    // Initial Selection (First IN-STOCK color)
-    if (colorBtns.length > 0) {
-        // Find first color that has qty > 0
-        let defaultColor = colorBtns[0].dataset.color;
+    // --- UI Functions ---
+    const ui = {
+        updateColorSwatches() {
+            colorSwatches.forEach(btn => {
+                const isSelected = btn.dataset.color === state.selectedColor;
+                btn.classList.toggle('border-moon-gold', isSelected);
+                btn.classList.toggle('border-transparent', !isSelected);
+            });
+            if (colorNameDisplay) colorNameDisplay.textContent = state.selectedColor;
+        },
+        updateSizeButtons() {
+            const sizeBtns = sizeContainer.querySelectorAll('.product-size-btn');
+            sizeBtns.forEach(btn => {
+                const size = btn.dataset.size;
+                const variant = state.variants.find(v => v.size === size && v.color === state.selectedColor);
+                const isOutOfStock = !variant || variant.qty === 0;
 
-        // Find first color in variants with qty > 0
-        // We need reference to unique colors order? Or just any in-stock?
-        // Let's iterate colorBtns to respect display order.
-        for (let btn of colorBtns) {
-            const c = btn.dataset.color;
-            const hasStock = variants.some(v => v.color === c && v.qty > 0);
-            if (hasStock) {
-                defaultColor = c;
-                break;
+                btn.disabled = isOutOfStock;
+                btn.classList.toggle('opacity-50', isOutOfStock);
+                btn.classList.toggle('cursor-not-allowed', isOutOfStock);
+                
+                const isSelected = size === state.selectedSize;
+                btn.classList.toggle('bg-moon-gold', isSelected && !isOutOfStock);
+                btn.classList.toggle('text-moon-dark', isSelected && !isOutOfStock);
+            });
+        },
+        updateMainImage() {
+            if (!mainImage) return;
+            const variantImage = galleryThumbs.length > 0 && Array.from(galleryThumbs).find(thumb => thumb.dataset.color === state.selectedColor);
+            if (variantImage) {
+                mainImage.src = variantImage.src;
+                galleryThumbs.forEach(t => t.classList.remove('border-moon-gold'));
+                variantImage.classList.add('border-moon-gold');
             }
+        },
+        setLoading(isLoading) {
+            if (!addToBagBtn) return;
+            addToBagBtn.disabled = isLoading;
+            addToBagBtn.innerText = isLoading ? 'Adding...' : 'Add to Bag';
+        },
+        showToast(message, isError = false) {
+            if (!toast) return;
+            toast.textContent = message;
+            toast.className = `fixed bottom-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 ${isError ? 'bg-red-600' : 'bg-green-600'}`;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        },
+        updateAll() {
+            this.updateColorSwatches();
+            this.updateSizeButtons();
+            this.updateMainImage();
+            // Find and set the currently selected variant object
+            state.selectedVariant = state.variants.find(v => v.color === state.selectedColor && v.size === state.selectedSize) || null;
         }
+    };
 
-        selectedColor = defaultColor;
-        updateUI(selectedColor);
-    } else {
-        // No colors (e.g. Bags?), ensure sizes are active
-        updateUI(null);
-    }
-
-    colorBtns.forEach(btn => {
+    // --- Event Listeners ---
+    colorSwatches.forEach(btn => {
         btn.addEventListener('click', () => {
-            selectedColor = btn.dataset.color;
-            updateUI(selectedColor);
+            state.selectedColor = btn.dataset.color;
+            // Find the first available size for this new color and select it
+            const firstAvailable = state.variants.find(v => v.color === state.selectedColor && v.qty > 0);
+            state.selectedSize = firstAvailable ? firstAvailable.size : null;
+            ui.updateAll();
         });
     });
 
-    function updateUI(color) {
-        // Update Swatches
-        if (color) {
-            colorBtns.forEach(b => {
-                if (b.dataset.color === color) {
-                    b.classList.remove('border-transparent');
-                    b.classList.add('border-moon-gold');
-                } else {
-                    b.classList.add('border-transparent');
-                    b.classList.remove('border-moon-gold');
-                }
-            });
-            if (colorNameDisplay) colorNameDisplay.textContent = color;
+    sizeContainer?.addEventListener('click', (e) => {
+        const sizeBtn = e.target.closest('.product-size-btn');
+        if (sizeBtn && !sizeBtn.disabled) {
+            state.selectedSize = sizeBtn.dataset.size;
+            ui.updateAll();
+        }
+    });
+
+    addToBagBtn?.addEventListener('click', async () => {
+        if (!state.selectedVariant) {
+            ui.showToast('Please make a valid selection.', true);
+            return;
+        }
+        if (state.selectedVariant.qty === 0) {
+            ui.showToast('This item is out of stock.', true);
+            return;
         }
 
-        // Update Images (Only if color is selected)
-        const thumbs = document.querySelectorAll('.gallery-thumb');
-        let firstVisible = null;
-        let firstExactMatch = null;
+        ui.setLoading(true);
+        const quantity = parseInt(qtyInput.value) || 1;
+        const { success, data, error } = await apiService.addToCart(state.selectedVariant.id, quantity);
+        ui.setLoading(false);
 
-        thumbs.forEach(thumb => {
-            const tColor = thumb.dataset.color;
-            // If no color selected (null), show all? Or show 'all' tagged.
-            // If color selected, show 'all' and matching color.
-            if (tColor === 'all' || (color && tColor === color)) {
-                thumb.classList.remove('hidden');
-                if (!firstVisible) firstVisible = thumb;
-                if (color && tColor === color && !firstExactMatch) firstExactMatch = thumb;
-            } else {
-                if (color) thumb.classList.add('hidden');
-            }
-        });
-
-        // Update Main Image to first visible if current not visible?
-        const mainImage = document.getElementById('main-image');
-
-        if (mainImage && color) {
-            // Prioritize exact match (specific color image) over generic 'all' image
-            if (firstExactMatch) {
-                mainImage.src = firstExactMatch.src;
-            } else if (firstVisible) {
-                mainImage.src = firstVisible.src;
-            }
-        }
-
-        // Update Sizes
-        const sizeBtns = document.querySelectorAll('.product-size-btn');
-        let availableSizes = [];
-
-        if (color) {
-            availableSizes = variants.filter(v => v.color === color).map(v => v.size);
+        if (success) {
+            ui.showToast('Item added to bag!');
+            updateCartBadge(data.cartCount);
         } else {
-            // If no color, maybe all sizes available? Or One Size?
-            // Use all unique sizes from variants
-            availableSizes = [...new Set(variants.map(v => v.size))];
+            ui.showToast(error, true);
         }
+    });
 
-        // Handle Case where Bag has generic One Size but no color logic?
-        // If variants empty? Default to enabled.
-
-        if (variants.length > 0) {
-            sizeBtns.forEach(btn => {
-                const size = btn.dataset.size;
-
-                // Check Validity and Stock
-                // 1. Check if size exists for this color (Validity)
-                const variantForColor = variants.find(v => v.size === size && (color ? v.color === color : true));
-                const isValid = !!variantForColor;
-
-                // 2. Check Stock
-                const isOutOfStock = isValid && variantForColor.qty === 0;
-
-                if (isValid && !isOutOfStock) {
-                    btn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-gray-800');
-                    btn.disabled = false;
-                    btn.title = '';
-                } else {
-                    btn.classList.add('opacity-50', 'cursor-not-allowed');
-                    btn.disabled = true;
-
-                    if (isOutOfStock) {
-                        btn.title = 'Sold Out';
-                        btn.classList.add('bg-gray-800'); // Darker background for sold out
-                    } else {
-                        btn.title = 'Not available in this color';
-                        btn.classList.remove('bg-gray-800');
-                    }
-                }
-            });
-
-            // Reset selectedSize
-            selectedSize = null;
-
-            // Auto-select first IN-STOCK Size for this color
-            // Get all size buttons that are NOT disabled
-            const enabledBtns = Array.from(sizeBtns).filter(btn => !btn.disabled);
-
-            if (enabledBtns.length > 0) {
-                const firstBtn = enabledBtns[0];
-                selectedSize = firstBtn.dataset.size;
-
-                // Highlight it
-                firstBtn.classList.remove('border-gray-700', 'text-gray-400');
-                firstBtn.classList.add('bg-moon-gold', 'text-moon-dark', 'font-bold', 'shadow-[0_0_10px_rgba(198,168,124,0.3)]');
-            } else if (availableSizes.length === 1 && availableSizes[0] === 'One Size') {
-                // Even if disabled (SOLD OUT), if it's One Size we might want to track it?
-                // But validation prevents adding.
-                selectedSize = 'One Size';
-            }
-        }
-    }
-
-
-
-    if (sizeContainer) {
-        sizeContainer.addEventListener('click', (e) => {
-            if (e.target.classList.contains('product-size-btn')) {
-                const btn = e.target;
-                if (btn.disabled) return;
-
-                // Deselect all
-                document.querySelectorAll('.product-size-btn').forEach(b => {
-                    b.classList.remove('bg-moon-gold', 'text-moon-dark', 'font-bold', 'shadow-[0_0_10px_rgba(198,168,124,0.3)]');
-                    b.classList.add('border-gray-700', 'text-gray-400');
-                });
-
-                btn.classList.remove('border-gray-700', 'text-gray-400');
-                btn.classList.add('bg-moon-gold', 'text-moon-dark', 'font-bold', 'shadow-[0_0_10px_rgba(198,168,124,0.3)]');
-                selectedSize = btn.dataset.size;
-            }
-        });
-    }
-
-    // Quantity Logic
-    if (qtyMinus) {
-        qtyMinus.addEventListener('click', () => {
-            let val = parseInt(qtyInput.value);
-            if (val > 1) qtyInput.value = val - 1;
-        });
-    }
-    if (qtyPlus) {
-        qtyPlus.addEventListener('click', () => {
-            let val = parseInt(qtyInput.value);
-            if (qtyInput.max && val >= parseInt(qtyInput.max)) return;
-            qtyInput.value = val + 1;
-        });
-    }
-
-    // Add to Bag Logic
-    if (addToBagBtn) {
-        addToBagBtn.addEventListener('click', () => {
-            // Check if size selection is mandatory
-            // If availableSizes is empty or only "One Size", and no other options, maybe we allow it?
-            // But Wait: 'availableSizes' is local to updateUI.
-            // We need to know if size selection is possible.
-
-            // Simplest Helper: Check if size buttons specific to this color exist and are enabled.
-            const enabledSizeBtns = document.querySelectorAll('.product-size-btn:not([disabled])');
-            const hasSizeOptions = enabledSizeBtns.length > 0;
-            const needsSize = hasSizeOptions && !selectedSize;
-
-            if (needsSize) {
-                // Special check: If only 1 option is 'One Size', maybe it's auto-selected?
-                // Logic in updateUI auto-selects 'One Size'. So selectedSize should be set.
-                // If it's NOT set, it means user hasn't clicked it or auto-select failed.
-                alert('Please select a size');
-                return;
-            }
-
-            if (colorBtns.length > 0 && !selectedColor) {
-                alert('Please select a color');
-                return;
-            }
-
-            const originalText = addToBagBtn.innerText;
-            addToBagBtn.innerText = 'Adding...';
-            addToBagBtn.disabled = true;
-
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            const productId = addToBagBtn.dataset.id;
-
-            fetch('/cart/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    size: selectedSize,
-                    color: selectedColor,
-                    quantity: parseInt(qtyInput.value)
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    addToBagBtn.innerText = originalText;
-                    addToBagBtn.disabled = false;
-
-                    if (data.success) {
-                        const toast = document.getElementById('toast');
-                        if (toast) {
-                            toast.classList.remove('translate-y-20', 'opacity-0');
-                            setTimeout(() => {
-                                toast.classList.add('translate-y-20', 'opacity-0');
-                            }, 3000);
-                        } else {
-                            alert('Added to Bag!');
-                        }
-                        updateCartBadge(data.cartCount);
-                    } else {
-                        alert(data.error || 'Something went wrong');
-                    }
-                })
-                .catch(e => {
-                    console.error(e);
-                    addToBagBtn.innerText = originalText;
-                    addToBagBtn.disabled = false;
-                });
-        });
-    }
-
-    // Gallery Click Logic
-    const mainImage = document.getElementById('main-image');
-    const thumbs = document.querySelectorAll('.gallery-thumb');
+    // --- New/Restored Gallery & Zoom Logic ---
+    const qtyMinus = document.getElementById('qty-minus');
+    const qtyPlus = document.getElementById('qty-plus');
     const zoomModal = document.getElementById('zoom-modal');
     const zoomImg = document.getElementById('zoom-img-full');
 
-    if (mainImage && thumbs.length > 0) {
-        thumbs.forEach(thumb => {
-            thumb.addEventListener('click', () => {
-                const src = thumb.dataset.src || thumb.src;
-                mainImage.style.opacity = '0.5';
-                setTimeout(() => {
-                    mainImage.src = src;
-                    mainImage.style.opacity = '1';
-                }, 150);
+    qtyMinus?.addEventListener('click', () => {
+        let val = parseInt(qtyInput.value);
+        if (val > 1) qtyInput.value = val - 1;
+    });
 
-                thumbs.forEach(t => t.classList.remove('border-moon-gold'));
-                thumb.classList.add('border-moon-gold');
-            });
+    qtyPlus?.addEventListener('click', () => {
+        let val = parseInt(qtyInput.value);
+        if (qtyInput.max && val >= parseInt(qtyInput.max)) return;
+        qtyInput.value = val + 1;
+    });
+
+    galleryThumbs.forEach(thumb => {
+        thumb.addEventListener('click', () => {
+            const src = thumb.dataset.src || thumb.src;
+            mainImage.style.opacity = '0.5';
+            setTimeout(() => {
+                mainImage.src = src;
+                mainImage.style.opacity = '1';
+            }, 150);
+
+            galleryThumbs.forEach(t => t.classList.remove('border-moon-gold'));
+            thumb.classList.add('border-moon-gold');
         });
-    }
+    });
 
-    // Zoom Logic
-    if (mainImage && zoomModal && zoomImg) {
-        mainImage.addEventListener('click', () => {
+    mainImage?.addEventListener('click', () => {
+        if (zoomModal && zoomImg) {
             zoomImg.src = mainImage.src;
             zoomModal.classList.remove('hidden');
             zoomModal.classList.add('flex');
-            // Animation
             setTimeout(() => {
                 zoomImg.classList.remove('scale-90', 'opacity-0');
-                zoomImg.classList.add('scale-100', 'opacity-100');
             }, 10);
-        });
+        }
+    });
 
-        zoomModal.addEventListener('click', () => {
-            zoomImg.classList.remove('scale-100', 'opacity-100');
+    zoomModal?.addEventListener('click', () => {
+        if (zoomImg) {
             zoomImg.classList.add('scale-90', 'opacity-0');
-            setTimeout(() => {
-                zoomModal.classList.remove('flex');
-                zoomModal.classList.add('hidden');
-            }, 300);
-        });
+        }
+        setTimeout(() => {
+            zoomModal.classList.add('hidden');
+            zoomModal.classList.remove('flex');
+        }, 300);
+    });
+    // --- End of New/Restored Logic ---
+
+
+    // --- Initialization ---
+    function initialize() {
+        const inStockVariants = state.variants.filter(v => v.qty > 0);
+        if (inStockVariants.length > 0) {
+            state.selectedColor = inStockVariants[0].color;
+            state.selectedSize = inStockVariants[0].size;
+        } else if (state.variants.length > 0) {
+            // If all are out of stock, select the first one anyway to show options
+            state.selectedColor = state.variants[0].color;
+            state.selectedSize = state.variants[0].size;
+        }
+        ui.updateAll();
     }
+
+    initialize();
 });

@@ -76,7 +76,7 @@
             <!-- Summary -->
             <div class="lg:col-span-5">
                 <div class="bg-gray-800/20 p-8 sticky top-32 border border-gray-800 backdrop-blur-sm">
-                    <h2 class="text-xl font-serif text-white mb-6 border-b border-gray-700 pb-4">Order Summary</h2>
+                    <h2 class="text-xl font-serif text-white mb-6 border-b border-gray-700 pb-4">Order Review</h2>
                     <div class="space-y-6 mb-8 max-h-96 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
                         @foreach($cart as $item)
                         <div class="flex gap-4 items-start">
@@ -93,34 +93,15 @@
                         @endforeach
                     </div>
                     
-                    <div class="border-t border-gray-700 pt-4 space-y-3 text-sm">
-                        <div class="flex justify-between text-gray-400">
-                            <span>Subtotal</span>
-                            <span>{{ number_format($subtotal) }} LE</span>
-                        </div>
-                         <div class="flex justify-between text-gray-400">
-                            <span>Shipping</span>
-                            <span>{{ $shipping > 0 ? number_format($shipping) . ' LE' : 'Free' }}</span>
-                        </div>
-                        @if(isset($discount) && $discount > 0)
-                        <div class="flex justify-between text-moon-gold">
-                            <span>Discount</span>
-                            <span>-{{ number_format($discount) }} LE</span>
-                        </div>
-                        @endif
-                         <div class="flex justify-between text-white text-xl font-serif font-bold pt-4 border-t border-gray-700 mt-2">
-                            <span>Total</span>
-                            <span>{{ number_format($total) }} LE</span>
-                        </div>
-                    </div>
-
-                    <button type="submit" form="checkout-form" class="w-full mt-8 bg-moon-gold text-moon-dark font-bold uppercase tracking-widest py-4 hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(198,168,124,0.2)] hover:shadow-[0_0_30px_rgba(198,168,124,0.4)]">
-                        Complete Order
-                    </button>
+                    <x-order-summary :subtotal="$subtotal" :shipping="$shipping" :discount="$discount" :total="$total">
+                        <button type="submit" form="checkout-form" class="w-full mt-8 bg-moon-gold text-moon-dark font-bold uppercase tracking-widest py-4 hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(198,168,124,0.2)] hover:shadow-[0_0_30px_rgba(198,168,124,0.4)]">
+                            Complete Order
+                        </button>
                     
-                    <div class="mt-6 flex justify-center">
-                        <a href="{{ route('cart') }}" class="text-sm text-gray-500 underline hover:text-moon-gold transition-colors">Return to Cart</a>
-                    </div>
+                        <div class="mt-6 flex justify-center">
+                            <a href="{{ route('cart.index') }}" class="text-sm text-gray-500 underline hover:text-moon-gold transition-colors">Return to Cart</a>
+                        </div>
+                    </x-order-summary>
                 </div>
             </div>
         </div>

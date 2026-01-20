@@ -18,6 +18,9 @@ class ProductController extends Controller
         $product = $this->productService->getBySlug($slug);
         $relatedProducts = $this->productService->getRelatedProducts($product);
 
-        return view('products.show', compact('product', 'relatedProducts'));
+        $uniqueColors = $product->variants->pluck('color')->unique('id')->filter()->values();
+        $allSizes = $product->variants->pluck('size')->unique();
+
+        return view('products.show', compact('product', 'relatedProducts', 'uniqueColors', 'allSizes'));
     }
 }

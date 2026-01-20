@@ -6,10 +6,8 @@
     <h3 id="modal-product-title" class="text-2xl font-serif text-white mb-2">Product Name</h3>
     <p id="modal-product-price" class="text-moon-gold font-bold mb-6">0 LE</p>
     
-    <div id="modal-size-container" class="mb-8 hidden">
-        <div id="modal-size-buttons" class="flex flex-col gap-4">
-            <!-- Appended via JS -->
-        </div>
+    <div id="modal-options-container" class="mb-8">
+        <!-- JS will render color/size options here -->
     </div>
 
     <button id="confirm-add-to-bag" class="w-full bg-moon-gold text-moon-dark font-bold uppercase tracking-widest py-4 hover:bg-white transition-colors">

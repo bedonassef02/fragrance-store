@@ -24,8 +24,10 @@ class CartController extends Controller
         $shipping = $this->cartService->getShipping();
         $discount = $this->cartService->getDiscount();
         $total = $this->cartService->getTotal();
+        $shippingThreshold = \App\Models\Setting::getValue('free_shipping_threshold', 2000);
+        $coupon = $this->cartService->getCoupon();
 
-        return view('cart.index', compact('cartItems', 'subtotal', 'shipping', 'discount', 'total'));
+        return view('cart.index', compact('cartItems', 'subtotal', 'shipping', 'discount', 'total', 'shippingThreshold', 'coupon'));
     }
 
     public function add(AddToCartRequest $request)

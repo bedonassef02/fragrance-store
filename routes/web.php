@@ -4,38 +4,37 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
-
 use App\Http\Controllers\HomeController;
-
-Route::get('/', [HomeController::class, 'index'])->name('home');
-
 use App\Http\Controllers\CollectionController;
-
-Route::get('/collections', [CollectionController::class, 'index'])->name('collections');
-
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 
+// Static & Main Pages
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/collections', [CollectionController::class, 'index'])->name('collections');
+Route::get('/about', fn() => view('about'))->name('about');
+Route::get('/contact', fn() => view('contact'))->name('contact');
+
+// Shop & Product
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
 
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-Route::get('/checkout/success/{orderNumber}', [CheckoutController::class, 'success'])->name('checkout.success');
+// Cart
+Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/add', 'add')->name('add');
+    Route::patch('/update', 'update')->name('update');
+    Route::delete('/remove', 'remove')->name('remove');
+    Route::post('/coupon', 'applyCoupon')->name('coupon.apply');
+    Route::post('/coupon/remove', 'removeCoupon')->name('coupon.remove');
+});
 
+// Checkout
+Route::controller(CheckoutController::class)->prefix('checkout')->name('checkout.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/', 'store')->name('store');
+    Route::get('/success/{orderNumber}', 'success')->name('success');
+});
+
+// Orders
 Route::get('/orders/{orderNumber}', [OrderController::class, 'show'])->name('orders.show');
-
-Route::get('/cart', [CartController::class, 'index'])->name('cart');
-Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-Route::patch('/cart/update', [CartController::class, 'update'])->name('cart.update');
-Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
-Route::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
-Route::post('/cart/coupon/remove', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
-
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
-
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');

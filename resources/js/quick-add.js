@@ -11,13 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalTitle = document.getElementById('modal-product-title');
     const modalPrice = document.getElementById('modal-product-price');
     const confirmBtn = document.getElementById('confirm-add-to-bag');
-    const sizeButtonsContainer = document.getElementById('modal-size-buttons');
+    const optionsContainer = document.getElementById('modal-options-container');
     const toast = document.getElementById('toast');
 
     // --- State ---
     let state = {
         variants: [],
-        selectedVariantId: null,
         selectedColor: null,
         selectedSize: null,
     };
@@ -62,11 +61,12 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     };
 
-    // --- Event Handlers ---
-    document.body.addEventListener('click', function(e) {
-        if (e.target.matches('.quick-add-btn')) {
+    // --- Event Listeners ---
+    document.body.addEventListener('click', function (e) {
+        const quickAddButton = e.target.closest('.quick-add-btn');
+        if (quickAddButton) {
             e.preventDefault();
-            initModal(e.target);
+            initModal(quickAddButton);
         }
     });
 
@@ -74,17 +74,27 @@ document.addEventListener('DOMContentLoaded', function () {
     backdrop?.addEventListener('click', ui.closeModal.bind(ui));
     confirmBtn?.addEventListener('click', handleConfirmAddToCart);
 
-    // --- Logic ---
+    // --- Main Logic ---
     function initModal(button) {
         state.variants = JSON.parse(button.dataset.variants || '[]');
-        
-        const inStockVariants = state.variants.filter(v => v.qty > 0);
+        state.selectedColor = null;
+        state.selectedSize = null;
 
-        // If only one variant exists and it's in stock, add directly.
-        if (inStockVariants.length === 1 && state.variants.length === 1) {
+        const inStockVariants = state.variants.filter(v => v.qty > 0);
+        
+        // If there's only one variant total and it's in stock, add it directly without showing the modal.
+        if (state.variants.length === 1 && inStockVariants.length === 1) {
             handleDirectAddToCart(inStockVariants[0].id);
             return;
         }
+
+        // --- New Default Selection Logic ---
+        if (inStockVariants.length > 0) {
+            const firstAvailable = inStockVariants[0];
+            state.selectedColor = firstAvailable.color;
+            state.selectedSize = firstAvailable.size;
+        }
+        // --- End of New Logic ---
 
         ui.openModal(button.dataset.name, button.dataset.price);
         renderOptions();
@@ -102,14 +112,31 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function handleConfirmAddToCart() {
-        const { selectedVariantId } = findSelectedVariant();
-        if (!selectedVariantId) {
-            ui.showToast('Please make a selection.', true);
+        const uniqueColors = [...new Set(state.variants.map(v => v.color).filter(Boolean))];
+        const uniqueSizes = [...new Set(state.variants.map(v => v.size).filter(v => v && v !== 'One Size'))];
+
+        if (uniqueColors.length > 0 && !state.selectedColor) {
+            ui.showToast('Please select a color.', true);
             return;
         }
-        
+        if (uniqueSizes.length > 0 && !state.selectedSize) {
+            ui.showToast('Please select a size.', true);
+            return;
+        }
+
+        const selectedVariant = state.variants.find(v => {
+            const colorMatch = uniqueColors.length === 0 || v.color === state.selectedColor;
+            const sizeMatch = uniqueSizes.length === 0 || v.size === state.selectedSize;
+            return colorMatch && sizeMatch;
+        });
+
+        if (!selectedVariant) {
+            ui.showToast('This combination is not available.', true);
+            return;
+        }
+
         ui.setLoading(true);
-        const { success, data, error } = await apiService.addToCart(selectedVariantId, 1);
+        const { success, data, error } = await apiService.addToCart(selectedVariant.id, 1);
         ui.setLoading(false);
 
         if (success) {
@@ -120,100 +147,86 @@ document.addEventListener('DOMContentLoaded', function () {
             ui.showToast(error, true);
         }
     }
-
-    function findSelectedVariant() {
-        const variant = state.variants.find(v => {
-            const colorMatch = state.selectedColor ? v.color === state.selectedColor : true;
-            const sizeMatch = state.selectedSize ? v.size === state.selectedSize : true;
-            return colorMatch && sizeMatch;
-        });
-        state.selectedVariantId = variant ? variant.id : null;
-        return { selectedVariantId: state.selectedVariantId, variant: variant };
-    }
-
+    
     function renderOptions() {
-        sizeButtonsContainer.innerHTML = '';
+        optionsContainer.innerHTML = '';
         const uniqueColors = [...new Set(state.variants.map(v => v.color).filter(Boolean))];
-        const uniqueSizes = [...new Set(state.variants.map(v => v.size).filter(s => s && s !== 'One Size'))];
+        const uniqueSizes = [...new Set(state.variants.map(v => v.size).filter(v => v && v !== 'One Size'))];
 
-        if (uniqueColors.length > 0) renderColorSwatches(uniqueColors);
-        if (uniqueSizes.length > 0) renderSizeButtons(uniqueSizes);
+        if (uniqueColors.length > 0) {
+            optionsContainer.appendChild(createColorSwatches(uniqueColors));
+        }
+        if (uniqueSizes.length > 0) {
+            optionsContainer.appendChild(createSizeButtons(uniqueSizes));
+        }
     }
+    
+    function createColorSwatches(colors) {
+        const container = document.createElement('div');
+        container.innerHTML = `<p class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Select Color</p>`;
+        const swatchesDiv = document.createElement('div');
+        swatchesDiv.className = 'flex gap-3 mb-6';
 
-    function renderColorSwatches(colors) {
-        const colorsDiv = document.createElement('div');
-        colorsDiv.className = 'flex gap-3 mb-6';
-        
-        const label = document.createElement('p');
-        label.className = 'text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide';
-        label.innerText = 'Select Color';
-        sizeButtonsContainer.appendChild(label);
-        
         colors.forEach(color => {
             const isOutOfStock = !state.variants.some(v => v.color === color && v.qty > 0);
             const variant = state.variants.find(v => v.color === color);
             
             const btn = document.createElement('button');
-            btn.className = 'w-10 h-10 rounded-full border-2 transition-all relative';
+            btn.className = 'w-10 h-10 rounded-full border-2 transition-all relative disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105';
             btn.style.backgroundColor = variant?.color_hex || '#000';
             btn.title = color + (isOutOfStock ? ' (Sold Out)' : '');
             btn.dataset.color = color;
-
-            if (isOutOfStock) {
-                btn.disabled = true;
-                btn.className += ' opacity-50 cursor-not-allowed';
-            } else {
-                btn.className += ' hover:border-moon-gold hover:scale-105';
-                btn.addEventListener('click', () => {
-                    state.selectedColor = color;
-                    renderOptions();
-                });
-            }
+            btn.disabled = isOutOfStock;
+            
+            btn.addEventListener('click', () => {
+                state.selectedColor = color;
+                // If the current size is not available with the new color, reset it.
+                const isSizeAvailable = state.variants.some(v => v.color === state.selectedColor && v.size === state.selectedSize && v.qty > 0);
+                if (!isSizeAvailable) {
+                    state.selectedSize = null;
+                }
+                renderOptions();
+            });
 
             btn.classList.toggle('border-moon-gold', color === state.selectedColor);
             btn.classList.toggle('border-transparent', color !== state.selectedColor);
-
-            colorsDiv.appendChild(btn);
+            swatchesDiv.appendChild(btn);
         });
-        sizeButtonsContainer.appendChild(colorsDiv);
+        container.appendChild(swatchesDiv);
+        return container;
     }
-    
-    function renderSizeButtons(sizes) {
-        const sizeDiv = document.createElement('div');
-        sizeDiv.className = 'flex flex-wrap gap-2';
 
-        const label = document.createElement('p');
-        label.className = 'text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide w-full';
-        label.innerText = 'Select Size';
-        sizeDiv.appendChild(label);
-        
+    function createSizeButtons(sizes) {
+        const container = document.createElement('div');
+        container.innerHTML = `<p class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Select Size</p>`;
+        const sizesDiv = document.createElement('div');
+        sizesDiv.className = 'flex flex-wrap gap-2';
+
         sizes.forEach(size => {
-            const isAvailableForColor = state.selectedColor ? state.variants.some(v => v.color === state.selectedColor && v.size === size) : true;
-            const variant = state.variants.find(v => v.size === size && (state.selectedColor ? v.color === state.selectedColor : true));
-            const isOutOfStock = !variant || variant.qty === 0;
+            const isAvailableForColor = !state.selectedColor || state.variants.some(v => v.color === state.selectedColor && v.size === size);
+            const variantForStockCheck = state.variants.find(v => v.size === size && (!state.selectedColor || v.color === state.selectedColor));
+            const isOutOfStock = !variantForStockCheck || variantForStockCheck.qty === 0;
             const isDisabled = !isAvailableForColor || isOutOfStock;
 
             const btn = document.createElement('button');
-            btn.className = 'size-btn w-12 h-12 border text-gray-400 font-bold transition-all rounded-sm relative';
+            btn.className = 'size-btn w-12 h-12 border text-gray-400 font-bold transition-all rounded-sm relative disabled:opacity-50 disabled:cursor-not-allowed';
             btn.innerText = size;
+            btn.disabled = isDisabled;
 
-            if (isDisabled) {
-                btn.disabled = true;
-                btn.className += ' opacity-50 cursor-not-allowed bg-gray-800 border-gray-700';
-            } else {
-                btn.className += ' border-gray-600 hover:border-moon-gold hover:text-white';
-                btn.addEventListener('click', () => {
-                    state.selectedSize = size;
-                    renderOptions(); 
-                });
-            }
-            
+            btn.addEventListener('click', () => {
+                state.selectedSize = size;
+                renderOptions();
+            });
+
             if (size === state.selectedSize && !isDisabled) {
                 btn.classList.add('bg-moon-gold', 'text-black', 'border-moon-gold');
+                btn.classList.remove('border-gray-600', 'text-gray-400');
+            } else {
+                btn.classList.add('border-gray-600', 'hover:border-moon-gold', 'hover:text-white');
             }
-
-            sizeDiv.appendChild(btn);
+            sizesDiv.appendChild(btn);
         });
-        sizeButtonsContainer.appendChild(sizeDiv);
+        container.appendChild(sizesDiv);
+        return container;
     }
 });

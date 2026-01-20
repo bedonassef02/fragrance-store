@@ -108,6 +108,7 @@ class CartService
                 'variant_id' => $variant->id,
                 'product_id' => $variant->product->id,
                 'name'       => $variant->product->name,
+                'slug'       => $variant->product->slug,
                 'price'      => $variant->product->price,
                 'image'      => $image,
                 'size'       => $variant->size,

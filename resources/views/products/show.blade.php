@@ -59,12 +59,7 @@
                     <div class="space-y-8 mb-12">
                          <!-- Size Selector -->
                         <!-- Color & Size -->
-                        @php
-                            $uniqueColors = $product->variants->pluck('color')->unique('id')->filter()->values();
-                            $allSizes = $product->variants->pluck('size')->unique();
-                        @endphp
-                        
-                        <div id="product-variants-data" data-variants="{{ json_encode($product->variants->map(fn($v) => ['color' => $v->color?->name, 'size' => $v->size, 'qty' => $v->quantity])) }}" class="hidden"></div>
+                        <div id="product-variants-data" data-variants="{{ json_encode($product->variants->map(fn($v) => ['id' => $v->id, 'color' => $v->color?->name, 'size' => $v->size, 'qty' => $v->quantity])) }}" class="hidden"></div>
 
                         @if($uniqueColors->isNotEmpty())
                         <div class="mb-8">
