@@ -40,3 +40,21 @@ Route::controller(CheckoutController::class)->prefix('checkout')->name('checkout
 Route::get('/orders/{orderNumber}', [OrderController::class, 'show'])->name('orders.show');
 Route::get('/orders/{order}/review', [App\Http\Controllers\ReviewController::class, 'create'])->name('reviews.create');
 Route::post('/orders/{order}/review', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+
+// Admin Routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Auth
+    Route::get('/login', [App\Http\Controllers\Admin\AdminAuthController::class, 'login'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Admin\AdminAuthController::class, 'authenticate'])->name('authenticate');
+    Route::post('/logout', [App\Http\Controllers\Admin\AdminAuthController::class, 'logout'])->name('logout');
+
+    // Dashboard (Protected)
+    Route::middleware('auth')->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
+        
+        // Profile
+        Route::get('/profile', [App\Http\Controllers\Admin\AdminProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [App\Http\Controllers\Admin\AdminProfileController::class, 'update'])->name('profile.update');
+        Route::put('/password', [App\Http\Controllers\Admin\AdminProfileController::class, 'updatePassword'])->name('password.update');
+    });
+});

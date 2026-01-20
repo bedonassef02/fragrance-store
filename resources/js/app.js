@@ -25,15 +25,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Navbar Scroll Effect
     const nav = document.getElementById('main-nav');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            nav.classList.add('py-0', 'shadow-lg');
-            nav.classList.remove('py-4');
-        } else {
-            nav.classList.remove('shadow-lg');
-            nav.classList.add('py-4');
-        }
-    });
+    if (nav) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('py-0', 'shadow-lg');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.remove('shadow-lg');
+                nav.classList.add('py-4');
+            }
+        });
+    }
 
     // Smooth Scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
