@@ -12,4 +12,12 @@ class ProductImage extends Model
     {
         return $this->belongsTo(Color::class);
     }
+
+    public function getImagePathAttribute($value)
+    {
+        if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://'])) {
+            return $value;
+        }
+        return asset('storage/' . $value);
+    }
 }

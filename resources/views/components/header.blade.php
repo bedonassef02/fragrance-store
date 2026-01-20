@@ -1,7 +1,7 @@
-<nav class="fixed w-full z-50 bg-black border-b border-white/5 transition-all duration-300" id="main-nav">
+<nav class="fixed w-full z-50 bg-black border-b border-white/5 transition-all duration-300 py-4" id="main-nav">
     <x-notification-bar />
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-20">
+        <div class="flex justify-between items-center h-16">
             <!-- Mobile Menu Button -->
             <div class="flex items-center md:hidden">
                 <button id="mobile-menu-btn" class="text-white hover:text-moon-gold transition-colors focus:outline-none p-2">

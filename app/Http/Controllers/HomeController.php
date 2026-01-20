@@ -10,8 +10,10 @@ class HomeController extends Controller
 {
     public function index(): View
     {
+        $heroImage = \App\Models\Setting::getValue('home_hero_image', 'https://images.pexels.com/photos/18269632/pexels-photo-18269632/free-photo-of-woman-in-hijab-posing-on-desert.jpeg?auto=compress&cs=tinysrgb&w=2000');
+
         $hero = [
-            'image' => 'https://images.pexels.com/photos/18269632/pexels-photo-18269632/free-photo-of-woman-in-hijab-posing-on-desert.jpeg?auto=compress&cs=tinysrgb&w=2000',
+            'image' => asset('storage/' . $heroImage),
             'subtitle' => 'The New Collection',
             'title' => 'Elegance',
             'title_highlight' => 'Redefined',

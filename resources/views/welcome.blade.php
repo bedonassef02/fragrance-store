@@ -5,20 +5,24 @@
     <!-- Hero Section -->
     <header id="home" class="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
         <!-- Background Overlay -->
+        <!-- Background Overlay -->
         <div class="absolute inset-0 z-0">
-            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-moon-dark"></div>
+            <!-- User requested 30% black opacity layer -->
+            <div class="absolute inset-0 bg-black/30 z-10"></div>
+            <!-- Existing gradient for bottom blending -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-moon-dark z-10"></div>
             <img src="{{ $hero['image'] }}" 
                  alt="Luxury Abaya Background" 
-                 class="w-full h-full object-cover object-center animate-kenburns opacity-70">
+                 class="w-full h-full object-cover object-top animate-kenburns">
         </div>
 
         <!-- Content -->
-        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16 sm:mt-0">
-            <p class="text-moon-gold uppercase tracking-[0.4em] text-xs sm:text-sm font-light mb-6 animate-fadeInUp">{{ $hero['subtitle'] }}</p>
-            <h1 class="text-5xl sm:text-6xl md:text-8xl font-serif text-white mb-8 leading-tight font-medium animate-fadeInUp delay-200">
+        <div class="relative z-20 text-center px-4 max-w-4xl mx-auto mt-32 sm:mt-0">
+            <p class="text-moon-gold uppercase tracking-[0.4em] text-xs sm:text-sm font-light mb-6 animate-fadeInUp drop-shadow-md">{{ $hero['subtitle'] }}</p>
+            <h1 class="text-5xl sm:text-6xl md:text-8xl font-serif text-white mb-8 leading-tight font-medium animate-fadeInUp delay-200 drop-shadow-lg">
                 {{ $hero['title'] }} <span class="italic font-light text-moon-gold">{{ $hero['title_highlight'] }}</span>
             </h1>
-            <p class="text-gray-300 text-lg sm:text-xl font-light mb-12 max-w-lg mx-auto leading-relaxed animate-fadeInUp delay-300">
+            <p class="text-gray-200 text-lg sm:text-xl font-light mb-12 max-w-lg mx-auto leading-relaxed animate-fadeInUp delay-300 drop-shadow-md">
                 {{ $hero['description'] }}
             </p>
             <div class="flex flex-col sm:flex-row gap-6 justify-center animate-fadeInUp delay-400">

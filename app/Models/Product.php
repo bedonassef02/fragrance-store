@@ -21,6 +21,14 @@ class Product extends Model
         'original_price' => 'decimal:2',
     ];
 
+    public function getImageAttribute($value)
+    {
+        if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://'])) {
+            return $value;
+        }
+        return asset('storage/' . $value);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
