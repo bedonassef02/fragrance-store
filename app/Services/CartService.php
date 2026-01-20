@@ -2,178 +2,146 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Session;
 use App\Models\Coupon;
+use App\Models\ProductVariant;
+use App\Models\Setting;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 
 class CartService
 {
+    private const SESSION_KEY = 'cart';
+    private const COUPON_KEY = 'coupon';
+
     public function getCart()
     {
-        return session()->get('cart', []);
+        return Session::get(self::SESSION_KEY, []);
     }
 
-    public function getSubtotal()
+    public function getSubtotal(): float
     {
         return collect($this->getCart())->sum(fn($item) => $item['price'] * $item['quantity']);
     }
 
-    public function getShipping()
+    public function getShipping(): float
     {
-        $threshold = \App\Models\Setting::getValue('free_shipping_threshold', 2000);
-        
-        if ($this->getSubtotal() >= $threshold) {
-             return 0;
-        }
-        return 150;
+        $threshold = Cache::remember('settings.free_shipping_threshold', 3600, function () {
+            return Setting::getValue('free_shipping_threshold', 2000);
+        });
+
+        return $this->getSubtotal() >= $threshold ? 0 : 150.0;
     }
 
     public function getCoupon()
     {
-        return session()->get('coupon');
+        return Session::get(self::COUPON_KEY);
     }
 
-    public function getDiscount()
+    public function getDiscount(): float
     {
         $coupon = $this->getCoupon();
         if (!$coupon) return 0;
 
         $subtotal = $this->getSubtotal();
-        $discount = 0;
+        
+        $discount = match ($coupon['type']) {
+            'fixed' => (float) $coupon['value'],
+            default => $subtotal * ((float) $coupon['value'] / 100),
+        };
 
-        if ($coupon['type'] === 'fixed') {
-            $discount = $coupon['value'];
-        } else {
-            $discount = $subtotal * ($coupon['value'] / 100);
-            if (isset($coupon['max_discount_amount']) && $coupon['max_discount_amount']) {
-                $discount = min($discount, $coupon['max_discount_amount']);
-            }
+        if (isset($coupon['max_discount_amount'])) {
+            $discount = min($discount, (float) $coupon['max_discount_amount']);
         }
 
         return min($discount, $subtotal);
     }
 
-    public function getTotal()
+    public function getTotal(): float
     {
         return $this->getSubtotal() + $this->getShipping() - $this->getDiscount();
     }
 
     public function addToCart(array $data)
     {
-        $productId = $data['product_id'];
-        $size = $data['size'] ?? null;
-        $colorName = $data['color'] ?? null;
-        $quantity = $data['quantity'] ?? 1;
-
-        $product = \App\Models\Product::find($productId);
-
-        if (!$product) {
-            return ['success' => false, 'message' => 'Product not found', 'status' => 404];
-        }
-
-        // Validate Variant Logic
-        $color = null;
-        if ($colorName) {
-            $color = \App\Models\Color::where('name', $colorName)->first();
-        }
+        $variantId = $data['product_variant_id'];
+        $quantity = $data['quantity'];
         
-        $variantQuery = \App\Models\ProductVariant::where('product_id', $product->id);
+        $variant = ProductVariant::with('product.images')->findOrFail($variantId);
 
-        if ($size) {
-            $variantQuery->where('size', $size);
-        }
-        
-        if ($color) {
-            $variantQuery->where('color_id', $color->id);
+        if ($variant->quantity < $quantity) {
+            return ['success' => false, 'message' => "Only {$variant->quantity} items left in stock.", 'status' => 400];
         }
 
-        $variant = $variantQuery->first();
-        
-        $allVariants = $product->variants;
-        $hasColors = $allVariants->whereNotNull('color_id')->count() > 0;
-        $hasSizes = $allVariants->where('size', '!=', 'One Size')->count() > 0;
+        $cart = $this->getCart();
+        $key = (string) $variantId;
 
-        if (!$variant) {
-            if ($size || $color) {
-                 return ['success' => false, 'message' => 'Selected combination is unavailable.', 'status' => 400];
-            }
-
-            if ($hasColors || $hasSizes) {
-                return ['success' => false, 'message' => 'Please select options.', 'status' => 400];
-            }
-
-            $variant = $allVariants->first();
-            if (!$variant) {
-                 return ['success' => false, 'message' => 'Product unavailable.', 'status' => 400];
-            }
-            $size = $variant->size;
-        }
-
-        if ($variant && $variant->quantity < $quantity) {
-             return ['success' => false, 'message' => "Only {$variant->quantity} items left in stock for this selection.", 'status' => 400];
-        }
-
-        $cart = session()->get('cart', []);
-        
-        $key = $productId . '-' . ($colorName ? \Illuminate\Support\Str::slug($colorName) . '-' : '') . $size;
-
-        $image = $product->image;
-        if ($color) {
-            $colorImage = $product->images()->where('color_id', $color->id)->first();
+        $image = $variant->product->image;
+        if ($variant->color_id) {
+            $colorImage = $variant->product->images->firstWhere('color_id', $variant->color_id);
             if ($colorImage) {
                 $image = $colorImage->image_path;
             }
         }
-
+        
         if (isset($cart[$key])) {
-            $cart[$key]['quantity'] += $quantity;
+            $newQuantity = $cart[$key]['quantity'] + $quantity;
+            if ($variant->quantity < $newQuantity) {
+                 return ['success' => false, 'message' => "Not enough stock. Only {$variant->quantity} available.", 'status' => 400];
+            }
+            $cart[$key]['quantity'] = $newQuantity;
         } else {
             $cart[$key] = [
-                'key' => $key,
-                'product_id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'image' => $image,
-                'size' => $size,
-                'color' => $colorName,
-                'quantity' => $quantity,
-                'variant_id' => $variant->id // Store variant_id for inventory checkout
+                'key'        => $key,
+                'variant_id' => $variant->id,
+                'product_id' => $variant->product->id,
+                'name'       => $variant->product->name,
+                'price'      => $variant->product->price,
+                'image'      => $image,
+                'size'       => $variant->size,
+                'color'      => $variant->color?->name,
+                'quantity'   => $quantity,
             ];
         }
 
-        session()->put('cart', $cart);
+        Session::put(self::SESSION_KEY, $cart);
         
         return ['success' => true, 'message' => 'Item added to bag', 'cartCount' => count($cart)];
     }
 
-    public function updateQuantity($id, $quantity)
+    public function updateQuantity(string $variantId, int $quantity)
     {
-        $cart = session()->get('cart');
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity'] = $quantity;
-            session()->put('cart', $cart);
+        $cart = $this->getCart();
+        $key = $variantId;
+
+        if (!isset($cart[$key])) {
+            return ['success' => false, 'message' => 'Item not found in cart.'];
+        }
+
+        $variant = ProductVariant::find($variantId);
+        if (!$variant || $variant->quantity < $quantity) {
+            return ['success' => false, 'message' => 'Not enough stock available.'];
+        }
+
+        $cart[$key]['quantity'] = $quantity;
+        Session::put(self::SESSION_KEY, $cart);
             
-            return [
-                'success' => true, 
-                'subtotal' => number_format($this->getSubtotal()),
-                'discount' => number_format($this->getDiscount()),
-                'total' => number_format($this->getTotal())
-            ];
-        }
-        return ['success' => false];
+        return [
+            'success'  => true, 
+            'subtotal' => number_format($this->getSubtotal()),
+            'discount' => number_format($this->getDiscount()),
+            'total'    => number_format($this->getTotal())
+        ];
     }
 
-    public function removeItem($id)
+    public function removeItem(string $variantId)
     {
-        $cart = session()->get('cart');
-        if (isset($cart[$id])) {
-            unset($cart[$id]);
-            session()->put('cart', $cart);
-            return ['success' => true];
-        }
-        return ['success' => false];
+        $cart = $this->getCart();
+        unset($cart[$variantId]);
+        Session::put(self::SESSION_KEY, $cart);
+        return ['success' => true];
     }
 
-    public function applyCoupon($code)
+    public function applyCoupon(string $code)
     {
         $coupon = Coupon::where('code', $code)->first();
 
@@ -182,13 +150,13 @@ class CartService
         }
 
         if ($coupon->min_order_amount && $this->getSubtotal() < $coupon->min_order_amount) {
-             return ['success' => false, 'message' => 'Order amount must be at least ' . number_format($coupon->min_order_amount)];
+             return ['success' => false, 'message' => 'Order total must be at least ' . number_format($coupon->min_order_amount)];
         }
 
-        session()->put('coupon', [
-            'code' => $coupon->code,
-            'type' => $coupon->type,
-            'value' => $coupon->value,
+        Session::put(self::COUPON_KEY, [
+            'code'                => $coupon->code,
+            'type'                => $coupon->type,
+            'value'               => $coupon->value,
             'max_discount_amount' => $coupon->max_discount_amount
         ]);
 
@@ -197,7 +165,7 @@ class CartService
 
     public function removeCoupon()
     {
-        session()->forget('coupon');
+        Session::forget(self::COUPON_KEY);
         return ['success' => true, 'message' => 'Coupon removed.'];
     }
 }

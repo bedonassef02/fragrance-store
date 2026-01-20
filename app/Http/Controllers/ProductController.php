@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Services\ProductService;
 
 class ProductController extends Controller
 {
-    public function show($slug)
-    {
-        $product = Product::with('category', 'variants.color', 'images.color')->where('slug', $slug)->firstOrFail();
+    protected $productService;
 
-        $relatedProducts = Product::where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
-            ->inRandomOrder()
-            ->take(3)
-            ->get();
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+
+    public function show(string $slug)
+    {
+        $product = $this->productService->getBySlug($slug);
+        $relatedProducts = $this->productService->getRelatedProducts($product);
 
         return view('products.show', compact('product', 'relatedProducts'));
     }

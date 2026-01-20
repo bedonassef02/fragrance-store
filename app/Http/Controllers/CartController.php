@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Services\CartService;
-use Illuminate\Http\Request;
-use App\Models\Coupon;
 use App\Http\Requests\AddToCartRequest;
+use App\Http\Requests\ApplyCouponRequest;
+use App\Http\Requests\RemoveFromCartRequest;
+use App\Http\Requests\UpdateCartRequest;
 
 class CartController extends Controller
 {
@@ -42,30 +43,27 @@ class CartController extends Controller
         return response()->json(['error' => $result['message']], $result['status'] ?? 400);
     }
 
-    public function update(Request $request)
+    public function update(UpdateCartRequest $request)
     {
-        if ($request->id && $request->quantity) {
-            $result = $this->cartService->updateQuantity($request->id, $request->quantity);
-            
-            if ($result['success']) {
-                return response()->json($result);
-            }
+        $validated = $request->validated();
+        $result = $this->cartService->updateQuantity($validated['id'], $validated['quantity']);
+        
+        if ($result['success']) {
+            return response()->json($result);
         }
+        
         return response()->json(['success' => false], 400);
     }
 
-    public function remove(Request $request)
+    public function remove(RemoveFromCartRequest $request)
     {
-        if ($request->id) {
-            $this->cartService->removeItem($request->id);
-            return response()->json(['success' => true]);
-        }
-        return response()->json(['success' => false], 400);
+        $this->cartService->removeItem($request->validated('id'));
+        return response()->json(['success' => true]);
     }
 
-    public function applyCoupon(Request $request)
+    public function applyCoupon(ApplyCouponRequest $request)
     {
-        $result = $this->cartService->applyCoupon($request->input('code'));
+        $result = $this->cartService->applyCoupon($request->validated('code'));
 
         if ($result['success']) {
             return back()->with('success', $result['message']);

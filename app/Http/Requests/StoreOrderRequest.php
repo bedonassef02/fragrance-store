@@ -6,20 +6,28 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreOrderRequest extends FormRequest
 {
-    public function authorize()
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
     {
         return [
-            'email'      => 'required|email',
-            'first_name' => 'required|string|max:255',
-            'last_name'  => 'required|string|max:255',
+            'email'      => 'required|email|max:255',
+            'first_name' => ['required', 'string', 'max:255', 'regex:/^[\pL\s\-]+$/u'],
+            'last_name'  => ['required', 'string', 'max:255', 'regex:/^[\pL\s\-]+$/u'],
             'address'    => 'required|string|max:255',
-            'city'       => 'required|string|max:255',
-            'phone'      => 'required|string|max:20',
+            'city'       => ['required', 'string', 'max:255', 'regex:/^[\pL\s\-]+$/u'],
+            'phone'      => ['required', 'string', 'regex:/^01[0-2,5]{1}[0-9]{8}$/'],
         ];
     }
 }
