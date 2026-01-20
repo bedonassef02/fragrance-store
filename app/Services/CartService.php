@@ -67,6 +67,7 @@ class CartService
         return [
             'totals' => [
                 'subtotal' => $this->getSubtotal(),
+                'shipping' => $this->getShipping(),
                 'discount' => $this->getDiscount(),
                 'total' => $this->getTotal(),
             ],
@@ -131,8 +132,15 @@ class CartService
         }
 
         $variant = ProductVariant::find($variantId);
-        if (!$variant || $variant->quantity < $quantity) {
-            return ['success' => false, 'message' => 'Not enough stock available.'];
+        
+        if (!$variant) {
+             unset($cart[$variantId]);
+             Session::put(self::SESSION_KEY, $cart);
+             return ['success' => false, 'message' => 'Product variant no longer exists. Removed from cart.'];
+        }
+
+        if ($variant->quantity < $quantity) {
+             return ['success' => false, 'message' => "Only {$variant->quantity} items left in stock."];
         }
 
         $cart[$variantId]['quantity'] = $quantity;
@@ -169,12 +177,12 @@ class CartService
             'max_discount_amount' => $coupon->max_discount_amount
         ]);
 
-        return ['success' => true, 'message' => 'Coupon applied successfully!'];
+        return ['success' => true, 'message' => 'Coupon applied successfully!'] + $this->getCartState();
     }
 
     public function removeCoupon()
     {
         Session::forget(self::COUPON_KEY);
-        return ['success' => true, 'message' => 'Coupon removed.'];
+        return ['success' => true, 'message' => 'Coupon removed.'] + $this->getCartState();
     }
 }

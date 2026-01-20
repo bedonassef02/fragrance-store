@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 btn.disabled = isOutOfStock;
                 btn.classList.toggle('opacity-50', isOutOfStock);
                 btn.classList.toggle('cursor-not-allowed', isOutOfStock);
-                
+
                 const isSelected = size === state.selectedSize;
                 btn.classList.toggle('bg-moon-gold', isSelected && !isOutOfStock);
                 btn.classList.toggle('text-moon-dark', isSelected && !isOutOfStock);
@@ -78,6 +78,27 @@ document.addEventListener('DOMContentLoaded', function () {
             this.updateMainImage();
             // Find and set the currently selected variant object
             state.selectedVariant = state.variants.find(v => v.color === state.selectedColor && v.size === state.selectedSize) || null;
+            this.updateAddToBagButton();
+        },
+        updateAddToBagButton() {
+            if (!addToBagBtn) return;
+
+            if (!state.selectedVariant) {
+                addToBagBtn.disabled = true;
+                addToBagBtn.innerText = 'Select Option';
+                addToBagBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            if (state.selectedVariant.qty === 0) {
+                addToBagBtn.disabled = true;
+                addToBagBtn.innerText = 'Out of Stock';
+                addToBagBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                addToBagBtn.disabled = false;
+                addToBagBtn.innerText = 'Add to Bag';
+                addToBagBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
         }
     };
 

@@ -68,6 +68,13 @@ class CartController extends Controller
     {
         $result = $this->cartService->applyCoupon($request->validated('code'));
 
+        if ($request->wantsJson()) {
+            if ($result['success']) {
+                return response()->json($result);
+            }
+            return response()->json(['message' => $result['message']], 400);
+        }
+
         if ($result['success']) {
             return back()->with('success', $result['message']);
         }
@@ -78,6 +85,11 @@ class CartController extends Controller
     public function removeCoupon()
     {
         $result = $this->cartService->removeCoupon();
+        
+        if (request()->wantsJson()) {
+             return response()->json($result);
+        }
+
         return back()->with('success', $result['message']);
     }
 }

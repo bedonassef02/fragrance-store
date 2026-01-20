@@ -17,27 +17,92 @@ document.addEventListener('DOMContentLoaded', function () {
     const updateTotals = (totals) => {
         if (subtotalEl) subtotalEl.innerText = formatPrice(totals.subtotal);
         if (totalEl) totalEl.innerText = formatPrice(totals.total);
-        if (discountEl) discountEl.innerText = `- ${formatPrice(totals.discount)}`;
+        if (discountEl) {
+            discountEl.innerText = `- ${formatPrice(totals.discount)}`;
+            // Show/Hide discount row based on value
+            discountEl.parentElement.style.display = totals.discount > 0 ? 'flex' : 'none';
+        }
+
+        // Update Shipping
+        const shippingEl = document.getElementById('cart-shipping');
+        if (shippingEl) {
+            shippingEl.innerText = totals.shipping > 0 ? formatPrice(totals.shipping) : 'Free';
+        }
     };
 
     const setLoadingState = (row, isLoading) => {
-        row.style.opacity = isLoading ? '0.5' : '1';
-        row.style.pointerEvents = isLoading ? 'none' : 'auto';
+        if (row) {
+            row.style.opacity = isLoading ? '0.5' : '1';
+            row.style.pointerEvents = isLoading ? 'none' : 'auto';
+        }
     };
 
     // --- Event Delegation ---
     cartContainer.addEventListener('click', async (e) => {
         const qtyBtn = e.target.closest('.cart-qty-btn');
         const removeBtn = e.target.closest('.cart-remove-btn');
+        const removeCouponBtn = e.target.closest('#remove-coupon-btn');
 
-        if (qtyBtn) {
-            handleQuantityUpdate(qtyBtn);
-        }
-
-        if (removeBtn) {
-            handleRemoveItem(removeBtn);
-        }
+        if (qtyBtn) handleQuantityUpdate(qtyBtn);
+        if (removeBtn) handleRemoveItem(removeBtn);
+        if (removeCouponBtn) handleRemoveCoupon(removeCouponBtn);
     });
+
+    const couponForm = document.getElementById('coupon-form');
+    if (couponForm) {
+        couponForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = couponForm.querySelector('input[name="code"]');
+            const btn = couponForm.querySelector('button');
+            const code = input.value;
+
+            if (!code) return;
+
+            btn.disabled = true;
+            btn.innerText = 'Applying...';
+
+            const { success, data, error } = await apiService.applyCoupon(code);
+
+            btn.disabled = false;
+            btn.innerText = 'Apply';
+
+            if (success) {
+                // Update totals
+                updateTotals(data.totals);
+                // Reload to show correct coupon UI state (simplest for now, or rebuild DOM)
+                window.location.reload();
+            } else {
+                const msgEl = document.getElementById('coupon-message');
+                if (msgEl) {
+                    msgEl.innerText = error || 'Invalid coupon code';
+                    msgEl.className = 'mt-2 text-xs font-medium text-red-500 fade-in';
+                    msgEl.classList.remove('hidden');
+                }
+            }
+        });
+
+        // Clear error on input
+        const input = couponForm.querySelector('input[name="code"]');
+        input.addEventListener('input', () => {
+            const msgEl = document.getElementById('coupon-message');
+            if (msgEl) msgEl.classList.add('hidden');
+        });
+    }
+
+    async function handleRemoveCoupon(btn) {
+        btn.disabled = true;
+        btn.innerText = '...';
+
+        const { success, data, error } = await apiService.removeCoupon();
+
+        if (success) {
+            updateTotals(data.totals);
+            window.location.reload();
+        } else {
+            btn.disabled = false;
+            btn.innerText = 'Remove';
+        }
+    }
 
     // --- Event Handlers ---
     async function handleQuantityUpdate(btn) {
@@ -45,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const action = btn.dataset.action;
         const row = document.getElementById(`row-${variantId}`);
         const qtyDisplay = document.getElementById(`qty-${variantId}`);
-        
+
         const currentQty = parseInt(qtyDisplay.innerText);
         const newQty = action === 'increase' ? currentQty + 1 : currentQty - 1;
 
@@ -60,12 +125,10 @@ document.addEventListener('DOMContentLoaded', function () {
         setLoadingState(row, false);
 
         if (success) {
-            updateTotals(data);
+            updateTotals(data.totals);
+            updateCartBadge(data.cartCount);
         } else {
-            // Revert optimistic update on failure
             qtyDisplay.innerText = currentQty;
-            // Optionally, show a toast or alert
-            alert(error || 'Failed to update quantity.');
         }
     }
 
@@ -73,29 +136,21 @@ document.addEventListener('DOMContentLoaded', function () {
         const variantId = btn.dataset.id;
         const row = document.getElementById(`row-${variantId}`);
 
-        if (!confirm('Are you sure you want to remove this item?')) return;
-
         setLoadingState(row, true);
 
         const { success, data, error } = await apiService.removeFromCart(variantId);
 
         if (success) {
             row.remove();
-            // The service should return updated totals and cart count
-            if (data.totals) {
-                updateTotals(data.totals);
-            }
-            if (data.cartCount !== undefined) {
-                updateCartBadge(data.cartCount);
-            }
-            // Check if cart is now empty
+            if (data.totals) updateTotals(data.totals);
+            if (data.cartCount !== undefined) updateCartBadge(data.cartCount);
+
+            const cartItemsContainer = document.getElementById('cart-items');
             if (cartItemsContainer && cartItemsContainer.children.length === 0) {
-                // You might want to replace the cart content with an "empty cart" message
-                window.location.reload(); // Simple solution for now
+                window.location.reload();
             }
         } else {
             setLoadingState(row, false);
-            alert(error || 'Failed to remove item.');
         }
     }
 });

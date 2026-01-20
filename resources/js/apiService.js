@@ -58,6 +58,17 @@ const apiService = {
             }),
         });
     },
+
+    applyCoupon(code) {
+        return this._fetch('/cart/coupon', {
+            method: 'POST',
+            body: JSON.stringify({ code }),
+        });
+    },
+
+    removeCoupon() {
+        return this._fetch('/cart/coupon/remove', { method: 'POST' });
+    },
 };
 
 export default apiService;

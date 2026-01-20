@@ -27,10 +27,14 @@
                         @foreach($order->items as $item)
                         <div class="flex gap-6 items-center">
                              <div class="w-20 h-24 bg-gray-700 flex-shrink-0 overflow-hidden border border-gray-700">
-                                 <img src="{{ $item->product->image }}" class="w-full h-full object-cover">
+                                 @php
+                                     // Try to get image from current variant/product, else placeholder
+                                     $image = $item->variant?->product?->image ?? asset('images/no-image.png');
+                                 @endphp
+                                 <img src="{{ $image }}" class="w-full h-full object-cover">
                              </div>
                              <div class="flex-1">
-                                 <h3 class="text-white font-bold">{{ $item->product->name }}</h3>
+                                 <h3 class="text-white font-bold">{{ $item->product_name }}</h3>
                                  <p class="text-sm text-gray-400">
                                      Size: {{ $item->size }} 
                                      @if($item->color) | Color: {{ $item->color }} @endif
@@ -38,7 +42,8 @@
                                  </p>
                              </div>
                              <div class="text-right">
-                                 <p class="text-moon-gold">{{ number_format($item->price * $item->quantity) }} LE</p>
+                                 <p class="text-moon-gold">{{ number_format($item->total) }} LE</p>
+                                 <p class="text-xs text-gray-500">{{ number_format($item->unit_price) }} LE / unit</p>
                              </div>
                         </div>
                         @endforeach
@@ -51,18 +56,14 @@
                 <!-- Totals -->
                 <div class="bg-gray-800/20 border border-gray-800 p-8 rounded-sm">
                     <h2 class="text-xl font-serif text-white mb-6 border-b border-gray-700 pb-4">Summary</h2>
-                    <div class="space-y-3 text-sm text-gray-400">
+                     <div class="space-y-3 text-sm text-gray-400">
                          <div class="flex justify-between">
                             <span>Subtotal</span>
-                            <span>{{ number_format($order->subtotal ?? ($order->total_amount + ($order->discount_amount ?? 0) - 150)) }} LE</span>
+                            <span>{{ number_format($order->subtotal) }} LE</span>
                         </div>
-                        @php
-                            $calculatedSubtotal = $order->subtotal ?? ($order->total_amount + ($order->discount_amount ?? 0) - 150);
-                            $calculatedShipping = $order->total_amount - $calculatedSubtotal + ($order->discount_amount ?? 0);
-                        @endphp
                          <div class="flex justify-between">
                             <span>Shipping</span>
-                            <span>{{ $calculatedShipping > 0 ? number_format($calculatedShipping) . ' LE' : 'Free' }}</span>
+                            <span>{{ ($order->total_amount - $order->subtotal + $order->discount_amount) > 0 ? number_format($order->total_amount - $order->subtotal + $order->discount_amount) . ' LE' : 'Free' }}</span>
                         </div>
                         @if($order->discount_amount > 0)
                         <div class="flex justify-between text-moon-gold">

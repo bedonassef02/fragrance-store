@@ -11,12 +11,14 @@ class Product extends Model
 
     protected $fillable = [
         'category_id', 'name', 'slug', 'description', 'price', 'original_price', 'image', 'badge', 'badge_color',
-        'is_featured', 'is_trending'
+        'featured', 'trending'
     ];
 
     protected $casts = [
-        'is_featured' => 'boolean',
-        'is_trending' => 'boolean',
+        'featured' => 'boolean',
+        'trending' => 'boolean',
+        'price' => 'decimal:2',
+        'original_price' => 'decimal:2',
     ];
 
     public function category()
