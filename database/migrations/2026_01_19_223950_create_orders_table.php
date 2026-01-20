@@ -22,8 +22,11 @@ return new class extends Migration
             $table->string('city');
             $table->string('phone');
             $table->decimal('total_amount', 10, 2);
+            $table->decimal('subtotal', 10, 2)->nullable();
+            $table->decimal('discount_amount', 10, 2)->default(0);
+            $table->string('coupon_code')->nullable();
             $table->string('payment_method')->default('cod');
-            $table->enum('status', ['pending', 'processing', 'shipped', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'processing', 'shipped', 'completed', 'cancelled'])->default('pending')->index();
             $table->timestamps();
         });
     }

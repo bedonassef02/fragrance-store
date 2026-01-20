@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('image');
             $table->string('badge')->nullable();
             $table->string('badge_color')->nullable();
+            $table->boolean('featured')->default(false);
+            $table->boolean('trending')->default(false);
             $table->timestamps();
         });
     }

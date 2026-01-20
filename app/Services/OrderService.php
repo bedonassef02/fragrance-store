@@ -31,6 +31,7 @@ class OrderService
         return DB::transaction(function () use ($data, $cartItems, $variantIds) {
             // 1. Lock and retrieve all variants in a single query to prevent race conditions.
             $variants = ProductVariant::whereIn('id', $variantIds)
+                ->with('product', 'color') // Eager load product for price and color for snapshot
                 ->lockForUpdate()
                 ->get()
                 ->keyBy('id');
@@ -67,8 +68,12 @@ class OrderService
                 
                 $order->items()->create([
                     'product_variant_id' => $variant->id,
+                    'product_name'       => $variant->product->name, // Snapshot name
+                    'color'              => $variant->color?->name,  // Snapshot color
+                    'size'               => $variant->size,          // Snapshot size
+                    'unit_price'         => $variant->product->price, // Use fresh DB price
                     'quantity'           => $item['quantity'],
-                    'price'              => $item['price'],
+                    'total'              => $variant->product->price * $item['quantity'], // Recalculate total
                 ]);
 
                 $variant->decrement('quantity', $item['quantity']);
