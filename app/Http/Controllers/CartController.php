@@ -31,7 +31,7 @@ class CartController extends Controller
         $request->validate([
             'product_id' => 'required|integer',
             'product_title' => 'nullable|string', 
-            'size' => 'required|string',
+            'size' => 'nullable|string',
             'color' => 'nullable|string',
             'quantity' => 'nullable|integer|min:1'
         ]);
@@ -54,14 +54,48 @@ class CartController extends Controller
             $color = \App\Models\Color::where('name', $colorName)->first();
         }
         
-        $variantQuery = \App\Models\ProductVariant::where('product_id', $product->id)
-                        ->where('size', $size);
+        $variantQuery = \App\Models\ProductVariant::where('product_id', $product->id);
+
+        // If Size is provided, filter by it.
+        if ($size) {
+            $variantQuery->where('size', $size);
+        }
         
         if ($color) {
             $variantQuery->where('color_id', $color->id);
         }
 
         $variant = $variantQuery->first();
+
+        // Strict Validation: If user selected options, we must match a variant.
+        // If no options selected, checks if product REQUIRES options.
+        
+        $allVariants = $product->variants;
+        $hasColors = $allVariants->whereNotNull('color_id')->count() > 0;
+        $hasSizes = $allVariants->where('size', '!=', 'One Size')->count() > 0;
+
+        if (!$variant) {
+            // Case 1: User requested specific options but they don't exist
+            if ($size || $color) {
+                 return response()->json(['error' => 'Selected combination is unavailable.'], 400);
+            }
+
+            // Case 2: User sent NOTHING, but product HAS options
+            if ($hasColors || $hasSizes) {
+                return response()->json(['error' => 'Please select options.'], 400);
+            }
+
+            // Case 3: Simple Product (No specific variants or just 'One Size' default)
+            $variant = $allVariants->first();
+            if (!$variant) {
+                 // Should not happen if seeded correctly, but fallback
+                 // Create dummy or error?
+                 // Error implies data issue.
+                 return response()->json(['error' => 'Product unavailable.'], 400);
+            }
+            // Auto-fill defaults
+            $size = $variant->size;
+        }
 
         // Stock Check (Optional strictness, warn user)
         if ($variant && $variant->quantity < $quantity) {

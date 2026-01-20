@@ -20,9 +20,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const hiddenSize = document.getElementById('selected-size');
     if (hiddenSize) selectedSize = hiddenSize.value;
 
-    // Initial Selection (First color)
+    // Initial Selection (First IN-STOCK color)
     if (colorBtns.length > 0) {
-        selectedColor = colorBtns[0].dataset.color;
+        // Find first color that has qty > 0
+        let defaultColor = colorBtns[0].dataset.color;
+
+        // Find first color in variants with qty > 0
+        // We need reference to unique colors order? Or just any in-stock?
+        // Let's iterate colorBtns to respect display order.
+        for (let btn of colorBtns) {
+            const c = btn.dataset.color;
+            const hasStock = variants.some(v => v.color === c && v.qty > 0);
+            if (hasStock) {
+                defaultColor = c;
+                break;
+            }
+        }
+
+        selectedColor = defaultColor;
         updateUI(selectedColor);
     } else {
         // No colors (e.g. Bags?), ensure sizes are active
@@ -99,23 +114,50 @@ document.addEventListener('DOMContentLoaded', function () {
         if (variants.length > 0) {
             sizeBtns.forEach(btn => {
                 const size = btn.dataset.size;
-                // Reset Selection
-                btn.classList.remove('bg-moon-gold', 'text-moon-dark', 'font-bold', 'shadow-[0_0_10px_rgba(198,168,124,0.3)]');
-                btn.classList.add('border-gray-700', 'text-gray-400');
 
-                if (availableSizes.includes(size)) {
-                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                // Check Validity and Stock
+                // 1. Check if size exists for this color (Validity)
+                const variantForColor = variants.find(v => v.size === size && (color ? v.color === color : true));
+                const isValid = !!variantForColor;
+
+                // 2. Check Stock
+                const isOutOfStock = isValid && variantForColor.qty === 0;
+
+                if (isValid && !isOutOfStock) {
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-gray-800');
                     btn.disabled = false;
+                    btn.title = '';
                 } else {
                     btn.classList.add('opacity-50', 'cursor-not-allowed');
                     btn.disabled = true;
+
+                    if (isOutOfStock) {
+                        btn.title = 'Sold Out';
+                        btn.classList.add('bg-gray-800'); // Darker background for sold out
+                    } else {
+                        btn.title = 'Not available in this color';
+                        btn.classList.remove('bg-gray-800');
+                    }
                 }
             });
 
             // Reset selectedSize
             selectedSize = null;
-            // Auto-select if only 1 option (e.g. One Size)
-            if (availableSizes.length === 1 && availableSizes[0] === 'One Size') {
+
+            // Auto-select first IN-STOCK Size for this color
+            // Get all size buttons that are NOT disabled
+            const enabledBtns = Array.from(sizeBtns).filter(btn => !btn.disabled);
+
+            if (enabledBtns.length > 0) {
+                const firstBtn = enabledBtns[0];
+                selectedSize = firstBtn.dataset.size;
+
+                // Highlight it
+                firstBtn.classList.remove('border-gray-700', 'text-gray-400');
+                firstBtn.classList.add('bg-moon-gold', 'text-moon-dark', 'font-bold', 'shadow-[0_0_10px_rgba(198,168,124,0.3)]');
+            } else if (availableSizes.length === 1 && availableSizes[0] === 'One Size') {
+                // Even if disabled (SOLD OUT), if it's One Size we might want to track it?
+                // But validation prevents adding.
                 selectedSize = 'One Size';
             }
         }
@@ -160,10 +202,24 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add to Bag Logic
     if (addToBagBtn) {
         addToBagBtn.addEventListener('click', () => {
-            if (!selectedSize) {
+            // Check if size selection is mandatory
+            // If availableSizes is empty or only "One Size", and no other options, maybe we allow it?
+            // But Wait: 'availableSizes' is local to updateUI.
+            // We need to know if size selection is possible.
+
+            // Simplest Helper: Check if size buttons specific to this color exist and are enabled.
+            const enabledSizeBtns = document.querySelectorAll('.product-size-btn:not([disabled])');
+            const hasSizeOptions = enabledSizeBtns.length > 0;
+            const needsSize = hasSizeOptions && !selectedSize;
+
+            if (needsSize) {
+                // Special check: If only 1 option is 'One Size', maybe it's auto-selected?
+                // Logic in updateUI auto-selects 'One Size'. So selectedSize should be set.
+                // If it's NOT set, it means user hasn't clicked it or auto-select failed.
                 alert('Please select a size');
                 return;
             }
+
             if (colorBtns.length > 0 && !selectedColor) {
                 alert('Please select a color');
                 return;

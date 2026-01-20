@@ -14,25 +14,25 @@
 
         @php
             $hasMultipleColors = $product->variants->pluck('color_id')->unique()->count() > 1;
-            $firstColor = $product->variants->first()?->color;
+            // We pass full variants data for "Smart Popup" logic in quick-add.js
+            $variantsData = $product->variants->map(fn($v) => [
+                'id' => $v->id,
+                'color' => $v->color?->name,
+                'color_hex' => $v->color?->hex_code,
+                'color_id' => $v->color_id,
+                'size' => $v->size,
+                'qty' => $v->quantity
+            ]);
         @endphp
 
-        @if($hasMultipleColors)
-        <a href="{{ route('product.show', $product['slug']) }}" 
-            class="absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10 flex items-center justify-center">
-            Select Option
-        </a>
-        @else
         <button 
             data-id="{{ $product['id'] }}" 
             data-name="{{ $product['name'] }}"
             data-price="{{ number_format($product['price']) }} LE"
-            data-sizes="{{ $product->variants->pluck('size')->unique()->implode(',') }}"
-            data-color="{{ $firstColor?->name }}"
-            class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-white border-t border-moon-dark/10">
+            data-variants="{{ json_encode($variantsData) }}"
+            class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-0 opacity-100 md:opacity-0 md:translate-y-full md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-300 hover:bg-white border-t border-moon-dark/10">
             Add to Bag
         </button>
-        @endif
     </div>
     <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
         <a href="{{ route('product.show', $product['slug']) }}" class="block">

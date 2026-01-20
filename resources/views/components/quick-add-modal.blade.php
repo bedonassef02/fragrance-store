@@ -7,8 +7,7 @@
     <p id="modal-product-price" class="text-moon-gold font-bold mb-6">0 LE</p>
     
     <div id="modal-size-container" class="mb-8 hidden">
-        <label class="block text-center text-xs uppercase tracking-widest text-gray-400 mb-4 font-bold">Select Size</label>
-        <div id="modal-size-buttons" class="flex gap-4 justify-center flex-wrap">
+        <div id="modal-size-buttons" class="flex flex-col gap-4">
             <!-- Appended via JS -->
         </div>
     </div>
