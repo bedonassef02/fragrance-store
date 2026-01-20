@@ -61,5 +61,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/reviews', [App\Http\Controllers\Admin\AdminReviewController::class, 'index'])->name('reviews.index');
         Route::patch('/reviews/{review}', [App\Http\Controllers\Admin\AdminReviewController::class, 'update'])->name('reviews.update');
         Route::delete('/reviews/{review}', [App\Http\Controllers\Admin\AdminReviewController::class, 'destroy'])->name('reviews.destroy');
+
+        // Collections
+        Route::resource('collections', App\Http\Controllers\Admin\AdminCollectionController::class);
+
+        // Categories
+        Route::resource('categories', App\Http\Controllers\Admin\AdminCategoryController::class);
     });
 });
