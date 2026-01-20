@@ -139,6 +139,47 @@
                 </div>
             </div>
 
+            <!-- Reviews -->
+            <div class="mt-24 border-t border-gray-800 pt-16">
+                <div class="flex items-center justify-between mb-12">
+                     <h2 class="text-2xl font-serif text-white">Customer Reviews</h2>
+                     <div class="flex items-center gap-2">
+                        <span class="text-4xl font-serif text-moon-gold">{{ number_format($product->average_rating, 1) }}</span>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest text-right">
+                           Average<br>Rating
+                        </div>
+                     </div>
+                </div>
+
+                @if($product->reviews_count > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    @foreach($product->reviews as $review)
+                    <div class="bg-white/5 border border-white/10 p-6 rounded-sm">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="flex text-moon-gold text-sm mb-1">
+                                    @for($i=1; $i<=5; $i++)
+                                        @if($i <= $review->rating) ★ @else ☆ @endif
+                                    @endfor
+                                </div>
+                                <span class="text-white text-sm font-bold">{{ $review->user->name ?? 'Verified Buyer' }}</span>
+                            </div>
+                            <span class="text-xs text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">{{ $review->comment }}</p>
+                        @if($review->image_path)
+                        <img src="{{ Storage::url($review->image_path) }}" class="w-20 h-20 object-cover rounded-sm border border-gray-700 cursor-zoom-in" onclick="document.getElementById('zoom-img-full').src=this.src; document.getElementById('zoom-modal').classList.remove('hidden', 'opacity-0');">
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <div class="text-center py-12 bg-white/5 border border-white/5 border-dashed rounded-sm">
+                    <p class="text-gray-500 font-light">No reviews yet. Be the first to share your thoughts!</p>
+                </div>
+                @endif
+            </div>
+
             <!-- Related Products -->
              <div class="mt-24 border-t border-gray-800 pt-16">
                 <h2 class="text-2xl font-serif text-white mb-8 text-center">You May Also Like</h2>

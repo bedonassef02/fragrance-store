@@ -63,4 +63,18 @@ class Product extends Model
     {
         return $query->where('trending', true);
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class)->where('is_approved', true)->orderBy('created_at', 'desc');
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return $this->reviews()->avg('rating') ?? 0;
+    }
+
+    public function getReviewsCountAttribute()
+    {
+        return $this->reviews()->count();
+    }
 }

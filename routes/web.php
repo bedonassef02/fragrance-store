@@ -36,4 +36,7 @@ Route::controller(CheckoutController::class)->prefix('checkout')->name('checkout
 });
 
 // Orders
+// Orders
 Route::get('/orders/{orderNumber}', [OrderController::class, 'show'])->name('orders.show');
+Route::get('/orders/{order}/review', [App\Http\Controllers\ReviewController::class, 'create'])->name('reviews.create');
+Route::post('/orders/{order}/review', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
