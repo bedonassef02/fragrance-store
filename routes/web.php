@@ -56,5 +56,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/profile', [App\Http\Controllers\Admin\AdminProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [App\Http\Controllers\Admin\AdminProfileController::class, 'update'])->name('profile.update');
         Route::put('/password', [App\Http\Controllers\Admin\AdminProfileController::class, 'updatePassword'])->name('password.update');
+
+        // Reviews
+        Route::get('/reviews', [App\Http\Controllers\Admin\AdminReviewController::class, 'index'])->name('reviews.index');
+        Route::patch('/reviews/{review}', [App\Http\Controllers\Admin\AdminReviewController::class, 'update'])->name('reviews.update');
+        Route::delete('/reviews/{review}', [App\Http\Controllers\Admin\AdminReviewController::class, 'destroy'])->name('reviews.destroy');
     });
 });
