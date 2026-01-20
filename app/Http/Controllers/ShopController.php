@@ -17,9 +17,15 @@ class ShopController extends Controller
 
     public function index(ProductFilterRequest $request)
     {
-        $products = $this->productService->getFilteredProducts($request->validated());
+        $validated = $request->validated();
+        $products = $this->productService->getFilteredProducts($validated);
         $categories = Category::all();
+        
+        $activeCollection = null;
+        if (!empty($validated['collection'])) {
+            $activeCollection = \App\Models\Collection::where('slug', $validated['collection'])->first();
+        }
 
-        return view('shop.index', compact('products', 'categories'));
+        return view('shop.index', compact('products', 'categories', 'activeCollection'));
     }
 }

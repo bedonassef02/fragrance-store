@@ -4,10 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\View\View;
 use App\Models\Collection;
-use App\Models\Product;
+use App\Services\ProductService;
 
 class HomeController extends Controller
 {
+    protected $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+
     public function index(): View
     {
         $heroImage = \App\Models\Setting::getValue('home_hero_image', 'https://images.pexels.com/photos/18269632/pexels-photo-18269632/free-photo-of-woman-in-hijab-posing-on-desert.jpeg?auto=compress&cs=tinysrgb&w=2000');
@@ -29,8 +36,8 @@ class HomeController extends Controller
         ];
 
         $collections = Collection::orderBy('sort_order')->take(3)->get();
-        $featured = Product::where('featured', true)->take(8)->get();
-        $trending = Product::where('trending', true)->take(8)->get();
+        $featured = $this->productService->getFeaturedProducts(8);
+        $trending = $this->productService->getTrendingProducts(8);
 
         return view('welcome', compact('hero', 'collections', 'featured', 'trending'));
     }

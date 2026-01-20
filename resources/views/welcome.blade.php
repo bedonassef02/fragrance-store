@@ -70,7 +70,7 @@
             <h2 class="text-3xl md:text-4xl font-serif text-white mb-6">Discover Our World</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
                 @foreach($collections as $item)
-                <a href="{{ route($item['route']) }}" class="group relative h-96 overflow-hidden">
+                <a href="{{ route('shop', ['collection' => $item->slug]) }}" class="group relative h-96 overflow-hidden">
                     <img src="{{ $item['image'] }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="{{ $item['title'] }}">
                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
                         <h3 class="text-2xl font-serif text-white border-b border-moon-gold pb-2 hover:text-moon-gold">{{ $item['title'] }}</h3>

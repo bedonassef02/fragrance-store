@@ -6,9 +6,21 @@
     <div class="pt-44 pb-16 bg-moon-dark min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header (Centered) -->
+            <!-- Header (Centered) -->
             <div class="text-center mb-12 border-b border-gray-800 pb-10">
-                <h1 class="text-4xl md:text-5xl font-serif text-white mb-4 animate-fadeInUp">Shop All</h1>
-                <p class="text-gray-400 font-light tracking-wide animate-fadeInUp delay-100">Thinking of you. Designed for you.</p>
+                @if($activeCollection)
+                    <div class="mb-6 relative h-64 md:h-80 w-full overflow-hidden rounded-sm animate-fadeInUp">
+                        <div class="absolute inset-0 bg-black/40 z-10"></div>
+                        <img src="{{ $activeCollection->image }}" alt="{{ $activeCollection->title }}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center p-4">
+                             <span class="text-moon-gold text-sm uppercase tracking-widest mb-2 block">{{ $activeCollection->subtitle }}</span>
+                             <h1 class="text-4xl md:text-5xl font-serif text-white">{{ $activeCollection->title }}</h1>
+                        </div>
+                    </div>
+                @else
+                    <h1 class="text-4xl md:text-5xl font-serif text-white mb-4 animate-fadeInUp">Shop All</h1>
+                    <p class="text-gray-400 font-light tracking-wide animate-fadeInUp delay-100">Thinking of you. Designed for you.</p>
+                @endif
             </div>
             
             <!-- Controls Bar -->

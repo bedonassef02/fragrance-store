@@ -31,7 +31,6 @@
                 <a href="{{ route('collections') }}" class="nav-link text-sm uppercase tracking-widest {{ request()->routeIs('collections') ? 'text-moon-gold' : 'text-gray-300' }} hover:text-moon-gold transition-colors duration-300">Collections</a>
                 <a href="{{ route('shop') }}" class="nav-link text-sm uppercase tracking-widest {{ request()->routeIs('shop') ? 'text-moon-gold' : 'text-gray-300' }} hover:text-moon-gold transition-colors duration-300">Shop</a>
                 <a href="{{ route('about') }}" class="nav-link text-sm uppercase tracking-widest {{ request()->routeIs('about') ? 'text-moon-gold' : 'text-gray-300' }} hover:text-moon-gold transition-colors duration-300">Our Story</a>
-                <a href="{{ route('contact') }}" class="nav-link text-sm uppercase tracking-widest {{ request()->routeIs('contact') ? 'text-moon-gold' : 'text-gray-300' }} hover:text-moon-gold transition-colors duration-300">Contact</a>
             </div>
 
             <!-- Actions -->
@@ -54,7 +53,6 @@
             <a href="{{ route('collections') }}" class="block px-3 py-4 border-b border-white/5 text-base font-serif text-white uppercase tracking-wider hover:text-moon-gold">Collections</a>
             <a href="{{ route('shop') }}" class="block px-3 py-4 border-b border-white/5 text-base font-serif text-white uppercase tracking-wider hover:text-moon-gold">Shop</a>
             <a href="{{ route('about') }}" class="block px-3 py-4 border-b border-white/5 text-base font-serif text-white uppercase tracking-wider hover:text-moon-gold">About</a>
-            <a href="{{ route('contact') }}" class="block px-3 py-4 text-base font-serif text-white uppercase tracking-wider hover:text-moon-gold">Contact</a>
         </div>
     </div>
 </nav>

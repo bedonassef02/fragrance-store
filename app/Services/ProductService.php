@@ -13,9 +13,10 @@ class ProductService
 
     public function getFilteredProducts(array $filters): LengthAwarePaginator
     {
-        $query = Product::with(['category', 'variants.color']);
+        $query = Product::with(['category', 'variants.color', 'images']);
 
         $this->applySearchFilter($query, $filters['search'] ?? null);
+        $this->applyCollectionFilter($query, $filters['collection'] ?? null);
         $this->applyCategoryFilter($query, $filters['category'] ?? null);
         $this->applyPriceRangeFilter($query, $filters['price_range'] ?? null);
         $this->applySizeFilter($query, $filters['sizes'] ?? null);
@@ -26,16 +27,33 @@ class ProductService
 
     public function getBySlug(string $slug): Product
     {
-        return Product::with('category', 'variants.color', 'images.color')
+        return Product::with(['category', 'variants.color', 'images.color'])
             ->where('slug', $slug)
             ->firstOrFail();
     }
 
     public function getRelatedProducts(Product $product, int $count = self::DEFAULT_RELATED_PRODUCTS_COUNT): \Illuminate\Database\Eloquent\Collection
     {
-        return Product::where('category_id', $product->category_id)
+        return Product::with(['category', 'variants.color', 'images'])
+            ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->inRandomOrder()
+            ->take($count)
+            ->get();
+    }
+
+    public function getFeaturedProducts(int $count = 8): \Illuminate\Database\Eloquent\Collection
+    {
+        return Product::featured()
+            ->with(['category', 'variants.color', 'images'])
+            ->take($count)
+            ->get();
+    }
+
+    public function getTrendingProducts(int $count = 8): \Illuminate\Database\Eloquent\Collection
+    {
+        return Product::trending()
+            ->with(['category', 'variants.color', 'images'])
             ->take($count)
             ->get();
     }
@@ -46,6 +64,15 @@ class ProductService
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%')
                   ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        }
+    }
+
+    private function applyCollectionFilter(Builder $query, ?string $collectionSlug): void
+    {
+        if ($collectionSlug) {
+            $query->whereHas('collections', function ($q) use ($collectionSlug) {
+                $q->where('slug', $collectionSlug);
             });
         }
     }

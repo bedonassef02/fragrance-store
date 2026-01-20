@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\View\View;
 use App\Models\Collection;
+use App\Models\Product; // Add Product usage if needed, though usually via relationship
 
 class CollectionController extends Controller
 {

@@ -13,7 +13,6 @@ use App\Http\Controllers\OrderController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/collections', [CollectionController::class, 'index'])->name('collections');
 Route::get('/about', fn() => view('about'))->name('about');
-Route::get('/contact', fn() => view('contact'))->name('contact');
 
 // Shop & Product
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');

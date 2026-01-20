@@ -13,7 +13,7 @@ class CollectionSeeder extends Seeder
             [
                 'title' => 'Ramadan 2026',
                 'subtitle' => 'Special Edition',
-                'image' => 'https://images.unsplash.com/photo-1628045620958-8671607590d9?q=80&w=1000',
+                'image' => 'https://images.pexels.com/photos/20344409/pexels-photo-20344409/free-photo-of-woman-in-long-coat-posing-in-passage.jpeg?auto=compress&cs=tinysrgb&w=800',
                 'route' => 'shop',
                 'cta_text' => 'Shop the Look',
                 'cta_class' => 'text-white border-b border-white pb-1 hover:text-moon-gold hover:border-moon-gold transition-colors',
@@ -23,7 +23,7 @@ class CollectionSeeder extends Seeder
             [
                 'title' => 'Modern Minimalist',
                 'subtitle' => 'New Season',
-                'image' => 'https://images.unsplash.com/photo-1590736969955-71cc94801759?q=80&w=800',
+                'image' => 'https://images.pexels.com/photos/16848560/pexels-photo-16848560/free-photo-of-woman-in-dress-in-desert.jpeg?auto=compress&cs=tinysrgb&w=800',
                 'route' => 'shop',
                 'cta_text' => 'Shop the Look',
                 'cta_class' => 'text-white border-b border-white pb-1 hover:text-moon-gold hover:border-moon-gold transition-colors',
@@ -33,7 +33,7 @@ class CollectionSeeder extends Seeder
             [
                 'title' => 'The Essentials Edit',
                 'subtitle' => 'Everyday Luxury',
-                'image' => 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1600',
+                'image' => 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800',
                 'route' => 'shop',
                 'cta_text' => 'Explore All',
                 'cta_class' => 'inline-block bg-white text-black px-8 py-3 uppercase tracking-widest text-xs font-bold hover:bg-moon-gold hover:text-white transition-colors',
@@ -43,7 +43,14 @@ class CollectionSeeder extends Seeder
         ];
 
         foreach ($collections as $c) {
-            Collection::create($c);
+            $c['slug'] = \Illuminate\Support\Str::slug($c['title']);
+            $collection = Collection::create($c);
+            
+            // Attach random products (assuming products exist)
+            if (\App\Models\Product::exists()) {
+                $products = \App\Models\Product::inRandomOrder()->take(rand(4, 12))->pluck('id');
+                $collection->products()->attach($products);
+            }
         }
     }
 }

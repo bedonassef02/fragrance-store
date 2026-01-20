@@ -34,6 +34,11 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function collections()
+    {
+        return $this->belongsToMany(Collection::class);
+    }
+
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
@@ -47,5 +52,15 @@ class Product extends Model
     public function isOutOfStock()
     {
         return $this->variants->sum('quantity') <= 0;
+    }
+
+    public function scopeFeatured($query)
+    {
+        return $query->where('featured', true);
+    }
+
+    public function scopeTrending($query)
+    {
+        return $query->where('trending', true);
     }
 }

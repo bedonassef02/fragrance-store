@@ -23,6 +23,7 @@ class ProductFilterRequest extends FormRequest
     {
         return [
             'search'           => 'nullable|string|max:100',
+            'collection'       => 'nullable|string|exists:collections,slug',
             'category'         => 'nullable|array',
             'category.*'       => 'string|max:50',
             'price_range'      => 'nullable|array',

@@ -27,7 +27,7 @@
             <div>
                 <h4 class="text-white font-serif mb-6 uppercase tracking-widest text-xs">Client Services</h4>
                 <ul class="space-y-3 text-sm text-gray-400">
-                    <li><a href="{{ route('contact') }}" class="hover:text-moon-gold transition-colors">Contact Us</a></li>
+
                     <li><a href="#" class="hover:text-moon-gold transition-colors">Delivery & Returns</a></li>
                     <li><a href="#" class="hover:text-moon-gold transition-colors">Size Guide</a></li>
                     <li><a href="#" class="hover:text-moon-gold transition-colors">Book an Appointment</a></li>

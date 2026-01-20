@@ -10,6 +10,11 @@ class Collection extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'subtitle', 'image', 'route', 'cta_text', 'cta_class', 'layout_class', 'sort_order'
+        'title', 'slug', 'subtitle', 'image', 'route', 'cta_text', 'cta_class', 'layout_class', 'sort_order'
     ];
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class);
+    }
 }

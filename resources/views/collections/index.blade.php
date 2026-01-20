@@ -15,7 +15,7 @@
                     <div class="absolute bottom-0 left-0 p-12 z-20 {{ $collection['class'] ? 'text-center w-full' : '' }}">
                         <span class="text-moon-gold text-sm uppercase tracking-widest mb-2 block">{{ $collection['subtitle'] }}</span>
                         <h2 class="text-4xl font-serif text-white mb-4">{{ $collection['title'] }}</h2>
-                        <a href="{{ route($collection['route']) }}" class="{{ $collection['cta_class'] }}">{{ $collection['cta'] }}</a>
+                        <a href="{{ route('shop', ['collection' => $collection->slug]) }}" class="{{ $collection['cta_class'] }}">{{ $collection['cta_text'] }}</a>
                     </div>
                 </div>
                 @endforeach
