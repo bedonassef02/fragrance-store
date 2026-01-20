@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
             CollectionSeeder::class,
             SettingSeeder::class,
             CouponSeeder::class,
+            OrderSeeder::class, // Orders need Users and Products
+            ReviewSeeder::class, // Reviews need Orders and Products
         ]);
     }
 }

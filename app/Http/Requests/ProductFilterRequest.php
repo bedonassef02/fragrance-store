@@ -30,6 +30,9 @@ class ProductFilterRequest extends FormRequest
             'price_range.*'    => ['string', 'regex:/^\d+-\d+$|^\d+\+$/'],
             'sizes'            => 'nullable|array',
             'sizes.*'          => 'string|max:20',
+            'colors'           => 'nullable|array',
+            'colors.*'         => 'string|max:50',
+            'in_stock'         => 'nullable|boolean',
             'sort'             => 'nullable|string|in:price_asc,price_desc,newest',
         ];
     }

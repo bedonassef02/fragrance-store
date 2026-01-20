@@ -83,6 +83,67 @@ class ShopSeeder extends Seeder
                 'badge' => '-15%',
                 'badge_color' => 'bg-red-600',
                 'category' => 'Bags'
+            ],
+            // NEW PRODUCTS
+            [
+                'name' => 'Emerald Green Kaftan',
+                'description' => 'Vibrant emerald kaftan with silver thread details.',
+                'price' => 3800,
+                'original_price' => 4500,
+                'image' => 'https://images.pexels.com/photos/19259460/pexels-photo-19259460/free-photo-of-woman-in-green-dress-posing-in-studio.jpeg?auto=compress&cs=tinysrgb&w=800',
+                'badge' => 'Sale',
+                'badge_color' => 'bg-green-600',
+                'category' => 'Kaftans'
+            ],
+            [
+                'name' => 'Pearl White Abaya',
+                'description' => 'Minimalist white abaya perfect for bright days.',
+                'price' => 2500,
+                'original_price' => null,
+                'image' => 'https://images.pexels.com/photos/7283446/pexels-photo-7283446.jpeg?auto=compress&cs=tinysrgb&w=800',
+                'badge' => 'Popular',
+                'badge_color' => 'bg-blue-600',
+                'category' => 'Abayas'
+            ],
+            [
+                'name' => 'Bohemian Maxi Dress',
+                'description' => 'Relaxed fit maxi dress with a bohemian print.',
+                'price' => 2200,
+                'original_price' => null,
+                'image' => 'https://images.pexels.com/photos/16654763/pexels-photo-16654763/free-photo-of-woman-in-dress-walking-in-desert.jpeg?auto=compress&cs=tinysrgb&w=800',
+                'badge' => null,
+                'badge_color' => null,
+                'category' => 'Dresses'
+            ],
+             [
+                'name' => 'Quilted Crossbody Bag',
+                'description' => 'Classic quilted pattern in a modern silhouette.',
+                'price' => 1500,
+                'original_price' => null,
+                'image' => 'https://images.pexels.com/photos/904350/pexels-photo-904350.jpeg?auto=compress&cs=tinysrgb&w=800',
+                'badge' => null,
+                'badge_color' => null,
+                'category' => 'Bags'
+            ],
+            [
+                'name' => 'Golden Hour Kaftan',
+                'description' => 'Shimmering gold fabric that captures the light.',
+                'price' => 5200,
+                'original_price' => null,
+                'image' => 'https://images.pexels.com/photos/18861110/pexels-photo-18861110/free-photo-of-model-in-traditional-clothes-and-jewelry.jpeg?auto=compress&cs=tinysrgb&w=800',
+                'badge' => 'Luxury',
+                'badge_color' => 'bg-moon-gold',
+                'category' => 'Kaftans'
+            ],
+            [
+                'name' => 'Linen Summer Dress',
+                'description' => 'Breathable linen dress for hot summer days.',
+                'price' => 1900,
+                'original_price' => 2400,
+                'image' => 'https://images.pexels.com/photos/10350352/pexels-photo-10350352.jpeg?auto=compress&cs=tinysrgb&w=800',
+                'badge' => '-20%',
+                'badge_color' => 'bg-red-600',
+                'category' => 'Dresses'
             ]
         ];
 

@@ -92,6 +92,47 @@
                                 </div>
                             </div>
 
+                            <!-- Sizes -->
+                            <div>
+                                <h3 class="text-white font-serif text-lg mb-4">Size</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach($sizes as $size)
+                                    <label class="cursor-pointer">
+                                        <input type="checkbox" name="sizes[]" value="{{ $size }}" {{ in_array($size, (array)request('sizes', [])) ? 'checked' : '' }} class="peer hidden">
+                                        <span class="block w-10 h-10 flex items-center justify-center border border-gray-700 text-gray-400 text-sm font-bold peer-checked:bg-moon-gold peer-checked:text-moon-dark peer-checked:border-moon-gold hover:border-moon-gold transition-all">
+                                            {{ $size }}
+                                        </span>
+                                    </label>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Colors -->
+                            <div>
+                                <h3 class="text-white font-serif text-lg mb-4">Color</h3>
+                                <div class="flex flex-wrap gap-3">
+                                    @foreach($colors as $color)
+                                    <label class="cursor-pointer group relative">
+                                        <input type="checkbox" name="colors[]" value="{{ $color->name }}" {{ in_array($color->name, (array)request('colors', [])) ? 'checked' : '' }} class="peer hidden">
+                                        <span class="block w-8 h-8 rounded-full border border-gray-700 peer-checked:ring-2 peer-checked:ring-moon-gold peer-checked:ring-offset-2 peer-checked:ring-offset-moon-dark transition-all" style="background-color: {{ $color->hex_code }}"></span>
+                                        <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">{{ $color->name }}</span>
+                                    </label>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Availability -->
+                            <div>
+                                <h3 class="text-white font-serif text-lg mb-4">Availability</h3>
+                                 <label class="flex items-center space-x-3 cursor-pointer group">
+                                    <div class="relative flex items-center">
+                                        <input type="checkbox" name="in_stock" value="1" {{ request('in_stock') ? 'checked' : '' }} class="peer h-4 w-4 appearance-none border border-gray-600 rounded-sm checked:bg-moon-gold checked:border-moon-gold transition-all">
+                                        <svg class="absolute w-3 h-3 text-black hidden peer-checked:block pointer-events-none left-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
+                                    </div>
+                                    <span class="text-sm text-gray-400 group-hover:text-moon-gold transition-colors">In Stock Only</span>
+                                </label>
+                            </div>
+
                             <!-- Price Range -->
                             <div>
                                 <h3 class="text-white font-serif text-lg mb-4">Price Range</h3>

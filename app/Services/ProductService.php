@@ -20,6 +20,8 @@ class ProductService
         $this->applyCategoryFilter($query, $filters['category'] ?? null);
         $this->applyPriceRangeFilter($query, $filters['price_range'] ?? null);
         $this->applySizeFilter($query, $filters['sizes'] ?? null);
+        $this->applyColorFilter($query, $filters['colors'] ?? null); // Added
+        $this->applyStockFilter($query, $filters['in_stock'] ?? null); // Added
         $this->applySorting($query, $filters['sort'] ?? null);
 
         return $query->paginate(self::DEFAULT_PAGINATION_COUNT)->withQueryString();
@@ -112,6 +114,25 @@ class ProductService
             $sizeList = is_array($sizes) ? $sizes : explode(',', $sizes);
             $query->whereHas('variants', function ($q) use ($sizeList) {
                 $q->whereIn('size', $sizeList);
+            });
+        }
+    }
+
+    private function applyColorFilter(Builder $query, $colors): void
+    {
+        if (!empty($colors)) {
+            $colorList = is_array($colors) ? $colors : explode(',', $colors);
+            $query->whereHas('variants.color', function ($q) use ($colorList) {
+                $q->whereIn('name', $colorList);
+            });
+        }
+    }
+
+    private function applyStockFilter(Builder $query, $inStock): void
+    {
+        if ($inStock) {
+            $query->whereHas('variants', function ($q) {
+                $q->where('quantity', '>', 0);
             });
         }
     }
