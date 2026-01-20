@@ -1,69 +1,101 @@
+import apiService from './apiService';
+import { updateCartBadge } from './cart-utils';
+
 document.addEventListener('DOMContentLoaded', function () {
-    const qtyBtns = document.querySelectorAll('.cart-qty-btn');
-    const removeBtns = document.querySelectorAll('.cart-remove-btn');
+    const cartContainer = document.querySelector('.cart-container');
+    if (!cartContainer) return;
+
+    // --- DOM Elements ---
     const subtotalEl = document.getElementById('cart-subtotal');
     const totalEl = document.getElementById('cart-total');
+    const discountEl = document.getElementById('cart-discount');
+    const cartItemsContainer = document.getElementById('cart-items');
 
-    if (qtyBtns.length === 0 && removeBtns.length === 0) return;
+    // --- Utility Functions ---
+    const formatPrice = (amount) => `${Number(amount).toLocaleString()} LE`;
 
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    const updateTotals = (totals) => {
+        if (subtotalEl) subtotalEl.innerText = formatPrice(totals.subtotal);
+        if (totalEl) totalEl.innerText = formatPrice(totals.total);
+        if (discountEl) discountEl.innerText = `- ${formatPrice(totals.discount)}`;
+    };
 
-    qtyBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const key = btn.dataset.key;
-            const action = btn.dataset.action;
-            const qtyDisplay = document.getElementById('qty-' + key);
-            let currentQty = parseInt(qtyDisplay.innerText);
-            let newQty = action === 'increase' ? currentQty + 1 : currentQty - 1;
+    const setLoadingState = (row, isLoading) => {
+        row.style.opacity = isLoading ? '0.5' : '1';
+        row.style.pointerEvents = isLoading ? 'none' : 'auto';
+    };
 
-            if (newQty < 1) return;
+    // --- Event Delegation ---
+    cartContainer.addEventListener('click', async (e) => {
+        const qtyBtn = e.target.closest('.cart-qty-btn');
+        const removeBtn = e.target.closest('.cart-remove-btn');
 
-            // Optimistic UI update
-            qtyDisplay.innerText = newQty;
+        if (qtyBtn) {
+            handleQuantityUpdate(qtyBtn);
+        }
 
-            fetch('/cart/update', {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify({
-                    id: key,
-                    quantity: newQty
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (subtotalEl) subtotalEl.innerText = data.subtotal + ' LE';
-                        if (totalEl) totalEl.innerText = data.total + ' LE';
-                    }
-                });
-        });
+        if (removeBtn) {
+            handleRemoveItem(removeBtn);
+        }
     });
 
-    removeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const key = btn.dataset.key;
-            fetch('/cart/remove', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify({
-                    id: key
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const row = document.getElementById('row-' + key);
-                        if (row) row.remove();
-                        // Reload to update totals cleanly for now
-                        window.location.reload();
-                    }
-                });
-        });
-    });
+    // --- Event Handlers ---
+    async function handleQuantityUpdate(btn) {
+        const variantId = btn.dataset.id;
+        const action = btn.dataset.action;
+        const row = document.getElementById(`row-${variantId}`);
+        const qtyDisplay = document.getElementById(`qty-${variantId}`);
+        
+        const currentQty = parseInt(qtyDisplay.innerText);
+        const newQty = action === 'increase' ? currentQty + 1 : currentQty - 1;
+
+        if (newQty < 1) return;
+
+        // Optimistic UI update
+        qtyDisplay.innerText = newQty;
+        setLoadingState(row, true);
+
+        const { success, data, error } = await apiService.updateCart(variantId, newQty);
+
+        setLoadingState(row, false);
+
+        if (success) {
+            updateTotals(data);
+        } else {
+            // Revert optimistic update on failure
+            qtyDisplay.innerText = currentQty;
+            // Optionally, show a toast or alert
+            alert(error || 'Failed to update quantity.');
+        }
+    }
+
+    async function handleRemoveItem(btn) {
+        const variantId = btn.dataset.id;
+        const row = document.getElementById(`row-${variantId}`);
+
+        if (!confirm('Are you sure you want to remove this item?')) return;
+
+        setLoadingState(row, true);
+
+        const { success, data, error } = await apiService.removeFromCart(variantId);
+
+        if (success) {
+            row.remove();
+            // The service should return updated totals and cart count
+            if (data.totals) {
+                updateTotals(data.totals);
+            }
+            if (data.cartCount !== undefined) {
+                updateCartBadge(data.cartCount);
+            }
+            // Check if cart is now empty
+            if (cartItemsContainer && cartItemsContainer.children.length === 0) {
+                // You might want to replace the cart content with an "empty cart" message
+                window.location.reload(); // Simple solution for now
+            }
+        } else {
+            setLoadingState(row, false);
+            alert(error || 'Failed to remove item.');
+        }
+    }
 });

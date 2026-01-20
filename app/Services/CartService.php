@@ -60,6 +60,19 @@ class CartService
     {
         return $this->getSubtotal() + $this->getShipping() - $this->getDiscount();
     }
+    
+    private function getCartState(): array
+    {
+        $cart = $this->getCart();
+        return [
+            'totals' => [
+                'subtotal' => $this->getSubtotal(),
+                'discount' => $this->getDiscount(),
+                'total' => $this->getTotal(),
+            ],
+            'cartCount' => count($cart),
+        ];
+    }
 
     public function addToCart(array $data)
     {
@@ -111,9 +124,8 @@ class CartService
     public function updateQuantity(string $variantId, int $quantity)
     {
         $cart = $this->getCart();
-        $key = $variantId;
-
-        if (!isset($cart[$key])) {
+        
+        if (!isset($cart[$variantId])) {
             return ['success' => false, 'message' => 'Item not found in cart.'];
         }
 
@@ -122,15 +134,10 @@ class CartService
             return ['success' => false, 'message' => 'Not enough stock available.'];
         }
 
-        $cart[$key]['quantity'] = $quantity;
+        $cart[$variantId]['quantity'] = $quantity;
         Session::put(self::SESSION_KEY, $cart);
             
-        return [
-            'success'  => true, 
-            'subtotal' => number_format($this->getSubtotal()),
-            'discount' => number_format($this->getDiscount()),
-            'total'    => number_format($this->getTotal())
-        ];
+        return ['success' => true] + $this->getCartState();
     }
 
     public function removeItem(string $variantId)
@@ -138,7 +145,8 @@ class CartService
         $cart = $this->getCart();
         unset($cart[$variantId]);
         Session::put(self::SESSION_KEY, $cart);
-        return ['success' => true];
+        
+        return ['success' => true] + $this->getCartState();
     }
 
     public function applyCoupon(string $code)

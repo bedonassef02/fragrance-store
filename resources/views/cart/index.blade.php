@@ -7,12 +7,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 class="text-4xl font-serif text-white mb-12 text-center">Shopping Bag</h1>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 cart-container">
                 <!-- Cart Items -->
-                <div class="lg:col-span-2 space-y-8">
+                <div class="lg:col-span-2 space-y-8" id="cart-items">
                     @forelse($cartItems as $item)
                     <!-- Item -->
-                    <div class="cart-item-row flex gap-6 border-b border-gray-800 pb-8" id="row-{{ $item['key'] }}">
+                    <div class="cart-item-row flex gap-6 border-b border-gray-800 pb-8" id="row-{{ $item['variant_id'] }}">
                         <div class="w-32 h-40 bg-gray-800 flex-shrink-0">
                             <img src="{{ $item['image'] }}" class="w-full h-full object-cover">
                         </div>
@@ -32,11 +32,11 @@
                             
                             <div class="flex justify-between items-center">
                                 <div class="flex items-center border border-gray-700">
-                                    <button class="cart-qty-btn px-3 py-1 text-gray-400 hover:text-white" data-action="decrease" data-key="{{ $item['key'] }}">-</button>
-                                    <span class="cart-qty-display px-2 text-white text-sm" id="qty-{{ $item['key'] }}">{{ $item['quantity'] }}</span>
-                                    <button class="cart-qty-btn px-3 py-1 text-gray-400 hover:text-white" data-action="increase" data-key="{{ $item['key'] }}">+</button>
+                                    <button class="cart-qty-btn px-3 py-1 text-gray-400 hover:text-white" data-action="decrease" data-id="{{ $item['variant_id'] }}">-</button>
+                                    <span class="cart-qty-display px-2 text-white text-sm" id="qty-{{ $item['variant_id'] }}">{{ $item['quantity'] }}</span>
+                                    <button class="cart-qty-btn px-3 py-1 text-gray-400 hover:text-white" data-action="increase" data-id="{{ $item['variant_id'] }}">+</button>
                                 </div>
-                                <button class="cart-remove-btn text-gray-500 text-xs uppercase tracking-widest hover:text-red-500 transition-colors" data-key="{{ $item['key'] }}">Remove</button>
+                                <button class="cart-remove-btn text-gray-500 text-xs uppercase tracking-widest hover:text-red-500 transition-colors" data-id="{{ $item['variant_id'] }}">Remove</button>
                             </div>
                         </div>
                     </div>

@@ -33,14 +33,10 @@ class CartController extends Controller
         $result = $this->cartService->addToCart($request->validated());
         
         if ($result['success']) {
-            return response()->json([
-                'success' => true,
-                'message' => $result['message'],
-                'cartCount' => $result['cartCount']
-            ]);
+            return response()->json($result);
         }
         
-        return response()->json(['error' => $result['message']], $result['status'] ?? 400);
+        return response()->json(['message' => $result['message']], $result['status'] ?? 400);
     }
 
     public function update(UpdateCartRequest $request)
@@ -52,13 +48,18 @@ class CartController extends Controller
             return response()->json($result);
         }
         
-        return response()->json(['success' => false], 400);
+        return response()->json(['message' => $result['message']], 400);
     }
 
     public function remove(RemoveFromCartRequest $request)
     {
-        $this->cartService->removeItem($request->validated('id'));
-        return response()->json(['success' => true]);
+        $result = $this->cartService->removeItem($request->validated('id'));
+
+        if ($result['success']) {
+            return response()->json($result);
+        }
+
+        return response()->json(['message' => 'Failed to remove item'], 400);
     }
 
     public function applyCoupon(ApplyCouponRequest $request)
