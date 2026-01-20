@@ -13,7 +13,17 @@
 
             <!-- Logo -->
             <div class="flex-shrink-0 flex items-center justify-center md:justify-start w-full md:w-auto absolute md:relative left-0 right-0 pointer-events-none md:pointer-events-auto">
-                <a href="{{ route('home') }}" class="text-3xl font-serif text-white tracking-[0.2em] font-bold pointer-events-auto">MOON</a>
+                <a href="{{ route('home') }}" class="group flex items-center gap-3 text-3xl font-serif tracking-[0.3em] font-bold pointer-events-auto">
+                    <!-- Moon Icon -->
+                    <div class="relative w-8 h-8">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-full h-full text-moon-gold drop-shadow-lg transform -rotate-12 group-hover:rotate-0 transition-transform duration-500">
+                            <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd" />
+                        </svg>
+                        <!-- Glow effect -->
+                        <div class="absolute inset-0 bg-moon-gold/20 blur-md rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </div>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-moon-gold to-white drop-shadow-sm">MÒÓN</span>
+                </a>
             </div>
 
             <!-- Desktop Links -->
