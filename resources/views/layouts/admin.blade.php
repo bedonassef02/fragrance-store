@@ -48,7 +48,7 @@
                 <span class="ml-auto text-[10px] font-bold bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">New</span>
             </a>
 
-            <a href="#" class="sidebar-link flex items-center px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5">
+            <a href="{{ route('admin.products.index') }}" class="sidebar-link flex items-center px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                  <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                 <span class="font-medium">Products</span>
             </a>

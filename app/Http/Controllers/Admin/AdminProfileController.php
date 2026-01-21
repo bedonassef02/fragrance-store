@@ -19,6 +19,7 @@ class AdminProfileController extends Controller
 
     public function update(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $validated = $request->validate([
@@ -38,6 +39,7 @@ class AdminProfileController extends Controller
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $user->update([

@@ -11,7 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->redirectGuestsTo(function (Illuminate\Http\Request $request) {
+            return route('admin.login');
+        });
     })
     ->withProviders([
         App\Providers\ComposerServiceProvider::class,

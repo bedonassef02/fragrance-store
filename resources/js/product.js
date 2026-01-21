@@ -49,19 +49,54 @@ document.addEventListener('DOMContentLoaded', function () {
                 btn.classList.toggle('text-moon-dark', isSelected && !isOutOfStock);
             });
         },
-        updateMainImage() {
+        updateGalleryAndMainImage() {
             if (!mainImage) return;
-            const variantImage = galleryThumbs.length > 0 && Array.from(galleryThumbs).find(thumb => thumb.dataset.color === state.selectedColor);
-            if (variantImage) {
-                mainImage.src = variantImage.src;
-                galleryThumbs.forEach(t => t.classList.remove('border-moon-gold'));
-                variantImage.classList.add('border-moon-gold');
+
+            // 1. Filter Thumbnails
+            const allThumbs = Array.from(galleryThumbs);
+            let firstVisibleThumb = null;
+
+            allThumbs.forEach(thumb => {
+                const thumbColor = thumb.dataset.color;
+                // Show thumb if:
+                // a) No color selected
+                // b) Thumb is 'all' (main image usually)
+                // c) Thumb matches selected color
+                const shouldShow = !state.selectedColor || thumbColor === 'all' || thumbColor === state.selectedColor;
+
+                thumb.style.display = shouldShow ? 'block' : 'none';
+
+                if (shouldShow && !firstVisibleThumb) {
+                    firstVisibleThumb = thumb;
+                }
+            });
+
+            // 2. Update Main Image if needed
+            // If the currently displayed main image doesn't match the selected color (and isn't 'all'), switch it
+            const currentMainColor = mainImage.dataset.currentColor;
+            if (state.selectedColor && currentMainColor !== 'all' && currentMainColor !== state.selectedColor) {
+                // Find the first image for this color
+                const colorImage = allThumbs.find(t => t.dataset.color === state.selectedColor);
+                if (colorImage) {
+                    mainImage.src = colorImage.src;
+                    // Update active state
+                    allThumbs.forEach(t => t.classList.remove('border-moon-gold', 'border-transparent'));
+                    allThumbs.forEach(t => t.classList.add('border-transparent'));
+                    colorImage.classList.remove('border-transparent');
+                    colorImage.classList.add('border-moon-gold');
+                }
+            } else if (!state.selectedColor && firstVisibleThumb) {
+                // Reset to first if cleared
+                // Optional: decide if we want to reset main image when color is deselected
             }
         },
         updateAll() {
             this.updateColorSwatches();
             this.updateSizeButtons();
-            this.updateMainImage();
+
+            // Replaced updateMainImage with more comprehensive gallery update
+            this.updateGalleryAndMainImage();
+
             // Find and set the currently selected variant object
             state.selectedVariant = state.variants.find(v => v.color === state.selectedColor && v.size === state.selectedSize) || null;
             this.updateAddToBagButton();
