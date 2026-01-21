@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, \App\Traits\Trackable;
 
     protected $fillable = [
         'category_id', 'name', 'slug', 'description', 'price', 'original_price', 'image', 'badge', 'badge_color',
