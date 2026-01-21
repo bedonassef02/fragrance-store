@@ -66,6 +66,51 @@
         </x-admin.ui.glass-panel>
     </div>
 
+    <!-- Analytics Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <!-- Visits Today -->
+        <x-admin.ui.glass-panel class="p-6 relative overflow-hidden group">
+             <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <svg class="w-16 h-16 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+            </div>
+            <p class="text-sm font-medium text-slate-400 uppercase tracking-wider mb-1">Page Views Today</p>
+            <h3 class="text-3xl font-bold text-white">{{ number_format($analytics['visits_today']) }}</h3>
+            <div class="mt-4 flex items-center text-xs font-medium text-cyan-400">
+                <span class="bg-cyan-400/10 px-2 py-1 rounded-full">{{ $analytics['unique_visitors_today'] }} Unique Visitors</span>
+            </div>
+        </x-admin.ui.glass-panel>
+        
+        <!-- Most Viewed Products -->
+        <div class="lg:col-span-3">
+             <x-admin.ui.glass-panel class="h-full p-6">
+                <h3 class="font-bold text-white text-lg mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-moon-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    Top Viewed Products (All Time)
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                    @foreach($topViewedProducts as $view)
+                        <div class="bg-white/5 rounded-xl p-3 flex flex-col items-center text-center group hover:bg-white/10 transition-colors">
+                            <div class="w-12 h-12 rounded-lg bg-black/50 mb-3 overflow-hidden border border-white/10">
+                                @if($view->product)
+                                    <img src="{{ Storage::url($view->product->image) }}" class="w-full h-full object-cover">
+                                @endif
+                            </div>
+                            <div class="text-xs font-medium text-slate-200 truncate w-full mb-1">{{ $view->product->name ?? 'Unknown Product' }}</div>
+                            <div class="text-[10px] text-slate-500 mb-2">{{ $view->product ? number_format($view->product->price) . ' LE' : '-' }}</div>
+                            <span class="text-xs font-bold text-moon-gold bg-moon-gold/10 px-2 py-1 rounded-full">
+                                {{ $view->views }} Views
+                            </span>
+                        </div>
+                    @endforeach
+                    @if($topViewedProducts->isEmpty())
+                        <div class="col-span-full text-center text-slate-500 py-4 text-sm">No product views recorded yet.</div>
+                    @endif
+                </div>
+             </x-admin.ui.glass-panel>
+        </div>
+    </div>
+
+    <!-- Charts & Tables Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
         <!-- Weekly Sales Chart -->
         <div class="lg:col-span-2">

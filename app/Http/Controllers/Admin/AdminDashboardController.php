@@ -70,6 +70,21 @@ class AdminDashboardController extends Controller
             $chartData[$dayName] = $weeklySales[$date] ?? 0;
         }
 
-        return view('admin.dashboard', compact('stats', 'recentOrders', 'topProducts', 'lowStockItems', 'chartData'));
+        // 6. Analytics Data
+        $analytics = [
+            'visits_today' => \App\Models\PageVisit::whereDate('created_at', today())->count(),
+            'total_visits' => \App\Models\PageVisit::count(),
+            'unique_visitors_today' => \App\Models\PageVisit::whereDate('created_at', today())->distinct('ip_address')->count('ip_address'),
+        ];
+
+        // 7. Top Viewed Products
+        $topViewedProducts = \App\Models\ProductView::select('product_id', \Illuminate\Support\Facades\DB::raw('count(*) as views'))
+            ->with(['product' => function($q) { $q->select('id', 'name', 'image', 'price'); }])
+            ->groupBy('product_id')
+            ->orderByDesc('views')
+            ->take(5)
+            ->get();
+
+        return view('admin.dashboard', compact('stats', 'recentOrders', 'topProducts', 'lowStockItems', 'chartData', 'analytics', 'topViewedProducts'));
     }
 }
