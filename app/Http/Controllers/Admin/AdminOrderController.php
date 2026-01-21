@@ -47,4 +47,21 @@ class AdminOrderController extends Controller
 
         return back()->with('success', 'Order status updated successfully.');
     }
+
+    public function addDeposit(Request $request, Order $order)
+    {
+        $validated = $request->validate([
+            'deposit_amount' => 'required|numeric|min:0',
+            'deposit_proof' => 'required|image|max:2048', // 2MB max
+        ]);
+
+        $path = $request->file('deposit_proof')->store('deposits', 'public');
+
+        $order->update([
+            'deposit_amount' => $validated['deposit_amount'],
+            'deposit_proof_path' => $path,
+        ]);
+
+        return back()->with('success', 'Deposit added successfully.');
+    }
 }

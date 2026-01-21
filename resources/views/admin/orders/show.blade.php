@@ -144,8 +144,62 @@ Placed on <span class="text-white font-medium">{{ $order->created_at->format('F 
                 </span>
             </div>
         </div>
-    </div>
-</div>
+
+        <!-- Deposit Card -->
+        <div class="bg-[#1e293b]/50 backdrop-blur-md rounded-2xl border border-[#334155] p-6">
+            <h3 class="font-serif text-lg text-white font-medium mb-4">Deposit</h3>
+            
+            @if($order->deposit_amount)
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400 text-sm">Paid Amount</span>
+                        <span class="text-moon-gold font-bold font-mono text-lg">{{ number_format($order->deposit_amount, 2) }} LE</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400 text-sm">Remaining</span>
+                        <span class="text-white font-bold font-mono">{{ number_format($order->total_amount - $order->deposit_amount, 2) }} LE</span>
+                    </div>
+                    @if($order->deposit_proof_path)
+                        <div class="pt-4 border-t border-[#334155]">
+                            <a href="{{ Storage::url($order->deposit_proof_path) }}" target="_blank" class="flex items-center justify-center gap-2 w-full py-2 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-colors text-sm font-medium">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                View Proof Screenshot
+                            </a>
+                        </div>
+                    @endif
+                </div>
+            @else
+                <form action="{{ route('admin.orders.deposit', $order) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div>
+                        <label class="block text-xs text-slate-400 uppercase tracking-wider mb-2">Deposit Amount</label>
+                        <div class="relative">
+                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-slate-500 font-serif">LE</span>
+                            </div>
+                            <input type="number" step="0.01" name="deposit_amount" placeholder="0.00" class="w-full bg-[#0f172a] border border-[#334155] rounded-xl pl-10 pr-4 py-2 text-white text-sm focus:border-moon-gold focus:ring-1 focus:ring-moon-gold placeholder-slate-600 transition-colors">
+                        </div>
+                        @error('deposit_amount')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-400 uppercase tracking-wider mb-2">Proof Screenshot</label>
+                        <input type="file" name="deposit_proof" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-700 file:text-white hover:file:bg-slate-600">
+                        @error('deposit_proof')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="w-full py-2 bg-moon-gold hover:bg-yellow-500 text-moon-dark font-bold rounded-xl text-sm transition-colors shadow-lg shadow-moon-gold/20">
+                        Add Deposit
+                    </button>
+                </form>
+            @endif
+        </div>
 
 <style>
     .bg-moon-gold { background-color: #d4af37; }

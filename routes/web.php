@@ -79,6 +79,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/customers/{email}', [App\Http\Controllers\Admin\AdminCustomerController::class, 'show'])->name('customers.show');
 
         // Orders
+        Route::put('orders/{order}/deposit', [App\Http\Controllers\Admin\AdminOrderController::class, 'addDeposit'])->name('orders.deposit');
         Route::resource('orders', App\Http\Controllers\Admin\AdminOrderController::class)->only(['index', 'show', 'update']);
     });
 });

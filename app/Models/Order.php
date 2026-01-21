@@ -21,6 +21,8 @@ class Order extends Model
         'coupon_code',
         'payment_method',
         'status',
+        'deposit_amount',
+        'deposit_proof_path',
     ];
 
     public function items()

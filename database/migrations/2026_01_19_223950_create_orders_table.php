@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('coupon_code')->nullable();
             $table->string('payment_method')->default('cod');
             $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'completed', 'returned', 'replaced', 'cancelled'])->default('pending')->index();
+            $table->decimal('deposit_amount', 10, 2)->nullable();
+            $table->string('deposit_proof_path')->nullable();
             $table->timestamps();
         });
     }

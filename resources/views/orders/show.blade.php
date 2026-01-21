@@ -98,6 +98,17 @@
                             <span>Shipping</span>
                             <span>{{ $calculatedShipping > 0 ? number_format($calculatedShipping) . ' LE' : 'Free' }}</span>
                         </div>
+                        @if($order->deposit_amount > 0)
+                        <div class="flex justify-between text-moon-gold">
+                             <span>Deposit Paid</span>
+                             <span>-{{ number_format($order->deposit_amount) }} LE</span>
+                        </div>
+                        <div class="flex justify-between text-gray-400 text-xs italic">
+                             <span>Remaining Balance</span>
+                             <span>{{ number_format($order->total_amount - $order->deposit_amount) }} LE</span>
+                        </div>
+                        @endif
+
                         @if($order->discount_amount > 0)
                         <div class="flex justify-between text-green-400">
                             <span>Coupon Discount <small class="text-gray-500">({{ $order->coupon_code }})</small></span>
