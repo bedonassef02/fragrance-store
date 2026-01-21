@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+    <x-seo.schema-org type="organization" />
+    <x-seo.schema-org type="website" />
     <!-- Hero Section -->
     <!-- Hero Section -->
     <header id="home" class="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">

@@ -13,6 +13,7 @@ use App\Http\Controllers\OrderController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/collections', [CollectionController::class, 'index'])->name('collections');
 Route::get('/about', fn() => view('about'))->name('about');
+Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
 // Shop & Product
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');

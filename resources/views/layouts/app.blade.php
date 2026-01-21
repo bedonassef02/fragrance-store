@@ -6,6 +6,31 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'MOON | Luxury Arabian Fashion')</title>
     <meta name="description" content="@yield('description', 'Discover Moon\'s exclusive collection of handcrafted abayas, luxury bags, and modern Arabian fashion.')">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="@yield('canonical', url()->current())" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="@yield('og:type', 'website')" />
+    <meta property="og:url" content="@yield('og:url', url()->current())" />
+    <meta property="og:title" content="@yield('og:title', 'MOON | Luxury Arabian Fashion')" />
+    <meta property="og:description" content="@yield('og:description', 'Discover Moon\'s exclusive collection of handcrafted abayas, luxury bags, and modern Arabian fashion.')" />
+    <meta property="og:image" content="@yield('og:image', asset('moon-icon.svg'))" />
+    <meta property="og:locale" content="ar_AR" />
+    <meta property="og:site_name" content="MOON" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="@yield('og:url', url()->current())" />
+    <meta property="twitter:title" content="@yield('og:title', 'MOON | Luxury Arabian Fashion')" />
+    <meta property="twitter:description" content="@yield('og:description', 'Discover Moon\'s exclusive collection of handcrafted abayas, luxury bags, and modern Arabian fashion.')" />
+    <meta property="twitter:image" content="@yield('og:image', asset('moon-icon.svg'))" />
+    
+    <!-- Geo Tags for Egypt -->
+    <meta name="geo.region" content="EG" />
+    <meta name="geo.placename" content="Cairo, Egypt" />
+    <meta name="geo.position" content="30.0444;31.2357" />
+    <meta name="ICBM" content="30.0444, 31.2357" />
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

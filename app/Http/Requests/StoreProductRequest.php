@@ -24,6 +24,11 @@ class StoreProductRequest extends FormRequest
             'badge' => 'nullable|string|max:255',
             'badge_color' => 'nullable|string|max:50',
             
+            // SEO
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'keywords' => 'nullable|string',
+            
             // Relations
             'collections' => 'nullable|array',
             'collections.*' => 'exists:collections,id',

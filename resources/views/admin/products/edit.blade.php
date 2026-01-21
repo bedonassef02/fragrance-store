@@ -286,6 +286,32 @@
                  </div>
              </div>
 
+             <!-- SEO Settings -->
+             <div class="bg-moon-dark/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl">
+                 <h3 class="text-lg font-bold text-white mb-6 font-display flex items-center gap-2">
+                    <svg class="w-5 h-5 text-moon-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    SEO Settings
+                 </h3>
+                 <div class="space-y-4">
+                     <div>
+                        <label for="meta_title" class="block text-sm font-medium text-moon-gray-300 mb-2">Meta Title</label>
+                        <input type="text" name="meta_title" id="meta_title" value="{{ old('meta_title', $product->meta_title) }}" placeholder="Custom title for search engines"
+                               class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-moon-gray-500 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
+                        <p class="text-xs text-moon-gray-500 mt-1">Leave blank to use product name.</p>
+                    </div>
+                     <div>
+                        <label for="meta_description" class="block text-sm font-medium text-moon-gray-300 mb-2">Meta Description</label>
+                        <textarea name="meta_description" id="meta_description" rows="3" placeholder="Summary for search results..."
+                                  class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-moon-gray-500 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all resize-none">{{ old('meta_description', $product->meta_description) }}</textarea>
+                    </div>
+                     <div>
+                        <label for="keywords" class="block text-sm font-medium text-moon-gray-300 mb-2">Keywords</label>
+                        <textarea name="keywords" id="keywords" rows="2" placeholder="comma, separated, keywords"
+                                  class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-moon-gray-500 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all resize-none">{{ old('keywords', $product->keywords) }}</textarea>
+                    </div>
+                 </div>
+             </div>
+
         </div>
     </div>
 </form>

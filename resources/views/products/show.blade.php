@@ -1,8 +1,18 @@
 @extends('layouts.app')
 
-@section('title', $product['name'] . ' | MOON')
+@section('title', $product->meta_title ?: $product->name . ' | MOON')
+@section('description', $product->meta_description ?: 'Discover ' . $product->name . ' at Moon. ' . Str::limit(strip_tags($product->description), 100))
+@section('og:title', $product->meta_title ?: $product->name . ' | MOON')
+@section('og:description', $product->meta_description ?: 'Discover ' . $product->name . ' at Moon. ' . Str::limit(strip_tags($product->description), 100))
+@section('og:image', $product->image)
 
 @section('content')
+    <x-seo.schema-org type="product" :data="compact('product')" />
+    <x-seo.schema-org type="breadcrumb" :data="['breadcrumbs' => [
+        ['name' => 'Home', 'url' => route('home')],
+        ['name' => $product->category->name ?? 'Shop', 'url' => route('shop')],
+        ['name' => $product->name, 'url' => route('product.show', $product->slug)],
+    ]]" />
     <div class="pt-44 pb-24 bg-moon-dark min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Breadcrumbs -->
