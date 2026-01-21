@@ -11,11 +11,31 @@ use Illuminate\Support\Str;
 
 class AdminProductService
 {
-    public function getAllProducts($perPage = 10)
+    public function getAllProducts($filters = [], $perPage = 10)
     {
-        return Product::with(['category', 'variants'])
-            ->latest()
-            ->paginate($perPage);
+        $query = Product::with(['category', 'variants']);
+
+        // Search
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('id', 'like', "%{$search}%");
+            });
+        }
+
+        // Status Filter
+        if (!empty($filters['status'])) {
+            if ($filters['status'] === 'out_of_stock') {
+                $query->whereDoesntHave('variants', function($q) {
+                    $q->where('quantity', '>', 0);
+                });
+            } elseif ($filters['status'] === 'featured') {
+                $query->where('featured', true);
+            }
+        }
+
+        return $query->latest()->paginate($perPage);
     }
 
     public function createProduct(array $data)

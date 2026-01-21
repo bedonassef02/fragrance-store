@@ -13,7 +13,7 @@
                class="px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 {{ !request('status') ? 'bg-moon-gold text-white shadow-lg shadow-moon-gold/20' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
                 All
             </a>
-            @foreach(['pending', 'processing', 'shipped', 'delivered', 'cancelled'] as $status)
+            @foreach(['pending', 'processing', 'shipped', 'delivered', 'returned', 'replaced', 'cancelled'] as $status)
                 <a href="{{ route('admin.orders.index', ['status' => $status]) }}" 
                    class="px-4 py-2 rounded-xl text-sm font-medium capitalize transition-all duration-300 {{ request('status') === $status ? 'bg-moon-gold text-white shadow-lg shadow-moon-gold/20' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
                     {{ $status }}
@@ -78,6 +78,8 @@
                                     'processing' => 'bg-blue-500/10 text-blue-500 border-blue-500/20',
                                     'shipped' => 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20',
                                     'delivered' => 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+                                    'returned' => 'bg-orange-500/10 text-orange-500 border-orange-500/20',
+                                    'replaced' => 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20',
                                     'cancelled' => 'bg-rose-500/10 text-rose-500 border-rose-500/20',
                                 ];
                             @endphp

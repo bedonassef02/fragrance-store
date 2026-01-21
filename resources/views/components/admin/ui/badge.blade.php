@@ -21,6 +21,10 @@
         'danger' => 'bg-rose-500/10 text-rose-400 border-rose-500/20',
         'rose' => 'bg-rose-500/10 text-rose-400 border-rose-500/20',
         'primary' => 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+        'orange' => 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+        'cyan' => 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+        'purple' => 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+        'teal' => 'bg-teal-500/10 text-teal-400 border-teal-500/20',
     ];
 
     $colorClass = $colors[$finalColor] ?? $colors['slate'];

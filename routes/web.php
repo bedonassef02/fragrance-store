@@ -71,6 +71,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Products
         Route::resource('products', App\Http\Controllers\Admin\AdminProductController::class);
 
+        // Reviews Management
+        Route::resource('reviews', App\Http\Controllers\Admin\AdminReviewController::class)->only(['index', 'update', 'destroy']);
+
+        // Customers Management
+        Route::get('/customers', [App\Http\Controllers\Admin\AdminCustomerController::class, 'index'])->name('customers.index');
+        Route::get('/customers/{email}', [App\Http\Controllers\Admin\AdminCustomerController::class, 'show'])->name('customers.show');
+
         // Orders
         Route::resource('orders', App\Http\Controllers\Admin\AdminOrderController::class)->only(['index', 'show', 'update']);
     });

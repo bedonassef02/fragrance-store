@@ -19,7 +19,7 @@ Placed on <span class="text-white font-medium">{{ $order->created_at->format('F 
     @method('PUT')
     <div class="relative group">
         <select name="status" onchange="this.form.submit()" class="appearance-none bg-[#1e293b] border border-[#334155] text-white pl-4 pr-10 py-2.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-moon-gold/50 hover:border-moon-gold/50 transition-colors cursor-pointer capitalize">
-            @foreach(['pending', 'processing', 'shipped', 'delivered', 'cancelled'] as $status)
+            @foreach(['pending', 'processing', 'shipped', 'delivered', 'returned', 'replaced', 'cancelled'] as $status)
                 <option value="{{ $status }}" {{ $order->status === $status ? 'selected' : '' }}>{{ ucfirst($status) }}</option>
             @endforeach
         </select>

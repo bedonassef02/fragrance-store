@@ -25,25 +25,34 @@
     <!-- Filters & Search -->
     <div class="bg-moon-dark/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
         <div class="relative w-full md:w-96">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="w-5 h-5 text-moon-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </div>
-            <input type="text" placeholder="Search products by name, SKU..." 
-                   class="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder-moon-gray-500 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
+            <form action="{{ route('admin.products.index') }}" method="GET">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="w-5 h-5 text-moon-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products by name, ID..." 
+                       class="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder-moon-gray-500 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
+                
+                @if(request('status'))
+                    <input type="hidden" name="status" value="{{ request('status') }}">
+                @endif
+            </form>
         </div>
         
         <div class="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
-            <button class="px-4 py-2 rounded-lg bg-moon-gold/10 text-moon-gold border border-moon-gold/20 text-sm font-medium whitespace-nowrap hover:bg-moon-gold/20 transition-colors">
+            <a href="{{ route('admin.products.index', ['search' => request('search')]) }}" 
+               class="px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-colors {{ !request('status') ? 'bg-moon-gold/10 text-moon-gold border-moon-gold/20' : 'bg-white/5 text-moon-gray-400 border-white/5 hover:bg-white/10 hover:text-white' }}">
                 All Products
-            </button>
-            <button class="px-4 py-2 rounded-lg bg-white/5 text-moon-gray-400 border border-white/5 text-sm font-medium whitespace-nowrap hover:bg-white/10 hover:text-white transition-colors">
+            </a>
+            <a href="{{ route('admin.products.index', ['status' => 'out_of_stock', 'search' => request('search')]) }}" 
+               class="px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-colors {{ request('status') === 'out_of_stock' ? 'bg-moon-gold/10 text-moon-gold border-moon-gold/20' : 'bg-white/5 text-moon-gray-400 border-white/5 hover:bg-white/10 hover:text-white' }}">
                 Out of Stock
-            </button>
-            <button class="px-4 py-2 rounded-lg bg-white/5 text-moon-gray-400 border border-white/5 text-sm font-medium whitespace-nowrap hover:bg-white/10 hover:text-white transition-colors">
+            </a>
+            <a href="{{ route('admin.products.index', ['status' => 'featured', 'search' => request('search')]) }}" 
+               class="px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-colors {{ request('status') === 'featured' ? 'bg-moon-gold/10 text-moon-gold border-moon-gold/20' : 'bg-white/5 text-moon-gray-400 border-white/5 hover:bg-white/10 hover:text-white' }}">
                 Featured
-            </button>
+            </a>
         </div>
     </div>
 
@@ -183,7 +192,7 @@
         <!-- Pagination -->
         @if($products->hasPages())
             <div class="px-6 py-4 border-t border-white/5 bg-white/[0.02]">
-                {{ $products->links() }}
+                {{ $products->withQueryString()->links() }}
             </div>
         @endif
     </div>

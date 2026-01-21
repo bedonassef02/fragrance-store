@@ -26,7 +26,7 @@ return new class extends Migration
             $table->decimal('discount_amount', 10, 2)->default(0);
             $table->string('coupon_code')->nullable();
             $table->string('payment_method')->default('cod');
-            $table->enum('status', ['pending', 'processing', 'shipped', 'completed', 'cancelled'])->default('pending')->index();
+            $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'completed', 'returned', 'replaced', 'cancelled'])->default('pending')->index();
             $table->timestamps();
         });
     }
