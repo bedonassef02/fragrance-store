@@ -4,10 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Services\OrderService;
+use App\Http\Requests\Admin\AddOrderDepositRequest;
 use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
 {
+    protected $orderService;
+
+    public function __construct(OrderService $orderService)
+    {
+        $this->orderService = $orderService;
+    }
+
     /**
      * Display a listing of orders.
      */
@@ -48,20 +57,20 @@ class AdminOrderController extends Controller
         return back()->with('success', 'Order status updated successfully.');
     }
 
-    public function addDeposit(Request $request, Order $order)
+    public function addDeposit(AddOrderDepositRequest $request, Order $order) // Modified type hint
     {
-        $validated = $request->validate([
-            'deposit_amount' => 'required|numeric|min:0',
-            'deposit_proof' => 'required|image|max:2048', // 2MB max
-        ]);
-
-        $path = $request->file('deposit_proof')->store('deposits', 'public');
-
-        $order->update([
-            'deposit_amount' => $validated['deposit_amount'],
-            'deposit_proof_path' => $path,
-        ]);
+        // Removed inline validation and logic, delegated to OrderService
+        $this->orderService->addDeposit(
+            $order,
+            $request->validated('deposit_amount'),
+            $request->file('deposit_proof')
+        );
 
         return back()->with('success', 'Deposit added successfully.');
+    }
+    public function deleteDeposit(Order $order)
+    {
+        $this->orderService->deleteDeposit($order);
+        return back()->with('success', 'Deposit removed successfully.');
     }
 }

@@ -146,11 +146,27 @@ Placed on <span class="text-white font-medium">{{ $order->created_at->format('F 
         </div>
 
         <!-- Deposit Card -->
-        <div class="bg-[#1e293b]/50 backdrop-blur-md rounded-2xl border border-[#334155] p-6">
-            <h3 class="font-serif text-lg text-white font-medium mb-4">Deposit</h3>
+        <div class="bg-[#1e293b]/50 backdrop-blur-md rounded-2xl border border-[#334155] p-6" x-data="{ editing: false }">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-serif text-lg text-white font-medium">Deposit</h3>
+                @if($order->deposit_amount)
+                    <div class="flex items-center gap-2">
+                         <button @click="editing = !editing" class="text-xs font-bold uppercase tracking-wider text-moon-gold hover:text-white transition-colors">
+                            <span x-text="editing ? 'Cancel' : 'Edit'">Edit</span>
+                        </button>
+                        <form action="{{ route('admin.orders.deposit.destroy', $order) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this deposit?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-xs font-bold uppercase tracking-wider text-red-500 hover:text-red-400 transition-colors">
+                                Remove
+                            </button>
+                        </form>
+                    </div>
+                @endif
+            </div>
             
             @if($order->deposit_amount)
-                <div class="space-y-4">
+                <div x-show="!editing" class="space-y-4">
                     <div class="flex items-center justify-between">
                         <span class="text-slate-400 text-sm">Paid Amount</span>
                         <span class="text-moon-gold font-bold font-mono text-lg">{{ number_format($order->deposit_amount, 2) }} LE</span>
@@ -168,6 +184,39 @@ Placed on <span class="text-white font-medium">{{ $order->created_at->format('F 
                         </div>
                     @endif
                 </div>
+
+                <!-- Update Form -->
+                <form x-show="editing" action="{{ route('admin.orders.deposit', $order) }}" method="POST" enctype="multipart/form-data" class="space-y-4 mt-4">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div>
+                        <label class="block text-xs text-slate-400 uppercase tracking-wider mb-2">Update Amount</label>
+                        <div class="relative">
+                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-slate-500 font-serif">LE</span>
+                            </div>
+                            <input type="number" step="0.01" name="deposit_amount" value="{{ $order->deposit_amount }}" class="w-full bg-[#0f172a] border border-[#334155] rounded-xl pl-10 pr-4 py-2 text-white text-sm focus:border-moon-gold focus:ring-1 focus:ring-moon-gold placeholder-slate-600 transition-colors">
+                        </div>
+                        @error('deposit_amount')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-400 uppercase tracking-wider mb-2">Update Screenshot</label>
+                        <input type="file" name="deposit_proof" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-700 file:text-white hover:file:bg-slate-600">
+                        @error('deposit_proof')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                         <p class="text-[10px] text-slate-500 mt-1">Leave empty to keep current proof.</p>
+                    </div>
+
+                    <button type="submit" class="w-full py-2 bg-moon-gold hover:bg-yellow-500 text-moon-dark font-bold rounded-xl text-sm transition-colors shadow-lg shadow-moon-gold/20">
+                        Update Deposit
+                    </button>
+                </form>
+
             @else
                 <form action="{{ route('admin.orders.deposit', $order) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                     @csrf

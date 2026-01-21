@@ -36,7 +36,7 @@ class StoreProductRequest extends FormRequest
             
             // Images (with color association)
             'images' => 'nullable|array',
-            'images.*.file' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'images.*.file' => 'required|image|mimes:jpeg,png,jpg,webp|max:51200',
             'images.*.color_id' => 'nullable|exists:colors,id',
         ];
     }

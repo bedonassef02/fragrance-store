@@ -38,7 +38,7 @@ class UpdateProductRequest extends FormRequest
             
             // New Images
             'new_images' => 'nullable|array',
-            'new_images.*.file' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'new_images.*.file' => 'required|image|mimes:jpeg,png,jpg,webp|max:51200',
             'new_images.*.color_id' => 'nullable|exists:colors,id',
             
             'deleted_images' => 'nullable|array',

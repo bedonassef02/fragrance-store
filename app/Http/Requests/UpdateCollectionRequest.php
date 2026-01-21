@@ -36,7 +36,7 @@ class UpdateCollectionRequest extends FormRequest
                 Rule::unique('collections', 'slug')->ignore($this->collection->id),
             ],
             'subtitle' => 'nullable|string|max:255',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:51200',
             'route' => 'nullable|string|max:255',
             'cta_text' => 'nullable|string|max:50',
             'cta_class' => 'nullable|string|max:255',

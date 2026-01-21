@@ -29,7 +29,7 @@ class StoreReviewRequest extends FormRequest
             'reviews.*.product_id' => 'required|exists:products,id',
             'reviews.*.rating' => 'required|integer|min:1|max:5',
             'reviews.*.comment' => 'nullable|string|max:1000',
-            'reviews.*.image' => 'nullable|image|max:2048',
+            'reviews.*.image' => 'nullable|image|max:51200',
         ];
     }
 }

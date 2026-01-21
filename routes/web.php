@@ -80,6 +80,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Orders
         Route::put('orders/{order}/deposit', [App\Http\Controllers\Admin\AdminOrderController::class, 'addDeposit'])->name('orders.deposit');
+        Route::delete('orders/{order}/deposit', [App\Http\Controllers\Admin\AdminOrderController::class, 'deleteDeposit'])->name('orders.deposit.destroy');
         Route::resource('orders', App\Http\Controllers\Admin\AdminOrderController::class)->only(['index', 'show', 'update']);
     });
 });

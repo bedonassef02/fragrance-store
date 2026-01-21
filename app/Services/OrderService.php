@@ -92,4 +92,29 @@ class OrderService
             return $order;
         });
     }
+    public function addDeposit(Order $order, float $amount, $proofFile): void
+    {
+        // Delete old proof if exists
+        if ($order->deposit_proof_path) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($order->deposit_proof_path);
+        }
+
+        $path = $proofFile->store('deposits', 'public');
+
+        $order->update([
+            'deposit_amount' => $amount,
+            'deposit_proof_path' => $path,
+        ]);
+    }
+    public function deleteDeposit(Order $order): void
+    {
+        if ($order->deposit_proof_path) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($order->deposit_proof_path);
+        }
+
+        $order->update([
+            'deposit_amount' => null,
+            'deposit_proof_path' => null,
+        ]);
+    }
 }

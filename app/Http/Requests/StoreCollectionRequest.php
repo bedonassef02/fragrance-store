@@ -25,7 +25,7 @@ class StoreCollectionRequest extends FormRequest
             'title' => 'required|string|max:255|unique:collections,title',
             'slug' => 'nullable|string|max:255|unique:collections,slug',
             'subtitle' => 'nullable|string|max:255',
-            'image' => 'nullable|image|max:2048', // 2MB Max
+            'image' => 'nullable|image|max:51200', // 50MB Max
             'route' => 'nullable|string|max:255',
             'cta_text' => 'nullable|string|max:50',
             'cta_class' => 'nullable|string|max:255',
