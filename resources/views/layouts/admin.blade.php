@@ -42,7 +42,7 @@
 
             <p class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-8 mb-2">Store Management</p>
 
-            <a href="#" class="sidebar-link flex items-center px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5">
+            <a href="{{ route('admin.orders.index') }}" class="sidebar-link flex items-center px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                 <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
                 <span class="font-medium">Orders</span>
                 <span class="ml-auto text-[10px] font-bold bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">New</span>

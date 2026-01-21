@@ -67,5 +67,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Categories
         Route::resource('categories', App\Http\Controllers\Admin\AdminCategoryController::class);
+
+        // Orders
+        Route::resource('orders', App\Http\Controllers\Admin\AdminOrderController::class)->only(['index', 'show', 'update']);
     });
 });

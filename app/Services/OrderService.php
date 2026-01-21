@@ -68,6 +68,7 @@ class OrderService
                 $variant = $variants->get($key);
                 
                 $order->items()->create([
+                    'product_id'         => $variant->product_id, // Link to product
                     'product_variant_id' => $variant->id,
                     'product_name'       => $variant->product->name, // Snapshot name
                     'color'              => $variant->color?->name,  // Snapshot color
