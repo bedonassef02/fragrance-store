@@ -84,5 +84,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('orders/{order}/deposit', [App\Http\Controllers\Admin\AdminOrderController::class, 'deleteDeposit'])->name('orders.deposit.destroy');
         Route::get('/action-logs', [App\Http\Controllers\Admin\AdminActionLogController::class, 'index'])->name('action-logs.index');
         Route::resource('orders', App\Http\Controllers\Admin\AdminOrderController::class)->only(['index', 'show', 'update']);
+        Route::resource('coupons', App\Http\Controllers\Admin\AdminCouponController::class);
     });
 });

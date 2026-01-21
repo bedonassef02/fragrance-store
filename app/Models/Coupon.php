@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Coupon extends Model
 {
+    use \App\Traits\Trackable;
+
     protected $fillable = [
         'code', 'type', 'value', 
         'usage_limit', 'used_count', 
@@ -18,6 +20,25 @@ class Coupon extends Model
         'valid_to' => 'datetime',
         'value' => 'decimal:2',
     ];
+
+    public function calculateDiscount($total)
+    {
+        if ($this->type === 'fixed') {
+            return min($this->value, $total);
+        }
+
+        if ($this->type === 'percent') {
+            $discount = ($total * $this->value) / 100;
+            
+            if ($this->max_discount_amount > 0) {
+                return min($discount, $this->max_discount_amount);
+            }
+
+            return $discount;
+        }
+
+        return 0;
+    }
 
     public function isValid()
     {
