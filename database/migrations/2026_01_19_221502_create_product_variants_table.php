@@ -11,8 +11,12 @@ return new class extends Migration
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->foreignId('color_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('size')->nullable()->index();
+            
+            // Capacity / Size Logic for Perfumes
+            $table->integer('capacity')->nullable(); // e.g. 100, 50, 10
+            $table->string('unit')->default('ml');
+            $table->string('container_type')->default('Original Bottle'); // Bottle, Decant
+            
             $table->integer('quantity')->default(0);
             $table->timestamps();
         });
