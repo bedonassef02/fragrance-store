@@ -69,6 +69,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Categories
         Route::resource('categories', App\Http\Controllers\Admin\AdminCategoryController::class);
 
+        // Brands
+        Route::resource('brands', App\Http\Controllers\Admin\AdminBrandController::class);
+
+        // Notes
+        Route::resource('notes', App\Http\Controllers\Admin\AdminNoteController::class);
+
         // Products
         Route::resource('products', App\Http\Controllers\Admin\AdminProductController::class);
 

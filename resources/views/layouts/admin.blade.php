@@ -58,6 +58,16 @@
                 <span class="font-medium">Customers</span>
             </a>
 
+            <a href="{{ route('admin.brands.index') }}" class="sidebar-link flex items-center px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
+                <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                <span class="font-medium">Brands</span>
+            </a>
+
+            <a href="{{ route('admin.notes.index') }}" class="sidebar-link flex items-center px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 {{ request()->routeIs('admin.notes.*') ? 'active' : '' }}">
+                <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                <span class="font-medium">Notes</span>
+            </a>
+
             <a href="{{ route('admin.collections.index') }}" class="sidebar-link flex items-center px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 {{ request()->routeIs('admin.collections.*') ? 'active' : '' }}">
                 <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                 <span class="font-medium">Collections</span>

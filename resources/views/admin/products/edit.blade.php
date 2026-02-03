@@ -58,7 +58,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="concentration" class="block text-sm font-medium text-moon-gray-300 mb-2">Concentration</label>
-                        <select name="concentration" id="concentration" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
+                        <select name="concentration" id="concentration" class="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
                             <option value="">Select Concentration</option>
                             <option value="EDT" {{ old('concentration', $product->concentration) == 'EDT' ? 'selected' : '' }}>Eau de Toilette (EDT)</option>
                             <option value="EDP" {{ old('concentration', $product->concentration) == 'EDP' ? 'selected' : '' }}>Eau de Parfum (EDP)</option>
@@ -69,7 +69,7 @@
 
                     <div>
                         <label for="gender" class="block text-sm font-medium text-moon-gray-300 mb-2">Gender</label>
-                        <select name="gender" id="gender" required class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
+                        <select name="gender" id="gender" required class="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
                             <option value="unisex" {{ old('gender', $product->gender) == 'unisex' ? 'selected' : '' }}>Unisex</option>
                             <option value="male" {{ old('gender', $product->gender) == 'male' ? 'selected' : '' }}>Men</option>
                             <option value="female" {{ old('gender', $product->gender) == 'female' ? 'selected' : '' }}>Women</option>
@@ -168,7 +168,7 @@
                                     <input type="hidden" name="variants[{{ $index }}][id]" value="{{ $variant->id }}">
                                     <td class="px-4 py-2">
                                         <select name="variants[{{ $index }}][container_type]" required
-                                                class="w-32 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                                                class="w-32 bg-neutral-900 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
                                             @foreach(['Bottle', 'Decant', 'Sample', 'Tester'] as $type)
                                                 <option value="{{ $type }}" {{ $variant->container_type == $type ? 'selected' : '' }}>{{ $type }}</option>
                                             @endforeach
@@ -180,7 +180,7 @@
                                     </td>
                                     <td class="px-4 py-2 pl-4">
                                          <select name="variants[{{ $index }}][unit]" required
-                                                class="w-20 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                                                class="w-20 bg-neutral-900 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
                                             @foreach(['ml', 'oz', 'g'] as $unit)
                                                 <option value="{{ $unit }}" {{ $variant->unit == $unit ? 'selected' : '' }}>{{ $unit }}</option>
                                             @endforeach
@@ -244,7 +244,7 @@
                     <div>
                         <label for="category_id" class="block text-sm font-medium text-moon-gray-300 mb-2">Category</label>
                         <select name="category_id" id="category_id" required
-                                class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
+                                class="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-2.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
                             <option value="">Select Category</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -256,7 +256,7 @@
                     <div>
                         <label for="brand_id" class="block text-sm font-medium text-moon-gray-300 mb-2">Brand</label>
                         <select name="brand_id" id="brand_id" required
-                                class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
+                                class="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-2.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
                             <option value="">Select Brand</option>
                             @foreach($brands as $brand)
                                 <option value="{{ $brand->id }}" {{ old('brand_id', $product->brand_id) == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
@@ -455,7 +455,7 @@
         row.innerHTML = `
             <td class="px-4 py-2">
                 <select name="variants[${variantIndex}][container_type]" required
-                        class="w-32 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                        class="w-32 bg-neutral-900 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
                     <option value="Bottle">Bottle</option>
                     <option value="Decant">Decant</option>
                     <option value="Sample">Sample</option>
@@ -468,7 +468,7 @@
             </td>
             <td class="px-4 py-2 pl-4">
                  <select name="variants[${variantIndex}][unit]" required
-                        class="w-20 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                        class="w-20 bg-neutral-900 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
                     <option value="ml">ml</option>
                     <option value="oz">oz</option>
                     <option value="g">g</option>
