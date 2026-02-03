@@ -80,7 +80,7 @@ class CartService
         $variantId = $data['product_variant_id'];
         $quantity = $data['quantity'];
         
-        $variant = ProductVariant::with('product.images')->findOrFail($variantId);
+        $variant = ProductVariant::with('product')->findOrFail($variantId);
 
         if ($variant->quantity < $quantity) {
             return ['success' => false, 'message' => "Only {$variant->quantity} items left in stock.", 'status' => 400];
@@ -90,12 +90,6 @@ class CartService
         $key = (string) $variantId;
 
         $image = $variant->product->image;
-        if ($variant->color_id) {
-            $colorImage = $variant->product->images->firstWhere('color_id', $variant->color_id);
-            if ($colorImage) {
-                $image = $colorImage->image_path;
-            }
-        }
         
         if (isset($cart[$key])) {
             $newQuantity = $cart[$key]['quantity'] + $quantity;
@@ -110,11 +104,11 @@ class CartService
                 'product_id' => $variant->product->id,
                 'name'       => $variant->product->name,
                 'slug'       => $variant->product->slug,
-                'price'      => $variant->product->price,
-                'original_price' => $variant->product->original_price, // Added field
+                'price'      => $variant->price ?? $variant->product->price,
+                'original_price' => $variant->product->original_price,
                 'image'      => $image,
-                'size'       => $variant->size,
-                'color'      => $variant->color?->name,
+                'size'       => $variant->capacity . ' ' . $variant->unit,
+                'type'       => $variant->container_type,
                 'quantity'   => $quantity,
             ];
         }

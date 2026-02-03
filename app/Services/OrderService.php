@@ -31,7 +31,7 @@ class OrderService
         return DB::transaction(function () use ($data, $cartItems, $variantIds) {
             // 1. Lock and retrieve all variants in a single query to prevent race conditions.
             $variants = ProductVariant::whereIn('id', $variantIds)
-                ->with('product', 'color') // Eager load product for price and color for snapshot
+                ->with('product')
                 ->lockForUpdate()
                 ->get()
                 ->keyBy('id');
@@ -40,7 +40,7 @@ class OrderService
             foreach ($cartItems as $key => $item) {
                 $variant = $variants->get($key);
                 if (!$variant || $variant->quantity < $item['quantity']) {
-                    $name = $item['name'] . ' (' . $item['size'] . ($item['color'] ? ' - ' . $item['color'] : '') . ')';
+                    $name = $item['name'] . ' (' . $item['size'] . ')';
                     throw new \Exception("Insufficient stock for {$name}.");
                 }
             }
@@ -71,11 +71,11 @@ class OrderService
                     'product_id'         => $variant->product_id, // Link to product
                     'product_variant_id' => $variant->id,
                     'product_name'       => $variant->product->name, // Snapshot name
-                    'color'              => $variant->color?->name,  // Snapshot color
-                    'size'               => $variant->size,          // Snapshot size
-                    'unit_price'         => $variant->product->price, // Use fresh DB price
+                    'color'              => $variant->container_type,  // Map container type to color column
+                    'size'               => $variant->capacity . ' ' . $variant->unit, // Map capacity/unit to size
+                    'unit_price'         => $variant->price ?? $variant->product->price, // Use specific variant price
                     'quantity'           => $item['quantity'],
-                    'total'              => $variant->product->price * $item['quantity'], // Recalculate total
+                    'total'              => ($variant->price ?? $variant->product->price) * $item['quantity'],
                 ]);
 
                 $variant->decrement('quantity', $item['quantity']);

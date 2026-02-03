@@ -49,45 +49,57 @@ class AdminProductService
                 'price' => $data['price'],
                 'original_price' => $data['original_price'] ?? null,
                 'category_id' => $data['category_id'],
+                'brand_id' => $data['brand_id'],
                 'featured' => $data['featured'] ?? false,
                 'trending' => $data['trending'] ?? false,
                 'badge' => $data['badge'] ?? null,
                 'badge_color' => $data['badge_color'] ?? null,
+                
+                // Perfume Attributes
+                'concentration' => $data['concentration'] ?? null,
+                'gender' => $data['gender'],
+                'type' => $data['type'] ?? 'original',
+                'inspired_by' => $data['inspired_by'] ?? null,
+                'original_product_id' => $data['original_product_id'] ?? null,
             ]);
 
             // 2. Handle Collections
             if (!empty($data['collections'])) {
                 $product->collections()->sync($data['collections']);
             }
+            
+            // 3. Handle Notes
+            if (!empty($data['notes'])) {
+                $product->notes()->sync($data['notes']);
+            }
 
-            // 3. Handle Variants
+            // 4. Handle Variants
             if (!empty($data['variants'])) {
                 foreach ($data['variants'] as $variantData) {
                     $product->variants()->create([
-                        'size' => $variantData['size'],
-                        'color_id' => $variantData['color_id'],
+                        'capacity' => $variantData['capacity'],
+                        'unit' => $variantData['unit'],
+                        'container_type' => $variantData['container_type'],
+                        'price' => $variantData['price'],
                         'quantity' => $variantData['quantity'],
                     ]);
                 }
             }
 
-            // 4. Handle Images
+            // 5. Handle Images
             if (!empty($data['images'])) {
                 foreach ($data['images'] as $imageItem) {
                     if (isset($imageItem['file'])) {
                         $image = $imageItem['file'];
-                        $colorId = $imageItem['color_id'] ?? null;
-                        
                         $path = $image->store('products', 'public');
                         
-                        // For now, setting the first image as the main image string on the product model (legacy support)
+                        // Set main image if not set
                         if (!$product->image) {
                             $product->update(['image' => $path]);
                         }
                         
                         $product->images()->create([
                             'image_path' => $path,
-                            'color_id' => $colorId,
                         ]);
                     }
                 }
@@ -103,36 +115,34 @@ class AdminProductService
             // 1. Update Product Details
             $product->update([
                 'name' => $data['name'],
-                // Only update slug if name changed significantly, or keep as is? 
-                // Usually better not to change slug often for SEO, but let's allow it if requested or just keep it simple.
-                // 'slug' => ... 
                 'description' => $data['description'],
                 'price' => $data['price'],
                 'original_price' => $data['original_price'] ?? null,
                 'category_id' => $data['category_id'],
+                'brand_id' => $data['brand_id'],
                 'featured' => $data['featured'] ?? false,
                 'trending' => $data['trending'] ?? false,
                 'badge' => $data['badge'] ?? null,
                 'badge_color' => $data['badge_color'] ?? null,
+                 // Perfume Attributes
+                'concentration' => $data['concentration'] ?? null,
+                'gender' => $data['gender'],
+                'type' => $data['type'] ?? 'original',
+                'inspired_by' => $data['inspired_by'] ?? null,
+                'original_product_id' => $data['original_product_id'] ?? null,
             ]);
 
             // 2. Sync Collections
             if (isset($data['collections'])) {
                 $product->collections()->sync($data['collections']);
             }
+            
+            // 3. Sync Notes
+            if (isset($data['notes'])) {
+                $product->notes()->sync($data['notes']);
+            }
 
-            // 3. Handle Variants (Sync/Update/Create)
-            // Strategy: Detach or Delete all and recreate? Or smart sync?
-            // For MVP, deleting all and recreating is unsafe if orders depend on them (Wait, orders link to variants...).
-            // We should ideally update existing ones and create new ones.
-            // Simplified approach for now:
-            
-            // Delete removed variants?
-            // Let's assume the UI sends the full state of variants.
-            
-            // For now, let's just create new ones passed in 'new_variants' and update existing if 'variants' is passed with IDs.
-            // But to keep it simple as per "simple Admin", let's assume we can add new variants or edit stock of existing.
-            
+            // 4. Handle Variants (Sync/Update/Create)
             if (!empty($data['variants'])) {
                 foreach ($data['variants'] as $variantData) {
                     if (isset($variantData['id'])) {
@@ -140,38 +150,39 @@ class AdminProductService
                         $variant = ProductVariant::find($variantData['id']);
                         if ($variant && $variant->product_id == $product->id) {
                             $variant->update([
-                                'size' => $variantData['size'],
-                                'color_id' => $variantData['color_id'],
+                                'capacity' => $variantData['capacity'],
+                                'unit' => $variantData['unit'],
+                                'container_type' => $variantData['container_type'],
+                                'price' => $variantData['price'],
                                 'quantity' => $variantData['quantity'],
                             ]);
                         }
                     } else {
                         // Create
                         $product->variants()->create([
-                            'size' => $variantData['size'],
-                            'color_id' => $variantData['color_id'],
+                            'capacity' => $variantData['capacity'],
+                            'unit' => $variantData['unit'],
+                            'container_type' => $variantData['container_type'],
+                            'price' => $variantData['price'],
                             'quantity' => $variantData['quantity'],
                         ]);
                     }
                 }
             }
             
-            // Handle Variant Deletions if IDs are provided
+            // Handle Variant Deletions
             if (!empty($data['deleted_variants'])) {
                  ProductVariant::destroy($data['deleted_variants']);
             }
 
-            // 4. Handle New Images
+            // 5. Handle New Images
             if (!empty($data['new_images'])) {
                 foreach ($data['new_images'] as $imageItem) {
                     if (isset($imageItem['file'])) {
                         $image = $imageItem['file'];
-                        $colorId = $imageItem['color_id'] ?? null;
-
                         $path = $image->store('products', 'public');
                         $product->images()->create([
                             'image_path' => $path,
-                            'color_id' => $colorId
                         ]);
                         
                         // Update main image if none exists
