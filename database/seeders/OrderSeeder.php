@@ -52,11 +52,11 @@ class OrderSeeder extends Seeder
             $subtotal = 0;
 
             for ($j = 0; $j < $itemCount; $j++) {
-                $variant = ProductVariant::inRandomOrder()->with('product', 'color')->first();
+                $variant = ProductVariant::inRandomOrder()->with('product')->first();
                 if (!$variant) continue;
 
                 $qty = rand(1, 2);
-                $price = $variant->product->price;
+                $price = $variant->price ?? $variant->product->price;
                 $total = $price * $qty;
                 $subtotal += $total;
 
@@ -64,8 +64,8 @@ class OrderSeeder extends Seeder
                     'order_id' => $order->id,
                     'product_variant_id' => $variant->id,
                     'product_name' => $variant->product->name,
-                    'color' => $variant->color->name ?? null,
-                    'size' => $variant->size,
+                    'color' => $variant->container_type, // Map container type to color column for now or leave null
+                    'size' => $variant->capacity . $variant->unit,
                     'unit_price' => $price,
                     'quantity' => $qty,
                     'total' => $total

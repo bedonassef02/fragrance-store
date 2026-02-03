@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('capacity')->nullable(); // e.g. 100, 50, 10
             $table->string('unit')->default('ml');
             $table->string('container_type')->default('Original Bottle'); // Bottle, Decant
-            
+            $table->decimal('price', 10, 2)->nullable(); // Specific price for this variant
             $table->integer('quantity')->default(0);
             $table->timestamps();
         });

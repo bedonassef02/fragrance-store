@@ -5,195 +5,178 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Brand;
+use App\Models\Note;
+use App\Models\ProductVariant;
+use App\Models\ProductImage;
 use Illuminate\Support\Str;
 
 class ShopSeeder extends Seeder
 {
     public function run(): void
     {
-        // Categories
-        $categories = ['Abayas', 'Kaftans', 'Bags', 'Dresses'];
+        // 1. Categories
+        $categories = ['Men', 'Women', 'Unisex', 'Niche', 'Designer', 'Best Sellers'];
         $catIds = [];
         foreach ($categories as $cat) {
-            $c = Category::create([
-                'name' => $cat,
-                'slug' => Str::slug($cat)
-            ]);
+            $c = Category::firstOrCreate(
+                ['slug' => Str::slug($cat)],
+                ['name' => $cat]
+            );
             $catIds[$cat] = $c->id;
         }
 
-        // Products
+        // 2. Sample Products Data (Perfume Focused)
         $products = [
             [
-                'name' => 'Royal Black Abaya',
-                'description' => 'Exquisitely crafted from premium nida fabric, this Royal Black Abaya features intricate gold embroidery along the cuffs and hem.',
-                'price' => 2800,
-                'original_price' => 3500,
-                'image' => 'https://images.pexels.com/photos/9940866/pexels-photo-9940866.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'badge' => '-20%',
-                'badge_color' => 'bg-red-600',
-                'category' => 'Abayas'
-            ],
-            [
-                'name' => 'Crimson Velvet Kaftan',
-                'description' => 'A statement piece for evening wear, this Crimson Velvet Kaftan drapes elegantly with a luxurious sheen.',
-                'price' => 4200,
-                'original_price' => null,
-                'image' => 'https://images.pexels.com/photos/28905393/pexels-photo-28905393/free-photo-of-elegant-woman-in-red-traditional-dress-in-marrakech.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'badge' => null,
-                'badge_color' => null,
-                'category' => 'Kaftans'
-            ],
-            [
-                'name' => 'Embossed Leather Clutch',
-                'description' => 'Detailed embossed leather clutch with gold hardware.',
-                'price' => 1850,
-                'original_price' => null,
-                'image' => 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'badge' => 'New',
-                'badge_color' => 'bg-moon-gold',
-                'category' => 'Bags'
-            ],
-            [
-                'name' => 'Desert Rose Dress',
-                'description' => 'Inspired by the hues of the desert sunset, this dress features flowing chiffon layers.',
-                'price' => 3100,
-                'original_price' => null,
-                'image' => 'https://images.pexels.com/photos/16848560/pexels-photo-16848560/free-photo-of-woman-in-dress-in-desert.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'badge' => null,
-                'badge_color' => null,
-                'category' => 'Dresses'
-            ],
-             [
-                'name' => 'Midnight Silk Abaya',
-                'description' => 'Deep midnight blue silk abaya that shimmers under the evening light.',
-                'price' => 2950,
-                'original_price' => null,
-                'image' => 'https://images.pexels.com/photos/20344409/pexels-photo-20344409/free-photo-of-woman-in-long-coat-posing-in-passage.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'badge' => null,
-                'badge_color' => null,
-                'category' => 'Abayas'
-            ],
-            [
-                'name' => 'Gold Chain Satchel',
-                'description' => 'Compact yet spacious satchel with a signature gold chain strap.',
-                'price' => 1870,
-                'original_price' => 2200,
-                'image' => 'https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'badge' => '-15%',
-                'badge_color' => 'bg-red-600',
-                'category' => 'Bags'
-            ],
-            // NEW PRODUCTS
-            [
-                'name' => 'Emerald Green Kaftan',
-                'description' => 'Vibrant emerald kaftan with silver thread details.',
-                'price' => 3800,
-                'original_price' => 4500,
-                'image' => 'https://images.pexels.com/photos/19259460/pexels-photo-19259460/free-photo-of-woman-in-green-dress-posing-in-studio.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'badge' => 'Sale',
-                'badge_color' => 'bg-green-600',
-                'category' => 'Kaftans'
-            ],
-            [
-                'name' => 'Pearl White Abaya',
-                'description' => 'Minimalist white abaya perfect for bright days.',
-                'price' => 2500,
-                'original_price' => null,
-                'image' => 'https://images.pexels.com/photos/7283446/pexels-photo-7283446.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'badge' => 'Popular',
+                'name' => 'Sauvage',
+                'description' => 'A radically fresh composition, dictated by a name that has the ring of a manifesto.',
+                'price' => 4500,
+                'original_price' => 5200,
+                'image' => 'https://fimgs.net/mdimg/perfume/375x500.31861.jpg', // Placeholder
+                'badge' => 'Best Seller',
                 'badge_color' => 'bg-blue-600',
-                'category' => 'Abayas'
+                'category' => 'Men',
+                'concentration' => 'EDT',
+                'gender' => 'male',
+                'brand_slug' => 'dior'
             ],
             [
-                'name' => 'Bohemian Maxi Dress',
-                'description' => 'Relaxed fit maxi dress with a bohemian print.',
-                'price' => 2200,
+                'name' => 'Baccarat Rouge 540',
+                'description' => 'Luminous and sophisticated, Baccarat Rouge 540 lays on the skin like an amber, floral and woody breeze.',
+                'price' => 12000,
                 'original_price' => null,
-                'image' => 'https://images.pexels.com/photos/16654763/pexels-photo-16654763/free-photo-of-woman-in-dress-walking-in-desert.jpeg?auto=compress&cs=tinysrgb&w=800',
+                'image' => 'https://fimgs.net/mdimg/perfume/375x500.33519.jpg',
+                'badge' => 'Luxury',
+                'badge_color' => 'bg-gold-600',
+                'category' => 'Niche',
+                'concentration' => 'Extrait',
+                'gender' => 'unisex',
+                'brand_slug' => 'mfk'
+            ],
+            [
+                'name' => 'Aventus',
+                'description' => 'The exceptional Aventus was inspired by the dramatic life of a historic emperor, celebrating strength, power and success.',
+                'price' => 14500,
+                'original_price' => 16000,
+                'image' => 'https://fimgs.net/mdimg/perfume/375x500.9828.jpg',
+                'badge' => 'Iconic',
+                'badge_color' => 'bg-gray-800',
+                'category' => 'Men',
+                'concentration' => 'EDP',
+                'gender' => 'male',
+                'brand_slug' => 'creed'
+            ],
+            [
+                'name' => 'Black Opium',
+                'description' => 'A captivating floral gourmand scent, twisted with an overdose of black coffee.',
+                'price' => 5500,
+                'original_price' => null,
+                'image' => 'https://fimgs.net/mdimg/perfume/375x500.26378.jpg',
+                'badge' => 'Popular',
+                'badge_color' => 'bg-pink-600',
+                'category' => 'Women',
+                'concentration' => 'EDP',
+                'gender' => 'female',
+                'brand_slug' => 'ysl'
+            ],
+            [
+                'name' => 'Santal 33',
+                'description' => 'A unisex fragrance that captures a defining image of the spirit of the American West and personal freedom.',
+                'price' => 9800,
+                'original_price' => null,
+                'image' => 'https://fimgs.net/mdimg/perfume/375x500.12201.jpg',
                 'badge' => null,
                 'badge_color' => null,
-                'category' => 'Dresses'
+                'category' => 'Unisex',
+                'concentration' => 'EDP',
+                'gender' => 'unisex',
+                'brand_slug' => 'le-labo'
             ],
              [
-                'name' => 'Quilted Crossbody Bag',
-                'description' => 'Classic quilted pattern in a modern silhouette.',
-                'price' => 1500,
+                'name' => 'Tobacco Vanille',
+                'description' => 'Opulent. Warm. Iconic. Reminiscent of an English Gentleman’s Club.',
+                'price' => 11000,
                 'original_price' => null,
-                'image' => 'https://images.pexels.com/photos/904350/pexels-photo-904350.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'badge' => null,
-                'badge_color' => null,
-                'category' => 'Bags'
+                'image' => 'https://fimgs.net/mdimg/perfume/375x500.1825.jpg',
+                'badge' => 'Warm',
+                'badge_color' => 'bg-orange-800',
+                'category' => 'Unisex',
+                'concentration' => 'EDP',
+                'gender' => 'unisex',
+                'brand_slug' => 'tom-ford'
             ],
-            [
-                'name' => 'Golden Hour Kaftan',
-                'description' => 'Shimmering gold fabric that captures the light.',
-                'price' => 5200,
-                'original_price' => null,
-                'image' => 'https://images.pexels.com/photos/18861110/pexels-photo-18861110/free-photo-of-model-in-traditional-clothes-and-jewelry.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'badge' => 'Luxury',
-                'badge_color' => 'bg-moon-gold',
-                'category' => 'Kaftans'
-            ],
-            [
-                'name' => 'Linen Summer Dress',
-                'description' => 'Breathable linen dress for hot summer days.',
-                'price' => 1900,
-                'original_price' => 2400,
-                'image' => 'https://images.pexels.com/photos/10350352/pexels-photo-10350352.jpeg?auto=compress&cs=tinysrgb&w=800',
-                'badge' => '-20%',
-                'badge_color' => 'bg-red-600',
-                'category' => 'Dresses'
-            ]
         ];
+
+        $notes = Note::all();
 
         foreach ($products as $p) {
             $categoryName = $p['category'];
+            $brandSlug = $p['brand_slug'];
+            
             unset($p['category']);
+            unset($p['brand_slug']);
+
             $p['slug'] = Str::slug($p['name']);
-            $p['category_id'] = $catIds[$categoryName] ?? null;
-            $p['featured'] = rand(0, 10) > 6; // 40% chance
-            $p['trending'] = rand(0, 10) > 7; // 30% chance
+            $p['category_id'] = $catIds[$categoryName] ?? $catIds['Unisex'];
+            
+            // Link Brand
+            $brand = Brand::where('slug', $brandSlug)->first();
+            $p['brand_id'] = $brand ? $brand->id : Brand::first()->id;
+
+            $p['featured'] = rand(0, 10) > 6;
+            $p['trending'] = rand(0, 10) > 7;
 
             $product = Product::create($p);
 
-            // Variants (Colors + Sizes)
-            if ($categoryName !== 'Bags') {
-                $selectedColors = \App\Models\Color::inRandomOrder()->take(2)->get();
-                $sizes = ['S', 'M', 'L'];
-                
-                foreach ($selectedColors as $color) {
-                    foreach ($sizes as $size) {
-                        \App\Models\ProductVariant::create([
-                            'product_id' => $product->id,
-                            'color_id' => $color->id,
-                            'size' => $size,
-                            'quantity' => 20
-                        ]);
-                    }
-
-                    // Add Specific Image for this color
-                     \App\Models\ProductImage::create([
-                        'product_id' => $product->id,
-                        'image_path' => "https://placehold.co/800x1200/1a1a1a/c6a87c?text=" . urlencode($color->name) . "+Detail",
-                        'color_id' => $color->id
-                    ]);
-                }
-            } else {
-                // Bags: 1 Color (Random)
-                $color = \App\Models\Color::inRandomOrder()->first();
-                \App\Models\ProductVariant::create([
-                    'product_id' => $product->id,
-                    'color_id' => $color->id,
-                    'size' => 'One Size',
-                    'quantity' => 10
-                ]);
+            // Attach Random Notes
+            if ($notes->count() > 0) {
+                $product->notes()->attach($notes->random(rand(3, 5))->pluck('id'));
             }
 
-            // General Gallery Images (No specific color)
-            \App\Models\ProductImage::create([
+            // Create Variants
+            // 1. Original Bottle
+            ProductVariant::create([
                 'product_id' => $product->id,
-                'image_path' => 'https://placehold.co/800x1200/1a1a1a/c6a87c?text=General+Detail'
+                'container_type' => 'bottle',
+                'capacity' => 100,
+                'unit' => 'ml',
+                'quantity' => 10,
+                'price' => $product->price // Base price
+            ]);
+
+            ProductVariant::create([
+                'product_id' => $product->id,
+                'container_type' => 'bottle',
+                'capacity' => 50,
+                'unit' => 'ml',
+                'quantity' => 15,
+                'price' => $product->price - 1000 // Cheaper
+            ]);
+
+            // 2. Decants / Samples
+            ProductVariant::create([
+                'product_id' => $product->id,
+                'container_type' => 'decant',
+                'capacity' => 10,
+                'unit' => 'ml',
+                'quantity' => 50,
+                'price' => $product->price * 0.15 // Significantly cheaper
+            ]);
+
+             ProductVariant::create([
+                'product_id' => $product->id,
+                'container_type' => 'sample',
+                'capacity' => 2,
+                'unit' => 'ml',
+                'quantity' => 100,
+                'price' => $product->price * 0.05 // Very cheap
+            ]);
+
+            // Create Image
+            ProductImage::create([
+                'product_id' => $product->id,
+                'image_path' => $p['image']
             ]);
         }
     }

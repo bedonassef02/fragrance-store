@@ -10,7 +10,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            ColorSeeder::class,
+            BrandSeeder::class, // NEW
+            NoteSeeder::class, // NEW
             ShopSeeder::class,
             CollectionSeeder::class,
             SettingSeeder::class,
