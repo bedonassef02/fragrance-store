@@ -2,122 +2,146 @@
 
 @section('title', 'Reviews')
 
+@section('header')
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+        <h1 class="text-3xl font-bold text-white tracking-tight font-display">Reviews</h1>
+        <p class="text-moon-gray-400 mt-1">Moderate customer feedback.</p>
+    </div>
+</div>
+@endsection
+
 @section('content')
-    <x-admin.ui.page-header title="Reviews" description="Moderate customer feedback.">
-        <x-slot name="actions">
-            <!-- Filter Buttons -->
-            <div class="flex bg-slate-800/50 p-1 rounded-lg border border-slate-700">
-                <a href="{{ route('admin.reviews.index') }}" 
-                   class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors {{ !request('status') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white' }}">
-                    All
-                </a>
-                <a href="{{ route('admin.reviews.index', ['status' => 'pending']) }}" 
-                   class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors {{ request('status') === 'pending' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white' }}">
-                    Pending
-                </a>
-                <a href="{{ route('admin.reviews.index', ['status' => 'approved']) }}" 
-                   class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors {{ request('status') === 'approved' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white' }}">
-                    Approved
-                </a>
-            </div>
-        </x-slot>
-    </x-admin.ui.page-header>
+<div class="space-y-6">
+    <!-- Toolbar -->
+    <div class="bg-moon-dark/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+        <!-- Filter Buttons -->
+        <div class="flex bg-black/20 p-1 rounded-xl border border-white/10">
+            <a href="{{ route('admin.reviews.index') }}" 
+               class="px-4 py-2 rounded-lg text-sm font-medium transition-all {{ !request('status') ? 'bg-moon-gold text-moon-dark shadow-lg font-bold' : 'text-moon-gray-400 hover:text-white hover:bg-white/5' }}">
+                All
+            </a>
+            <a href="{{ route('admin.reviews.index', ['status' => 'pending']) }}" 
+               class="px-4 py-2 rounded-lg text-sm font-medium transition-all {{ request('status') === 'pending' ? 'bg-moon-gold text-moon-dark shadow-lg font-bold' : 'text-moon-gray-400 hover:text-white hover:bg-white/5' }}">
+                Pending
+            </a>
+            <a href="{{ route('admin.reviews.index', ['status' => 'approved']) }}" 
+               class="px-4 py-2 rounded-lg text-sm font-medium transition-all {{ request('status') === 'approved' ? 'bg-moon-gold text-moon-dark shadow-lg font-bold' : 'text-moon-gray-400 hover:text-white hover:bg-white/5' }}">
+                Approved
+            </a>
+        </div>
+    </div>
 
     @if(session('success'))
-        <div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-4 py-3 rounded-xl mb-6 flex items-center gap-3">
+        <div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-4 py-3 rounded-xl flex items-center gap-3">
             <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
             {{ session('success') }}
         </div>
     @endif
 
-    <x-admin.ui.glass-panel class="overflow-hidden">
+    <!-- Reviews Table -->
+    <div class="bg-moon-dark/40 backdrop-blur-md rounded-2xl border border-white/5 overflow-hidden ring-1 ring-white/5 shadow-2xl">
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-slate-400">
-                <thead class="bg-slate-900/50 uppercase tracking-wider text-xs font-bold text-slate-500">
-                    <tr>
-                        <th class="px-8 py-4">Customer</th>
-                        <th class="px-8 py-4">Product</th>
-                        <th class="px-8 py-4">Rating</th>
-                        <th class="px-8 py-4 w-1/3">Comment</th>
-                        <th class="px-8 py-4">Status</th>
-                        <th class="px-8 py-4 text-right">Actions</th>
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-white/5 bg-white/5">
+                        <th class="px-6 py-5 text-xs font-bold text-moon-gray-400 uppercase tracking-widest pl-8">Customer</th>
+                        <th class="px-6 py-5 text-xs font-bold text-moon-gray-400 uppercase tracking-widest">Product</th>
+                        <th class="px-6 py-5 text-xs font-bold text-moon-gray-400 uppercase tracking-widest">Rating</th>
+                        <th class="px-6 py-5 text-xs font-bold text-moon-gray-400 uppercase tracking-widest w-1/3">Comment</th>
+                        <th class="px-6 py-5 text-xs font-bold text-moon-gray-400 uppercase tracking-widest">Status</th>
+                        <th class="px-6 py-5 text-xs font-bold text-moon-gray-400 uppercase tracking-widest text-right pr-8">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-700/50">
+                <tbody class="divide-y divide-white/5 text-sm">
                     @forelse($reviews as $review)
-                    <tr class="hover:bg-white/5 transition-colors group">
-                         <td class="px-8 py-4">
+                    <tr class="group hover:bg-white/[0.02] transition-colors duration-200">
+                         <td class="px-6 py-4 pl-8">
                             @if($review->user)
                                 <div class="font-medium text-white">{{ $review->user->name }}</div>
                             @elseif($review->order)
-                                <div class="font-medium text-white">{{ $review->order->first_name }} {{ $review->order->last_name }} <span class="text-xs text-slate-500">(Guest)</span></div>
+                                <div class="font-medium text-white">{{ $review->order->first_name }} {{ $review->order->last_name }} <span class="text-xs text-moon-gray-500">(Guest)</span></div>
                             @else
-                                <div class="text-slate-500">Unknown</div>
+                                <div class="text-moon-gray-500">Unknown</div>
                             @endif
-                             <div class="text-xs opacity-60">{{ $review->created_at->format('M d, Y') }}</div>
+                             <div class="text-xs text-moon-gray-500 mt-0.5">{{ $review->created_at->format('M d, Y') }}</div>
                         </td>
-                        <td class="px-8 py-4">
+                        <td class="px-6 py-4">
                             @if($review->product)
-                                <a href="{{ route('product.show', $review->product->slug) }}" target="_blank" class="flex items-center gap-3 hover:text-blue-400 transition-colors">
-                                    <div class="w-10 h-10 rounded bg-slate-800 overflow-hidden flex-shrink-0 border border-slate-700">
+                                <a href="{{ route('product.show', $review->product->slug) }}" target="_blank" class="flex items-center gap-3 hover:text-moon-gold transition-colors">
+                                    <div class="w-10 h-10 rounded bg-white/10 overflow-hidden flex-shrink-0 border border-white/5">
                                         <img src="{{ $review->product->image }}" class="w-full h-full object-cover">
                                     </div>
                                     <div class="truncate max-w-[150px] font-medium">{{ $review->product->name }}</div>
                                 </a>
                             @else
-                                <span class="text-slate-500 italic">Deleted Product</span>
+                                <span class="text-moon-gray-500 italic">Deleted Product</span>
                             @endif
                         </td>
-                        <td class="px-8 py-4">
-                           <x-static-star-rating :rating="$review->rating" />
+                        <td class="px-6 py-4">
+                           <div class="flex text-moon-gold">
+                               @for($i = 1; $i <= 5; $i++)
+                                   @if($i <= $review->rating)
+                                       <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                   @else
+                                       <svg class="w-4 h-4 text-moon-gray-600 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                   @endif
+                               @endfor
+                           </div>
                         </td>
-                        <td class="px-8 py-4">
-                            <p class="text-slate-300 text-sm line-clamp-2" title="{{ $review->comment }}">
+                        <td class="px-6 py-4">
+                            <p class="text-moon-gray-300 text-sm line-clamp-2" title="{{ $review->comment }}">
                                 {{ $review->comment ?: 'No comment provided.' }}
                             </p>
-                            @if($review->image_path)
-                                <div class="mt-2">
-                                     <a href="{{ asset('storage/' . $review->image_path) }}" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-1.5 font-medium">
-                                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                         View Attachment
-                                     </a>
-                                </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            @if($review->is_approved)
+                                <span class="px-2.5 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-xs font-bold uppercase tracking-wider">Approved</span>
+                            @else
+                                <span class="px-2.5 py-1 rounded-full border border-yellow-500/20 bg-yellow-500/10 text-yellow-400 text-xs font-bold uppercase tracking-wider">Pending</span>
                             @endif
                         </td>
-                        <td class="px-8 py-4">
-                            <x-admin.ui.badge :color="$review->is_approved ? 'emerald' : 'amber'" :label="$review->is_approved ? 'Approved' : 'Pending'" />
-                        </td>
-                        <td class="px-8 py-4 text-right">
-                             <div class="flex justify-end gap-2">
+                        <td class="px-6 py-4 text-right pr-8">
+                             <div class="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
                                 <form action="{{ route('admin.reviews.update', $review) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
                                     @if($review->is_approved)
                                         <input type="hidden" name="is_approved" value="0">
-                                        <x-admin.ui.button type="submit" variant="icon" class="text-amber-400 hover:bg-amber-500/10 hover:text-amber-300" title="Reject / Hide">
-                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
-                                        </x-admin.ui.button>
+                                        <button type="submit" class="p-2 text-moon-gray-400 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-lg transition-all" title="Reject / Hide">
+                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                                        </button>
                                     @else
                                         <input type="hidden" name="is_approved" value="1">
-                                        <x-admin.ui.button type="submit" variant="icon" class="text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300" title="Approve">
-                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7" /></svg>
-                                        </x-admin.ui.button>
+                                        <button type="submit" class="p-2 text-moon-gray-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-all" title="Approve">
+                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                        </button>
                                     @endif
                                 </form>
                                 
-                                <form action="{{ route('admin.reviews.destroy', $review) }}" method="POST" class="confirm-delete">
+                                <form action="{{ route('admin.reviews.destroy', $review) }}" method="POST" onsubmit="return confirm('Delete review?');" class="inline-block">
                                     @csrf
                                     @method('DELETE')
-                                    <x-admin.ui.button type="submit" variant="icon" class="text-rose-400 hover:bg-rose-500/10 hover:text-rose-300" title="Delete">
-                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                    </x-admin.ui.button>
+                                    <button type="submit" class="p-2 text-moon-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all" title="Delete">
+                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    </button>
                                 </form>
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-8 py-12 text-center text-slate-500 italic">No reviews found.</td>
+                         <td colspan="6" class="px-6 py-32 text-center">
+                            <div class="flex flex-col items-center justify-center">
+                                <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-6 ring-1 ring-white/10">
+                                    <svg class="w-8 h-8 text-moon-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-2 font-display">No Reviews Found</h3>
+                                <p class="text-moon-gray-400 mb-8 max-w-sm mx-auto">Customer feedback will appear here.</p>
+                            </div>
+                        </td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -126,9 +150,10 @@
         
         <!-- Pagination -->
         @if($reviews->hasPages())
-        <div class="px-8 py-6 border-t border-slate-700/50">
-            {{ $reviews->links() }}
+        <div class="px-6 py-4 border-t border-white/5 bg-white/[0.02]">
+            {{ $reviews->withQueryString()->links() }}
         </div>
         @endif
-    </x-admin.ui.glass-panel>
+    </div>
+</div>
 @endsection

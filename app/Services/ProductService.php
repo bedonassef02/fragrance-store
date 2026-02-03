@@ -13,15 +13,19 @@ class ProductService
 
     public function getFilteredProducts(array $filters): LengthAwarePaginator
     {
-        $query = Product::with(['category', 'variants.color', 'images']);
+        $query = Product::with(['category', 'variants', 'images']);
 
         $this->applySearchFilter($query, $filters['search'] ?? null);
         $this->applyCollectionFilter($query, $filters['collection'] ?? null);
         $this->applyCategoryFilter($query, $filters['category'] ?? null);
         $this->applyPriceRangeFilter($query, $filters['price_range'] ?? null);
-        $this->applySizeFilter($query, $filters['sizes'] ?? null);
-        $this->applyColorFilter($query, $filters['colors'] ?? null); // Added
-        $this->applyStockFilter($query, $filters['in_stock'] ?? null); // Added
+        
+        // Perfume Filters
+        $this->applyCapacityFilter($query, $filters['capacity'] ?? null);
+        $this->applyConcentrationFilter($query, $filters['concentration'] ?? null);
+        $this->applyNoteFilter($query, $filters['notes'] ?? null);
+        $this->applyStockFilter($query, $filters['in_stock'] ?? null);
+        
         $this->applySorting($query, $filters['sort'] ?? null);
 
         return $query->paginate(self::DEFAULT_PAGINATION_COUNT)->withQueryString();
@@ -29,14 +33,14 @@ class ProductService
 
     public function getBySlug(string $slug): Product
     {
-        return Product::with(['category', 'variants.color', 'images.color'])
+        return Product::with(['category', 'variants', 'images', 'notes'])
             ->where('slug', $slug)
             ->firstOrFail();
     }
 
     public function getRelatedProducts(Product $product, int $count = self::DEFAULT_RELATED_PRODUCTS_COUNT): \Illuminate\Database\Eloquent\Collection
     {
-        return Product::with(['category', 'variants.color', 'images'])
+        return Product::with(['category', 'variants', 'images'])
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->inRandomOrder()
@@ -47,7 +51,7 @@ class ProductService
     public function getFeaturedProducts(int $count = 8): \Illuminate\Database\Eloquent\Collection
     {
         return Product::featured()
-            ->with(['category', 'variants.color', 'images'])
+            ->with(['category', 'variants', 'images'])
             ->take($count)
             ->get();
     }
@@ -55,7 +59,7 @@ class ProductService
     public function getTrendingProducts(int $count = 8): \Illuminate\Database\Eloquent\Collection
     {
         return Product::trending()
-            ->with(['category', 'variants.color', 'images'])
+            ->with(['category', 'variants', 'images'])
             ->take($count)
             ->get();
     }
@@ -108,22 +112,30 @@ class ProductService
         }
     }
 
-    private function applySizeFilter(Builder $query, $sizes): void
+    private function applyCapacityFilter(Builder $query, $capacities): void
     {
-        if (!empty($sizes)) {
-            $sizeList = is_array($sizes) ? $sizes : explode(',', $sizes);
-            $query->whereHas('variants', function ($q) use ($sizeList) {
-                $q->whereIn('size', $sizeList);
+        if (!empty($capacities)) {
+            $capacityList = is_array($capacities) ? $capacities : explode(',', $capacities);
+            $query->whereHas('variants', function ($q) use ($capacityList) {
+                $q->whereIn('capacity', $capacityList);
             });
         }
     }
 
-    private function applyColorFilter(Builder $query, $colors): void
+    private function applyConcentrationFilter(Builder $query, $concentrations): void
     {
-        if (!empty($colors)) {
-            $colorList = is_array($colors) ? $colors : explode(',', $colors);
-            $query->whereHas('variants.color', function ($q) use ($colorList) {
-                $q->whereIn('name', $colorList);
+        if (!empty($concentrations)) {
+            $concentrationList = is_array($concentrations) ? $concentrations : explode(',', $concentrations);
+            $query->whereIn('concentration', $concentrationList);
+        }
+    }
+    
+    private function applyNoteFilter(Builder $query, $notes): void
+    {
+        if (!empty($notes)) {
+            $noteList = is_array($notes) ? $notes : explode(',', $notes);
+            $query->whereHas('notes', function ($q) use ($noteList) {
+                $q->whereIn('name', $noteList);
             });
         }
     }

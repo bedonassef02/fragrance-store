@@ -32,6 +32,10 @@ class ProductFilterRequest extends FormRequest
             'brands.*'          => 'string|max:50',
             'notes'           => 'nullable|array',
             'notes.*'         => 'string|max:50',
+            'capacity'        => 'nullable|array', // Added
+            'capacity.*'      => 'integer|min:1',  // Added
+            'concentration'   => 'nullable|array', // Added
+            'concentration.*' => 'string|max:50',  // Added
             'in_stock'         => 'nullable|boolean',
             'sort'             => 'nullable|string|in:price_asc,price_desc,newest',
         ];

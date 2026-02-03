@@ -26,12 +26,19 @@ class ProductController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        $product->load(['reviews.user']); // Modified line, removed ->getBySlug($slug)
+        $product->load(['reviews.user', 'notes']); 
         $relatedProducts = $this->productService->getRelatedProducts($product);
 
-        $uniqueColors = $product->variants->pluck('color')->unique('id')->filter()->values();
-        $allSizes = $product->variants->pluck('size')->unique();
+        // Perfume specific variants extraction
+        $uniqueCapacities = $product->variants->map(function ($variant) {
+            return [
+                'id' => $variant->capacity, // Key by capacity
+                'label' => $variant->capacity . ' ' . $variant->unit,
+                'capacity' => $variant->capacity,
+                'unit' => $variant->unit
+            ];
+        })->unique('id')->values();
 
-        return view('products.show', compact('product', 'relatedProducts', 'uniqueColors', 'allSizes'));
+        return view('products.show', compact('product', 'relatedProducts', 'uniqueCapacities'));
     }
 }
