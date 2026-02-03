@@ -6,16 +6,7 @@
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div>
         <h1 class="text-3xl font-bold text-white tracking-tight font-display">Products</h1>
-        <p class="text-moon-gray-400 mt-1">Manage your store's inventory and catalog.</p>
-    </div>
-    <div class="flex items-center gap-3">
-        <a href="{{ route('admin.products.create') }}" 
-           class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-moon-gold to-yellow-500 text-moon-dark font-bold text-sm rounded-lg hover:shadow-[0_0_15px_rgba(255,215,0,0.3)] transition-all transform hover:-translate-y-0.5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
-            </svg>
-            <span>Add Product</span>
-        </a>
+        <p class="text-moon-gray-400 mt-1">Manage your perfume catalog and inventory.</p>
     </div>
 </div>
 @endsection
@@ -31,7 +22,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
                 </div>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products by name, ID..." 
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, brand..." 
                        class="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder-moon-gray-500 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
                 
                 @if(request('status'))
@@ -43,7 +34,7 @@
         <div class="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
             <a href="{{ route('admin.products.index', ['search' => request('search')]) }}" 
                class="px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-colors {{ !request('status') ? 'bg-moon-gold/10 text-moon-gold border-moon-gold/20' : 'bg-white/5 text-moon-gray-400 border-white/5 hover:bg-white/10 hover:text-white' }}">
-                All Products
+                All Perfumes
             </a>
             <a href="{{ route('admin.products.index', ['status' => 'out_of_stock', 'search' => request('search')]) }}" 
                class="px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-colors {{ request('status') === 'out_of_stock' ? 'bg-moon-gold/10 text-moon-gold border-moon-gold/20' : 'bg-white/5 text-moon-gray-400 border-white/5 hover:bg-white/10 hover:text-white' }}">
@@ -52,6 +43,16 @@
             <a href="{{ route('admin.products.index', ['status' => 'featured', 'search' => request('search')]) }}" 
                class="px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-colors {{ request('status') === 'featured' ? 'bg-moon-gold/10 text-moon-gold border-moon-gold/20' : 'bg-white/5 text-moon-gray-400 border-white/5 hover:bg-white/10 hover:text-white' }}">
                 Featured
+            </a>
+            
+            <div class="h-6 w-px bg-white/10 mx-2"></div>
+
+            <a href="{{ route('admin.products.create') }}" 
+               class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-moon-gold to-yellow-500 text-moon-dark font-bold text-sm rounded-lg hover:shadow-[0_0_15px_rgba(255,215,0,0.3)] transition-all transform hover:-translate-y-0.5 whitespace-nowrap">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+                </svg>
+                <span>Add Perfume</span>
             </a>
         </div>
     </div>
@@ -62,11 +63,11 @@
             <table class="w-full">
                 <thead>
                     <tr class="border-b border-white/5 bg-white/5">
-                        <th class="px-6 py-5 text-left text-xs font-bold text-moon-gray-400 uppercase tracking-widest">Product</th>
-                        <th class="px-6 py-5 text-left text-xs font-bold text-moon-gray-400 uppercase tracking-widest">Category</th>
+                        <th class="px-6 py-5 text-left text-xs font-bold text-moon-gray-400 uppercase tracking-widest">Perfume</th>
+                        <th class="px-6 py-5 text-left text-xs font-bold text-moon-gray-400 uppercase tracking-widest">Brand</th>
+                        <th class="px-6 py-5 text-left text-xs font-bold text-moon-gray-400 uppercase tracking-widest">Profile</th>
                         <th class="px-6 py-5 text-left text-xs font-bold text-moon-gray-400 uppercase tracking-widest">Price</th>
                         <th class="px-6 py-5 text-left text-xs font-bold text-moon-gray-400 uppercase tracking-widest">Inventory</th>
-                        <th class="px-6 py-5 text-left text-xs font-bold text-moon-gray-400 uppercase tracking-widest">Status</th>
                         <th class="px-6 py-5 text-right text-xs font-bold text-moon-gray-400 uppercase tracking-widest">Actions</th>
                     </tr>
                 </thead>
@@ -76,8 +77,11 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-4">
                                     <div class="w-16 h-16 rounded-xl bg-moon-dark border border-white/10 overflow-hidden relative group-hover:border-moon-gold/30 transition-colors shrink-0">
-                                        @if($product->image)
-                                            <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                                        @php
+                                            $mainImage = $product->images->first();
+                                        @endphp
+                                        @if($mainImage)
+                                            <img src="{{ Storage::url($mainImage->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
                                         @else
                                             <div class="w-full h-full flex items-center justify-center text-moon-gray-600 bg-white/5">
                                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,18 +98,30 @@
                                     </div>
                                     <div>
                                         <div class="text-white font-bold group-hover:text-moon-gold transition-colors text-lg font-display">{{ $product->name }}</div>
-                                        <div class="text-xs text-moon-gray-500 font-mono mt-0.5">ID: #{{ $product->id }}</div>
+                                        <div class="text-xs text-moon-gray-500 font-mono mt-0.5">
+                                            {{ $product->category ? $product->category->name : 'Uncategorized' }}
+                                        </div>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                @if($product->category)
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-white/5 text-moon-gray-300 border border-white/10 group-hover:border-white/20 transition-colors">
-                                        {{ $product->category->name }}
-                                    </span>
+                                @if($product->brand)
+                                    <span class="text-moon-gray-300 font-medium">{{ $product->brand->name }}</span>
                                 @else
                                     <span class="text-moon-gray-600">-</span>
                                 @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col gap-1">
+                                    @if($product->concentration)
+                                        <span class="inline-flex items-center w-fit px-2 py-0.5 rounded text-[10px] font-bold bg-white/5 text-moon-gray-300 border border-white/10">
+                                            {{ $product->concentration }}
+                                        </span>
+                                    @endif
+                                    @if($product->gender)
+                                        <span class="text-xs text-moon-gray-500 capitalize">{{ $product->gender }}</span>
+                                    @endif
+                                </div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex flex-col">
@@ -128,19 +144,6 @@
                                         </span>
                                     </div>
                                     <div class="text-xs text-moon-gray-500 ml-4">{{ $variantCount }} variant{{ $variantCount !== 1 ? 's' : '' }}</div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex flex-wrap gap-1.5">
-                                    @if($product->featured)
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-moon-gold/10 text-moon-gold border border-moon-gold/20 uppercase tracking-wider">Featured</span>
-                                    @endif
-                                    @if($product->trending)
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20 uppercase tracking-wider">Trending</span>
-                                    @endif
-                                    @if(!$product->featured && !$product->trending)
-                                        <span class="text-moon-gray-600 text-xs">-</span>
-                                    @endif
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-right">
@@ -175,11 +178,11 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                         </svg>
                                     </div>
-                                    <h3 class="text-2xl font-bold text-white mb-2 font-display">No Products Found</h3>
-                                    <p class="text-moon-gray-400 mb-8 max-w-sm mx-auto">Your inventory is empty. Start adding products to fill up your store.</p>
+                                    <h3 class="text-2xl font-bold text-white mb-2 font-display">No Perfumes Found</h3>
+                                    <p class="text-moon-gray-400 mb-8 max-w-sm mx-auto">Your catalog is empty. Start adding perfumes to your store.</p>
                                     <a href="{{ route('admin.products.create') }}" 
                                        class="px-8 py-3 bg-moon-gold text-moon-dark font-bold rounded-xl hover:bg-yellow-500 transition-all shadow-lg hover:shadow-moon-gold/20">
-                                        Add First Product
+                                        Add First Perfume
                                     </a>
                                 </div>
                             </td>
