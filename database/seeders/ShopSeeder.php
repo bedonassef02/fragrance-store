@@ -33,7 +33,7 @@ class ShopSeeder extends Seeder
                 'description' => 'A radically fresh composition, dictated by a name that has the ring of a manifesto.',
                 'price' => 4500,
                 'original_price' => 5200,
-                'image' => 'https://fimgs.net/mdimg/perfume/375x500.31861.jpg', // Placeholder
+                'image' => 'https://fimgs.net/mdimg/perfume/375x500.31861.jpg',
                 'badge' => 'Best Seller',
                 'badge_color' => 'bg-blue-600',
                 'category' => 'Men',
@@ -108,6 +108,8 @@ class ShopSeeder extends Seeder
             ],
         ];
 
+        // Ensure Brands exist
+        
         $notes = Note::all();
 
         foreach ($products as $p) {
@@ -119,11 +121,13 @@ class ShopSeeder extends Seeder
 
             $p['slug'] = Str::slug($p['name']);
             $p['category_id'] = $catIds[$categoryName] ?? $catIds['Unisex'];
+            $p['type'] = 'original'; // Default type
             
             // Link Brand
             $brand = Brand::where('slug', $brandSlug)->first();
-            $p['brand_id'] = $brand ? $brand->id : Brand::first()->id;
-
+            $p['brand_id'] = $brand ? $brand->id : (Brand::first()->id ?? null);
+            
+            // Random feature flags
             $p['featured'] = rand(0, 10) > 6;
             $p['trending'] = rand(0, 10) > 7;
 
@@ -131,14 +135,15 @@ class ShopSeeder extends Seeder
 
             // Attach Random Notes
             if ($notes->count() > 0) {
-                $product->notes()->attach($notes->random(rand(3, 5))->pluck('id'));
+                // Attach 3-5 random notes
+                $product->notes()->attach($notes->random(min($notes->count(), rand(3, 5)))->pluck('id'));
             }
 
             // Create Variants
             // 1. Original Bottle
             ProductVariant::create([
                 'product_id' => $product->id,
-                'container_type' => 'bottle',
+                'container_type' => 'Bottle',
                 'capacity' => 100,
                 'unit' => 'ml',
                 'quantity' => 10,
@@ -147,7 +152,7 @@ class ShopSeeder extends Seeder
 
             ProductVariant::create([
                 'product_id' => $product->id,
-                'container_type' => 'bottle',
+                'container_type' => 'Bottle',
                 'capacity' => 50,
                 'unit' => 'ml',
                 'quantity' => 15,
@@ -157,7 +162,7 @@ class ShopSeeder extends Seeder
             // 2. Decants / Samples
             ProductVariant::create([
                 'product_id' => $product->id,
-                'container_type' => 'decant',
+                'container_type' => 'Decant',
                 'capacity' => 10,
                 'unit' => 'ml',
                 'quantity' => 50,
@@ -166,7 +171,7 @@ class ShopSeeder extends Seeder
 
              ProductVariant::create([
                 'product_id' => $product->id,
-                'container_type' => 'sample',
+                'container_type' => 'Sample',
                 'capacity' => 2,
                 'unit' => 'ml',
                 'quantity' => 100,
@@ -178,6 +183,8 @@ class ShopSeeder extends Seeder
                 'product_id' => $product->id,
                 'image_path' => $p['image']
             ]);
+            
+            $product->update(['image' => $p['image']]);
         }
     }
 }

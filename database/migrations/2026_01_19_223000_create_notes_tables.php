@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('product_note', function (Blueprint $table) {
+        Schema::create('note_product', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->foreignId('note_id')->constrained()->onDelete('cascade');
@@ -27,7 +27,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('product_note');
+        Schema::dropIfExists('note_product');
         Schema::dropIfExists('notes');
     }
 };
