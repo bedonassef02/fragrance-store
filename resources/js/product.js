@@ -4,112 +4,81 @@ import { showToast, setLoading } from './ui-helpers';
 
 document.addEventListener('DOMContentLoaded', function () {
     const variantsDataEl = document.getElementById('product-variants-data');
+    
+    // Only run on product pages
     if (!variantsDataEl) return;
 
     // --- DOM Elements ---
-    const colorSwatches = document.querySelectorAll('.color-btn');
-    const sizeContainer = document.getElementById('size-container');
+    const capacityContainer = document.getElementById('capacity-container');
     const addToBagBtn = document.getElementById('add-to-bag-btn');
-    const colorNameDisplay = document.getElementById('selected-color-name');
     const mainImage = document.getElementById('main-image');
     const galleryThumbs = document.querySelectorAll('.gallery-thumb');
     const qtyInput = document.getElementById('quantity-input');
+    const priceEl = document.getElementById('product-price');
+    const selectedCapacityInput = document.getElementById('selected-capacity');
+    
+    // Quantity Controls
+    const qtyMinus = document.getElementById('qty-minus');
+    const qtyPlus = document.getElementById('qty-plus');
+
+    // Zoom Controls
+    const zoomModal = document.getElementById('zoom-modal');
+    const zoomImg = document.getElementById('zoom-img-full');
 
     // --- State ---
     let state = {
         variants: JSON.parse(variantsDataEl.dataset.variants || '[]'),
-        selectedColor: null,
-        selectedSize: null,
+        selectedCapacity: null,
         selectedVariant: null,
     };
 
     // --- UI Functions ---
     const ui = {
-        updateColorSwatches() {
-            colorSwatches.forEach(btn => {
-                const isSelected = btn.dataset.color === state.selectedColor;
-                btn.classList.toggle('border-moon-gold', isSelected);
-                btn.classList.toggle('border-transparent', !isSelected);
-            });
-            if (colorNameDisplay) colorNameDisplay.textContent = state.selectedColor;
-        },
-        updateSizeButtons() {
-            const sizeBtns = sizeContainer.querySelectorAll('.product-size-btn');
-            sizeBtns.forEach(btn => {
-                const size = btn.dataset.size;
-                const variant = state.variants.find(v => v.size === size && v.color === state.selectedColor);
-                const isOutOfStock = !variant || variant.qty === 0;
-
-                btn.disabled = isOutOfStock;
-                btn.classList.toggle('opacity-50', isOutOfStock);
-                btn.classList.toggle('cursor-not-allowed', isOutOfStock);
-
-                const isSelected = size === state.selectedSize;
-                btn.classList.toggle('bg-moon-gold', isSelected && !isOutOfStock);
-                btn.classList.toggle('text-moon-dark', isSelected && !isOutOfStock);
-            });
-        },
-        updateGalleryAndMainImage() {
-            if (!mainImage) return;
-
-            // 1. Filter Thumbnails
-            const allThumbs = Array.from(galleryThumbs);
-            let firstVisibleThumb = null;
-
-            allThumbs.forEach(thumb => {
-                const thumbColor = thumb.dataset.color;
-                // Show thumb if:
-                // a) No color selected
-                // b) Thumb is 'all' (main image usually)
-                // c) Thumb matches selected color
-                const shouldShow = !state.selectedColor || thumbColor === 'all' || thumbColor === state.selectedColor;
-
-                thumb.style.display = shouldShow ? 'block' : 'none';
-
-                if (shouldShow && !firstVisibleThumb) {
-                    firstVisibleThumb = thumb;
+        updateCapacityButtons() {
+            if (!capacityContainer) return;
+            const capBtns = capacityContainer.querySelectorAll('.product-capacity-btn');
+            
+            capBtns.forEach(btn => {
+                const capacity = btn.dataset.capacity;
+                const isSelected = capacity === state.selectedCapacity;
+                
+                if (isSelected) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
                 }
             });
-
-            // 2. Update Main Image if needed
-            // If the currently displayed main image doesn't match the selected color (and isn't 'all'), switch it
-            const currentMainColor = mainImage.dataset.currentColor;
-            if (state.selectedColor && currentMainColor !== 'all' && currentMainColor !== state.selectedColor) {
-                // Find the first image for this color
-                const colorImage = allThumbs.find(t => t.dataset.color === state.selectedColor);
-                if (colorImage) {
-                    mainImage.src = colorImage.src;
-                    // Update active state
-                    allThumbs.forEach(t => t.classList.remove('border-moon-gold', 'border-transparent'));
-                    allThumbs.forEach(t => t.classList.add('border-transparent'));
-                    colorImage.classList.remove('border-transparent');
-                    colorImage.classList.add('border-moon-gold');
-                }
-            } else if (!state.selectedColor && firstVisibleThumb) {
-                // Reset to first if cleared
-                // Optional: decide if we want to reset main image when color is deselected
-            }
         },
-        updateAll() {
-            this.updateColorSwatches();
-            this.updateSizeButtons();
 
-            // Replaced updateMainImage with more comprehensive gallery update
-            this.updateGalleryAndMainImage();
-
-            // Find and set the currently selected variant object
-            state.selectedVariant = state.variants.find(v => v.color === state.selectedColor && v.size === state.selectedSize) || null;
-            this.updateAddToBagButton();
+        updatePrice() {
+            if (!priceEl || !state.selectedVariant) return;
+            priceEl.textContent = state.selectedVariant.price + ' LE';
         },
+
         updateAddToBagButton() {
             if (!addToBagBtn) return;
 
             if (!state.selectedVariant) {
-                addToBagBtn.disabled = true;
-                addToBagBtn.innerText = 'Select Option';
-                addToBagBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                // If we have variants but none selected (shouldn't happen with auto-select), or explicit "Select Option" state
+                // However, for single variant items or handled logic, this might differ.
+                // For now, if no variant selected, disable.
+                
+                 // Check if it's a simple product with no variants data vs unselected
+                 if (state.variants.length > 0) {
+                     addToBagBtn.disabled = true;
+                     addToBagBtn.innerText = 'Select Capacity';
+                     addToBagBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                 } else {
+                     // No variants (e.g. simple product, if supported)
+                     addToBagBtn.disabled = false;
+                     addToBagBtn.innerText = 'Add to Bag';
+                     addToBagBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                 }
                 return;
             }
+
+            // Update Data ID for direct add logic (if needed elsewhere)
+            addToBagBtn.dataset.id = state.selectedVariant.id;
 
             if (state.selectedVariant.qty === 0) {
                 addToBagBtn.disabled = true;
@@ -120,57 +89,79 @@ document.addEventListener('DOMContentLoaded', function () {
                 addToBagBtn.innerText = 'Add to Bag';
                 addToBagBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
+        },
+
+        updateAll() {
+            this.updateCapacityButtons();
+            
+            // Find selected variant
+            if (state.selectedCapacity) {
+                state.selectedVariant = state.variants.find(v => v.capacity === state.selectedCapacity);
+            }
+
+            this.updatePrice();
+            this.updateAddToBagButton();
+            
+            // Update hidden input
+            if (selectedCapacityInput) {
+                selectedCapacityInput.value = state.selectedCapacity || '';
+            }
         }
     };
 
     // --- Event Listeners ---
-    colorSwatches.forEach(btn => {
-        btn.addEventListener('click', () => {
-            state.selectedColor = btn.dataset.color;
-            // Find the first available size for this new color and select it
-            const firstAvailable = state.variants.find(v => v.color === state.selectedColor && v.qty > 0);
-            state.selectedSize = firstAvailable ? firstAvailable.size : null;
-            ui.updateAll();
-        });
-    });
-
-    sizeContainer?.addEventListener('click', (e) => {
-        const sizeBtn = e.target.closest('.product-size-btn');
-        if (sizeBtn && !sizeBtn.disabled) {
-            state.selectedSize = sizeBtn.dataset.size;
+    
+    // Capacity Selection
+    capacityContainer?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.product-capacity-btn');
+        if (btn) {
+            state.selectedCapacity = btn.dataset.capacity;
             ui.updateAll();
         }
     });
 
+    // Add to Bag
     addToBagBtn?.addEventListener('click', async () => {
-        if (!state.selectedVariant) {
-            showToast('Please make a valid selection.', true);
+        // If variants exist but none selected
+        if (state.variants.length > 0 && !state.selectedVariant) {
+            showToast('Please select a capacity.', true);
             return;
         }
-        if (state.selectedVariant.qty === 0) {
+
+        // If selected but out of stock
+        if (state.selectedVariant && state.selectedVariant.qty === 0) {
             showToast('This item is out of stock.', true);
             return;
+        }
+        
+        // Determine ID to add: Variant ID if exists, described in button's data-id
+        const idToAdd = state.selectedVariant ? state.selectedVariant.id : addToBagBtn.dataset.id;
+        
+        if (!idToAdd) {
+             showToast('Error: Product ID not found.', true);
+             return;
         }
 
         setLoading(addToBagBtn, true, 'Adding...', 'Add to Bag');
         const quantity = parseInt(qtyInput.value) || 1;
-        const { success, data, error } = await apiService.addToCart(state.selectedVariant.id, quantity);
-        setLoading(addToBagBtn, false);
-
-        if (success) {
-            showToast('Item added to bag!');
-            updateCartBadge(data.cartCount);
-        } else {
-            showToast(error, true);
+        
+        try {
+            const { success, data, error } = await apiService.addToCart(idToAdd, quantity);
+            
+            if (success) {
+                showToast('Item added to bag!');
+                updateCartBadge(data.cartCount);
+            } else {
+                showToast(error || 'Failed to add item', true);
+            }
+        } catch (err) {
+            showToast('An unexpected error occurred.', true);
+        } finally {
+            setLoading(addToBagBtn, false);
         }
     });
 
-    // --- Gallery & Zoom Logic ---
-    const qtyMinus = document.getElementById('qty-minus');
-    const qtyPlus = document.getElementById('qty-plus');
-    const zoomModal = document.getElementById('zoom-modal');
-    const zoomImg = document.getElementById('zoom-img-full');
-
+    // Quantity Logic
     qtyMinus?.addEventListener('click', () => {
         let val = parseInt(qtyInput.value);
         if (val > 1) qtyInput.value = val - 1;
@@ -182,9 +173,10 @@ document.addEventListener('DOMContentLoaded', function () {
         qtyInput.value = val + 1;
     });
 
+    // Gallery Logic
     galleryThumbs.forEach(thumb => {
         thumb.addEventListener('click', () => {
-            const src = thumb.dataset.src || thumb.src;
+            const src = thumb.getAttribute('src'); // Use src attribute directly
             mainImage.style.opacity = '0.5';
             setTimeout(() => {
                 mainImage.src = src;
@@ -196,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Zoom Logic
     mainImage?.addEventListener('click', () => {
         if (zoomModal && zoomImg) {
             zoomImg.src = mainImage.src;
@@ -217,16 +210,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 300);
     });
 
+
     // --- Initialization ---
     function initialize() {
-        const inStockVariants = state.variants.filter(v => v.qty > 0);
-        if (inStockVariants.length > 0) {
-            state.selectedColor = inStockVariants[0].color;
-            state.selectedSize = inStockVariants[0].size;
-        } else if (state.variants.length > 0) {
-            // If all are out of stock, select the first one anyway to show options
-            state.selectedColor = state.variants[0].color;
-            state.selectedSize = state.variants[0].size;
+        if (state.variants.length > 0) {
+            // Auto Select first option
+             state.selectedCapacity = state.variants[0].capacity;
+        } else {
+             // Handle simple product case if needed, or leave null
         }
         ui.updateAll();
     }

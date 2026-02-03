@@ -28,10 +28,10 @@
                                     @endif
                                 </div>
                                 <p class="text-gray-500 text-sm mt-1">
-                                    Size: {{ $item['size'] }} 
-                                    @if(isset($item['color']) && $item['color'])
-                                    <span class="mx-2">|</span> {{ $item['color'] }}
+                                    @if(isset($item['concentration']) && $item['concentration'])
+                                    <span class="text-moon-gold/80 uppercase text-[10px] tracking-widest block mb-1">{{ $item['concentration'] }}</span>
                                     @endif
+                                    Capacity: {{ $item['capacity'] }}
                                 </p>
                             </div>
                             
@@ -74,4 +74,7 @@
                         </a>
                     </x-order-summary>
                 </div>
+            </div>
+        </div>
+    </div>
 @endsection

@@ -105,3 +105,10 @@
 .no-spinner {
     -moz-appearance: textfield;
 }
+
+/* Product Attributes */
+.product-capacity-btn.selected {
+    background-color: var(--color-moon-gold);
+    color: var(--color-moon-dark);
+    border-color: var(--color-moon-gold);
+}

@@ -21,7 +21,7 @@
                 <span class="mx-2">/</span>
                 <a href="{{ route('shop') }}" class="hover:text-moon-gold transition-colors">{{ $product->category->name ?? 'Shop' }}</a>
                 <span class="mx-2">/</span>
-                <span class="text-gray-300">{{ $product['name'] }}</span>
+                <span class="text-gray-300">{{ $product->name }}</span>
             </nav>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -31,21 +31,19 @@
                          <img id="main-image" src="{{ $product->image }}" 
                               class="w-full h-full object-cover cursor-zoom-in transition-opacity duration-300" alt="{{ $product->name }}">
                          
-                         @if(isset($product->badge) && $product->badge)
+                         @if($product->badge)
                          <span class="absolute top-4 left-4 {{ $product->badge_color ?? 'bg-moon-gold' }} text-white text-xs font-bold px-3 py-1.5 uppercase tracking-widest">{{ $product->badge }}</span>
                          @endif
                     </div>
                     
                     <!-- Thumbnails -->
-                    <!-- Thumbnails -->
                     @if($product->images->count() > 0)
                     <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                         <img src="{{ $product->image }}" class="gallery-thumb w-20 h-24 object-cover border-2 border-moon-gold cursor-pointer hover:opacity-80 transition-all" data-color="all">
+                         <img src="{{ $product->image }}" class="gallery-thumb w-20 h-24 object-cover border-2 border-moon-gold cursor-pointer hover:opacity-80 transition-all" onclick="document.getElementById('main-image').src=this.src; document.querySelectorAll('.gallery-thumb').forEach(el => el.classList.remove('border-moon-gold')); this.classList.add('border-moon-gold');">
                          @foreach($product->images as $img)
                          <img src="{{ $img->image_path }}" 
                               class="gallery-thumb w-20 h-24 object-cover border-2 border-transparent hover:border-moon-gold cursor-pointer hover:opacity-80 transition-all"
-                              data-color="{{ $img->color ? $img->color->name : 'all' }}"
-                              >
+                              onclick="document.getElementById('main-image').src=this.src; document.querySelectorAll('.gallery-thumb').forEach(el => el.classList.remove('border-moon-gold')); this.classList.add('border-moon-gold');">
                          @endforeach
                     </div>
                     @endif
@@ -53,11 +51,19 @@
 
                 <!-- Product Info -->
                 <div class="flex flex-col lg:sticky lg:top-32 h-fit">
-                    <h1 class="text-3xl md:text-5xl font-serif text-white mb-6 leading-tight">{{ $product->name }}</h1>
+                    @if($product->brand)
+                        <h2 class="text-moon-gold uppercase tracking-[0.2em] text-sm mb-2">{{ $product->brand->name }}</h2>
+                    @endif
+                    <h1 class="text-3xl md:text-5xl font-serif text-white mb-2 leading-tight">{{ $product->name }}</h1>
+                    @if($product->concentration)
+                        <p class="text-gray-400 font-light text-lg mb-6">{{ $product->concentration }}</p>
+                    @else
+                        <div class="mb-6"></div>
+                    @endif
                     
                     <div class="flex items-center space-x-4 mb-8 pb-8 border-b border-gray-800/50">
-                        <span class="text-3xl text-moon-gold font-bold font-serif">{{ number_format($product->price) }} LE</span>
-                        @if(isset($product->original_price) && $product->original_price)
+                        <span id="product-price" class="text-3xl text-moon-gold font-bold font-serif">{{ number_format($product->price) }} LE</span>
+                        @if($product->original_price)
                         <span class="text-xl text-gray-500 line-through font-light">{{ number_format($product->original_price) }} LE</span>
                         @endif
                     </div>
@@ -66,45 +72,46 @@
                         {{ $product->description }}
                     </p>
 
-                    <div class="space-y-8 mb-12">
-                         <!-- Size Selector -->
-                        <!-- Color & Size -->
-                        <div id="product-variants-data" data-variants="{{ json_encode($product->variants->map(fn($v) => ['id' => $v->id, 'color' => $v->color?->name, 'size' => $v->size, 'qty' => $v->quantity])) }}" class="hidden"></div>
-
-                        @if($uniqueColors->isNotEmpty())
-                        <div class="mb-8">
-                             <label class="block text-xs uppercase tracking-widest text-white font-bold mb-4">Select Color: <span id="selected-color-name" class="font-normal text-moon-gold ml-2"></span></label>
-                             <div class="flex gap-4">
-                                @foreach($uniqueColors as $idx => $color)
-                                <button type="button" 
-                                        class="color-btn w-10 h-10 rounded-full border-2 p-1 transition-all {{ $idx===0 ? 'border-moon-gold' : 'border-transparent' }}"
-                                        style="background-color: {{ $color->hex_code }}"
-                                        data-color="{{ $color->name }}"
-                                        title="{{ $color->name }}">
-                                </button>
-                                @endforeach
-                             </div>
+                    <!-- Olfactory Pyramid -->
+                    @if($product->notes->isNotEmpty())
+                    <div class="mb-10 p-6 bg-white/5 border border-white/5 rounded-sm">
+                        <h3 class="text-white font-serif text-lg mb-4 text-center">Olfactory Pyramid</h3>
+                        <div class="space-y-4">
+                            @foreach(['top' => 'Top Notes', 'heart' => 'Heart Notes', 'base' => 'Base Notes'] as $type => $label)
+                                @php $notes = $product->notes->where('pivot.type', $type); @endphp
+                                @if($notes->isNotEmpty())
+                                <div class="flex flex-col items-center text-center">
+                                    <span class="text-moon-gold text-xs uppercase tracking-widest mb-1">{{ $label }}</span>
+                                    <span class="text-gray-300 text-sm">{{ $notes->pluck('name')->join(', ') }}</span>
+                                </div>
+                                @endif
+                            @endforeach
                         </div>
-                        @endif
+                    </div>
+                    @endif
 
-                        @if($allSizes->count() > 0)
+                    <div class="space-y-8 mb-12">
+                         <!-- Capacity Selector -->
+                        <div id="product-variants-data" data-variants="{{ json_encode($product->variants->map(fn($v) => ['id' => $v->id, 'capacity' => $v->capacity . ' ' . $v->unit, 'price' => number_format($v->price), 'raw_price' => $v->price, 'qty' => $v->quantity])) }}" class="hidden"></div>
+                        
+                        @if($uniqueCapacities->isNotEmpty())
                         <div>
                             <div class="flex justify-between mb-4">
-                                <label class="text-xs uppercase tracking-widest text-white font-bold">Select Size</label>
-                                <a href="#" class="size-guide-trigger text-xs text-gray-500 underline hover:text-moon-gold transition-colors">Size Guide</a>
+                                <label class="text-xs uppercase tracking-widest text-white font-bold">Select Capacity</label>
                             </div>
-                            <div class="flex flex-wrap gap-3" id="size-container">
-                                @foreach($allSizes as $size)
-                                <button class="product-size-btn w-12 h-12 flex items-center justify-center border border-gray-700 text-gray-400 font-bold hover:border-moon-gold hover:text-white transition-all duration-300 hover:scale-110 focus:bg-moon-gold focus:text-black focus:border-moon-gold" 
-                                    data-size="{{ $size }}">
-                                    {{ $size }}
+                            <div class="flex flex-wrap gap-3" id="capacity-container">
+                                @foreach($uniqueCapacities as $variant)
+                                <button type="button" 
+                                    class="product-capacity-btn px-6 py-3 border border-gray-700 text-gray-400 font-bold hover:border-moon-gold hover:text-white transition-all duration-300 focus:bg-moon-gold focus:text-black focus:border-moon-gold" 
+                                    data-capacity="{{ $variant['label'] }}">
+                                    {{ $variant['label'] }}
                                 </button>
                                 @endforeach
                             </div>
+                            <input type="hidden" id="selected-capacity">
                         </div>
                         @else
-                          <!-- One Size / No Size Logic -->
-                          <input type="hidden" id="selected-size" value="One Size">
+                             <input type="hidden" id="selected-capacity" value="Standard">
                         @endif
 
                         <!-- Quantity & Add -->
@@ -120,23 +127,15 @@
                         </div>
                     </div>
 
-                    <style>
-                        /* Hide number input spinners */
-                        .no-spinner::-webkit-inner-spin-button, 
-                        .no-spinner::-webkit-outer-spin-button { 
-                            -webkit-appearance: none; 
-                            margin: 0; 
-                        }
-                        .no-spinner {
-                            -moz-appearance: textfield;
-                        }
-                    </style>
+
 
                     <x-product-feature-list />
                 </div>
             </div>
 
-            <!-- Reviews -->
+            <!-- Reviews and Related Sections (Keep existing style) -->
+            <!-- ... (Reviews code same as before but ensured layout consistency) ... -->
+             <!-- Reviews -->
             <div class="mt-24 border-t border-gray-800 pt-16">
                 <div class="flex items-center justify-between mb-12">
                      <h2 class="text-2xl font-serif text-white">Customer Reviews</h2>
@@ -195,5 +194,3 @@
         <img id="zoom-img-full" src="" class="max-h-[85vh] max-w-[90vw] object-contain scale-90 transition-transform duration-300">
     </div>
 @endsection
-
-

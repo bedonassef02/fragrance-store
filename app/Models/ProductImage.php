@@ -6,12 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductImage extends Model
 {
-    protected $fillable = ['product_id', 'image_path', 'color_id'];
-
-    public function color()
-    {
-        return $this->belongsTo(Color::class);
-    }
+    protected $fillable = ['product_id', 'image_path'];
 
     public function getImagePathAttribute($value)
     {

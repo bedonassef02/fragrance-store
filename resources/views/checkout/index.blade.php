@@ -85,7 +85,12 @@
                              </div>
                              <div class="flex-1 min-w-0">
                                  <h3 class="text-white font-bold truncate">{{ $item['name'] }}</h3>
-                                 <p class="text-sm text-gray-400">Size: {{ $item['size'] }} @if(isset($item['color']) && $item['color']) | {{ $item['color'] }} @endif</p>
+                                 <p class="text-sm text-gray-400">
+                                     @if(isset($item['concentration']) && $item['concentration'])
+                                     {{ $item['concentration'] }} | 
+                                     @endif
+                                     {{ $item['capacity'] }}
+                                 </p>
                                  <p class="text-moon-gold mt-1">{{ number_format($item['price'] * $item['quantity']) }} LE</p>
                              </div>
                         </div>

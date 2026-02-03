@@ -6,7 +6,6 @@
     <div class="pt-44 pb-16 bg-moon-dark min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header (Centered) -->
-            <!-- Header (Centered) -->
             <div class="text-center mb-12 border-b border-gray-800 pb-10">
                 @if($activeCollection)
                     <div class="mb-6 relative h-64 md:h-80 w-full overflow-hidden rounded-sm animate-fadeInUp">
@@ -90,30 +89,50 @@
                                 </div>
                             </div>
 
-                            <!-- Sizes -->
+                            <!-- Brands -->
                             <div>
-                                <h3 class="text-white font-serif text-lg mb-4">Size</h3>
-                                <div class="flex flex-wrap gap-2">
-                                    @foreach($sizes as $size)
-                                    <label class="cursor-pointer">
-                                        <input type="checkbox" name="sizes[]" value="{{ $size }}" {{ in_array($size, (array)request('sizes', [])) ? 'checked' : '' }} class="peer hidden">
-                                        <span class="block w-10 h-10 flex items-center justify-center border border-gray-700 text-gray-400 text-sm font-bold peer-checked:bg-moon-gold peer-checked:text-moon-dark peer-checked:border-moon-gold hover:border-moon-gold transition-all">
-                                            {{ $size }}
-                                        </span>
-                                    </label>
+                                <h3 class="text-white font-serif text-lg mb-4">Brands</h3>
+                                <div class="space-y-3">
+                                    @foreach($brands as $brand)
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="brand-{{ $brand->id }}" name="brand[]" value="{{ $brand->id }}" 
+                                               {{ in_array($brand->id, (array)request('brand', [])) ? 'checked' : '' }}
+                                               class="w-4 h-4 rounded border-gray-700 bg-transparent text-moon-gold focus:ring-moon-gold focus:ring-offset-0 focus:ring-1">
+                                        <label for="brand-{{ $brand->id }}" class="ml-3 text-sm text-gray-400 hover:text-white transition-colors cursor-pointer">
+                                            {{ $brand->name }}
+                                        </label>
+                                    </div>
                                     @endforeach
                                 </div>
                             </div>
 
-                            <!-- Colors -->
+                            <!-- Concentration -->
                             <div>
-                                <h3 class="text-white font-serif text-lg mb-4">Color</h3>
-                                <div class="flex flex-wrap gap-3">
-                                    @foreach($colors as $color)
-                                    <label class="cursor-pointer group relative">
-                                        <input type="checkbox" name="colors[]" value="{{ $color->name }}" {{ in_array($color->name, (array)request('colors', [])) ? 'checked' : '' }} class="peer hidden">
-                                        <span class="block w-8 h-8 rounded-full border border-gray-700 peer-checked:ring-2 peer-checked:ring-moon-gold peer-checked:ring-offset-2 peer-checked:ring-offset-moon-dark transition-all" style="background-color: {{ $color->hex_code }}"></span>
-                                        <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">{{ $color->name }}</span>
+                                <h3 class="text-white font-serif text-lg mb-4">Concentration</h3>
+                                <div class="space-y-3">
+                                    @foreach($uniqueConcentrations as $concentration)
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="conc-{{ Str::slug($concentration) }}" name="concentration[]" value="{{ $concentration }}" 
+                                               {{ in_array($concentration, (array)request('concentration', [])) ? 'checked' : '' }}
+                                               class="w-4 h-4 rounded border-gray-700 bg-transparent text-moon-gold focus:ring-moon-gold focus:ring-offset-0 focus:ring-1">
+                                        <label for="conc-{{ Str::slug($concentration) }}" class="ml-3 text-sm text-gray-400 hover:text-white transition-colors cursor-pointer">
+                                            {{ $concentration }}
+                                        </label>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Capacity -->
+                            <div>
+                                <h3 class="text-white font-serif text-lg mb-4">Capacity</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach($uniqueCapacities as $capacity)
+                                    <label class="cursor-pointer">
+                                        <input type="checkbox" name="capacity[]" value="{{ $capacity }}" {{ in_array($capacity, (array)request('capacity', [])) ? 'checked' : '' }} class="peer hidden">
+                                        <span class="block px-3 py-2 border border-gray-700 text-gray-400 text-sm font-bold peer-checked:bg-moon-gold peer-checked:text-moon-dark peer-checked:border-moon-gold hover:border-moon-gold transition-all">
+                                            {{ $capacity }}
+                                        </span>
                                     </label>
                                     @endforeach
                                 </div>
@@ -141,7 +160,7 @@
                             <button type="submit" class="w-full bg-moon-gold text-moon-dark py-3 font-bold uppercase tracking-widest text-xs hover:bg-white transition-colors">
                                 Apply Filters
                             </button>
-                            @if(request()->anyFilled(['search', 'category', 'price_range', 'sort']))
+                            @if(request()->anyFilled(['search', 'category', 'brand', 'concentration', 'capacity', 'price_range', 'sort', 'in_stock']))
                             <a href="{{ route('shop') }}" class="block text-center mt-4 text-xs text-gray-500 underline hover:text-white">Clear All</a>
                             @endif
                         </div>
@@ -167,5 +186,6 @@
                 </div>
         </div>
     </div>
+    
 
 @endsection

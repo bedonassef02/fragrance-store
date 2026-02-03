@@ -107,8 +107,8 @@ class CartService
                 'price'      => $variant->price ?? $variant->product->price,
                 'original_price' => $variant->product->original_price,
                 'image'      => $image,
-                'size'       => $variant->capacity . ' ' . $variant->unit,
-                'type'       => $variant->container_type,
+                'capacity'   => $variant->capacity . ' ' . $variant->unit,
+                'concentration' => $variant->product->concentration ?? '',
                 'quantity'   => $quantity,
             ];
         }
