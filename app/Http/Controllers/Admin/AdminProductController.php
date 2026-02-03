@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Collection;
-use App\Models\Color;
+use App\Models\Brand;
+use App\Models\Note;
 use App\Models\Product;
 use App\Services\AdminProductService;
 use App\Http\Requests\StoreProductRequest;
@@ -32,9 +33,10 @@ class AdminProductController extends Controller
     {
         $categories = Category::all();
         $collections = Collection::all();
-        $colors = Color::all();
+        $brands = Brand::orderBy('name')->get();
+        $notes = Note::orderBy('name')->get();
         
-        return view('admin.products.create', compact('categories', 'collections', 'colors'));
+        return view('admin.products.create', compact('categories', 'collections', 'brands', 'notes'));
     }
 
     public function store(StoreProductRequest $request)
@@ -49,12 +51,13 @@ class AdminProductController extends Controller
 
     public function edit(Product $product)
     {
-        $product->load(['collections', 'variants.color', 'images']);
+        $product->load(['collections', 'variants', 'images', 'brand', 'notes']);
         $categories = Category::all();
         $collections = Collection::all();
-        $colors = Color::all();
+        $brands = Brand::orderBy('name')->get();
+        $notes = Note::orderBy('name')->get();
 
-        return view('admin.products.edit', compact('product', 'categories', 'collections', 'colors'));
+        return view('admin.products.edit', compact('product', 'categories', 'collections', 'brands', 'notes'));
     }
 
     public function update(UpdateProductRequest $request, Product $product)
