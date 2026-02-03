@@ -3,121 +3,92 @@
 </p>
 
 <p align="center">
-  <strong>✨ Elegant Arabian Fashion ✨</strong>
+  <strong>✨ Exquisite Art of Application ✨</strong>
 </p>
 
 <p align="center">
-  Premium abayas, bags, and accessories for the modern woman
+  Premium perfumes, authentic oils, and exclusive fragrances for the connoisseur
 </p>
 
 ---
 
 ## 🌙 About Moon
 
-Moon is an exclusive online boutique offering premium Arabian fashion. Built with modern web technologies, it features a fluid, responsive shopping experience and a powerful administrative dashboard.
+Moon is an exclusive online boutique offering premium fragrances. Built with modern web technologies, it features a fluid, responsive shopping experience and a powerful administrative dashboard tailored for complex product variations like concentrations and bottle sizes.
 
 We specialize in:
-- **Luxurious Abayas** - Handcrafted designs with exquisite detailing
-- **Designer Bags** - Elegant accessories for every occasion
-- **Modern Modest Fashion** - Blending tradition with contemporary style
+- **Luxurious Perfumes** - High-concentration extracts (Parfum, EDP, EDT)
+- **Authentic Oils** - Pure, alcohol-free essence oils
+- **Inspired Collections** - Expertly crafted alternatives to niche favorites
 
 ---
 
 ## ✨ Key Features
 
 ### 🛍️ Storefront
-- **Responsive Design**: Mobile-first approach with smooth animations and transitions.
-- **Product Management**: Support for multiple product variants (Color/Size), image galleries, and zoom functionality.
-- **Collections & Categories**: Organized browsing with dedicated collection pages and category filters.
-- **Shopping Cart**: Real-time cart updates with coupon code support.
-- **Guest Checkout**: Seamless checkout process for both registered users and guests.
-- **Product Reviews**: Customer reviews with star ratings and image uploads.
-- **Advanced Filtering**: Filter products by color, price, availability, and more.
+- **Responsive Design**: Mobile-first approach with smooth animations.
+- **Advanced Product Search**: Filter by **Olfactory Notes** (Top, Middle, Base), **Concentration**, and **Scent Function**.
+- **Product Variants**: Support for multiple bottle sizes (e.g., 50ml, 100ml) and types (Bottle, Decant).
+- **Collections**: Organized browsing by 'Inspired By', 'Occasion', or 'Gender'.
+- **Shopping Cart**: Real-time cart with coupon code support.
+- **Reviews**: Customer reviews with star ratings and photos.
 
 ### 🛡️ Admin Dashboard
-- **Secure Authentication**: Dedicated admin login with separate guard.
-- **Dashboard Analytics**: Real-time overview of orders, revenue, and customer stats.
-- **Product Management**: Full CRUD for products, variants, and stock management.
-- **Order Management**: Track and update order statuses (Pending -> Delivered).
-- **Reviews Moderation**: Approve or reject customer reviews before they go live.
-- **Collections & Categories**: Manage site structure and featured collections easily.
-- **Profile Management**: Update admin credentials and profile settings.
+- **Product Management**: Full CRUD for products with detailed attributes (Notes breakdown, Concentration details).
+- **Inventory Control**: Track stock levels per bottle size/variant.
+- **Order Management**: Process orders from 'Pending' to 'Delivered'.
+- **Analytics**: Orders, Revenue, and Best-selling fragrances.
+- **Content Management**: Manage Brands, Collections, Notes, and Categories.
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Backend**: Laravel 11 (PHP 8.2+)
+- **Backend**: Laravel 12 (PHP 8.2+)
 - **Frontend**: Blade Templates, Alpine.js, Vanilla JS
-- **Styling**: Tailwind CSS 4 (Custom Design System)
+- **Styling**: Tailwind CSS 4
 - **Database**: MySQL / SQLite
 - **Build Tool**: Vite
-- **Assets**: Custom SVG Icons, Google Fonts (Playfair Display, Inter)
+
+---
+
+## 📂 Project Structure
+
+- **`app/Models`**: Includes domain-specific models like `Note`, `ProductVariant` (for capacities), `Brand`.
+- **`app/Services`**: Business logic layers (`ProductService`, `CartService`).
+- **`app/Http/Controllers/Admin`**: Admin management for Products, Orders, Notes, etc.
+- **`routes/web.php`**: Organized routes for Shop, Cart, and Admin panels.
 
 ---
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- PHP 8.2+
-- Composer
-- Node.js & NPM
-
-### Installation
-
-1. **Clone the repository**
+1. **Clone & Install**
    ```bash
    git clone https://github.com/yourusername/moon.git
-   cd moon
-   ```
-
-2. **Install Backend Dependencies**
-   ```bash
    composer install
-   ```
-
-3. **Install Frontend Dependencies**
-   ```bash
    npm install
    ```
 
-4. **Environment Setup**
+2. **Setup Environment**
    ```bash
    cp .env.example .env
    php artisan key:generate
-   ```
-
-5. **Database Setup**
-   Configure your `.env` file with your database credentials, then run:
-   ```bash
    php artisan migrate --seed
    ```
-   *Note: The seeder will create demo products, orders, reviews, and a default admin user.*
 
-6. **Run Development Servers**
+3. **Run**
    ```bash
-   # Terminal 1 (Laravel Server)
    php artisan serve
-
-   # Terminal 2 (Vite Hot Reload)
    npm run dev
    ```
----
-
-## 📂 Project Structure
-
-- **`app/Http/Controllers/Admin`**: Admin-specific controllers (Dashboard, Products, Orders, etc.).
-- **`app/Services`**: Business logic layers (e.g., `ReviewService`, `ProductService`).
-- **`resources/views/admin`**: Blade templates for the admin panel.
-- **`resources/js`**: Modular JavaScript files (`product.js`, `cart.js`, `quick-add.js`, etc.) using generic `ui-helpers.js`.
-- **`routes/web.php`**: Organized routes for Store, Cart, Checkout, and Admin prefixes.
 
 ---
 
 ## 📧 Contact
 
-For inquiries: contact@moon-fashion.com
+For inquiries: contact@moon-fragrances.com
 
 ---
 
-<p align="center">Made with ❤️ for Arabian Fashion</p>
+<p align="center">Made with ❤️ for the Art of Scent</p>
