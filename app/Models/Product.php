@@ -10,8 +10,10 @@ class Product extends Model
     use HasFactory, \App\Traits\Trackable;
 
     protected $fillable = [
-        'category_id', 'name', 'slug', 'description', 'price', 'original_price', 'image', 'badge', 'badge_color',
-        'featured', 'trending', 'meta_title', 'meta_description', 'keywords'
+        'category_id', 'brand_id', 'name', 'slug', 'description', 
+        'price', 'original_price', 'image', 'badge', 'badge_color',
+        'featured', 'trending', 'meta_title', 'meta_description', 'keywords',
+        'concentration', 'gender', 'type', 'inspired_by', 'original_product_id'
     ];
 
     protected $casts = [
@@ -32,6 +34,28 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function notes()
+    {
+        return $this->belongsToMany(Note::class)
+                    ->withPivot('type')
+                    ->withTimestamps();
+    }
+
+    public function originalProduct()
+    {
+        return $this->belongsTo(Product::class, 'original_product_id');
+    }
+
+    public function inspiredProducts()
+    {
+        return $this->hasMany(Product::class, 'original_product_id');
     }
 
     public function collections()
@@ -63,6 +87,7 @@ class Product extends Model
     {
         return $query->where('trending', true);
     }
+    
     public function reviews()
     {
         return $this->hasMany(Review::class)->where('is_approved', true)->orderBy('created_at', 'desc');
