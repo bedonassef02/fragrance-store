@@ -150,33 +150,22 @@
                 </div>
 
                 @if($product->reviews_count > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    @foreach($product->reviews as $review)
-                    <div class="bg-white/5 border border-white/10 p-6 rounded-sm">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <div class="flex text-moon-gold text-sm mb-1">
-                                    @for($i=1; $i<=5; $i++)
-                                        @if($i <= $review->rating) ★ @else ☆ @endif
-                                    @endfor
-                                </div>
-                                <span class="text-white text-sm font-bold">{{ $review->user->name ?? 'Verified Buyer' }}</span>
-                            </div>
-                            <span class="text-xs text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
-                        </div>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-4">{{ $review->comment }}</p>
-                        @if($review->image_path)
-                        <img src="{{ Storage::url($review->image_path) }}" class="w-20 h-20 object-cover rounded-sm border border-gray-700 cursor-zoom-in" onclick="document.getElementById('zoom-img-full').src=this.src; document.getElementById('zoom-modal').classList.remove('hidden', 'opacity-0');">
-                        @endif
-                    </div>
-                    @endforeach
+                <div class="text-center mb-12">
+                     <button id="toggle-reviews-btn" class="bg-transparent border border-moon-gold text-moon-gold px-8 py-3 uppercase tracking-widest text-sm hover:bg-moon-gold hover:text-black transition-colors" data-slug="{{ $product->slug }}">
+                        Show Customer Reviews
+                     </button>
                 </div>
-                @else
-                <div class="text-center py-12 bg-white/5 border border-white/5 border-dashed rounded-sm">
-                    <p class="text-gray-500 font-light">No reviews yet. Be the first to share your thoughts!</p>
+
+                <div id="reviews-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 hidden opacity-0 transition-opacity duration-500">
+                    <!-- Reviews loaded via JS -->
+                </div>
+
+                <div class="text-center mt-12 hidden" id="load-more-container">
+                    <button id="load-more-reviews-btn" class="text-gray-500 hover:text-white underline text-sm uppercase tracking-wide">
+                        Load More
+                    </button>
                 </div>
                 @endif
-            </div>
 
             <!-- Related Products -->
              <div class="mt-24 border-t border-gray-800 pt-16">

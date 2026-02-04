@@ -41,4 +41,10 @@ class ProductController extends Controller
 
         return view('products.show', compact('product', 'relatedProducts', 'uniqueCapacities'));
     }
+    public function reviews(string $slug)
+    {
+        $product = $this->productService->getBySlug($slug);
+        $reviews = $product->reviews()->with('user')->paginate(4); // 4 reviews per page
+        return response()->json($reviews);
+    }
 }

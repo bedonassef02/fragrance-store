@@ -18,6 +18,7 @@ Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'inde
 // Shop & Product
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
+Route::get('/product/{slug}/reviews', [ProductController::class, 'reviews'])->name('product.reviews');
 
 // Cart
 Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function () {
