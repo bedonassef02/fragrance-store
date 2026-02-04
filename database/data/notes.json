@@ -1,0 +1,482 @@
+[
+    {
+        "name": "Bergamot",
+        "type": "top"
+    },
+    {
+        "name": "Lemon",
+        "type": "top"
+    },
+    {
+        "name": "Mandarin",
+        "type": "top"
+    },
+    {
+        "name": "Grapefruit",
+        "type": "top"
+    },
+    {
+        "name": "Lime",
+        "type": "top"
+    },
+    {
+        "name": "Yuzu",
+        "type": "top"
+    },
+    {
+        "name": "Bitter Orange",
+        "type": "top"
+    },
+    {
+        "name": "Blood Orange",
+        "type": "top"
+    },
+    {
+        "name": "Petitgrain",
+        "type": "top"
+    },
+    {
+        "name": "Citron",
+        "type": "top"
+    },
+    {
+        "name": "Neroli",
+        "type": "top"
+    },
+    {
+        "name": "Black Currant",
+        "type": "top"
+    },
+    {
+        "name": "Pineapple",
+        "type": "top"
+    },
+    {
+        "name": "Apple",
+        "type": "top"
+    },
+    {
+        "name": "Pear",
+        "type": "top"
+    },
+    {
+        "name": "Peach",
+        "type": "top"
+    },
+    {
+        "name": "Raspberry",
+        "type": "top"
+    },
+    {
+        "name": "Strawberry",
+        "type": "top"
+    },
+    {
+        "name": "Fig",
+        "type": "top"
+    },
+    {
+        "name": "Coconut",
+        "type": "top"
+    },
+    {
+        "name": "Melon",
+        "type": "top"
+    },
+    {
+        "name": "Watermelon",
+        "type": "top"
+    },
+    {
+        "name": "Plum",
+        "type": "top"
+    },
+    {
+        "name": "Cherry",
+        "type": "top"
+    },
+    {
+        "name": "Mint",
+        "type": "top"
+    },
+    {
+        "name": "Basil",
+        "type": "top"
+    },
+    {
+        "name": "Sage",
+        "type": "top"
+    },
+    {
+        "name": "Thyme",
+        "type": "top"
+    },
+    {
+        "name": "Rosemary",
+        "type": "top"
+    },
+    {
+        "name": "Eucalyptus",
+        "type": "top"
+    },
+    {
+        "name": "Lavender",
+        "type": "heart"
+    },
+    {
+        "name": "Rose",
+        "type": "heart"
+    },
+    {
+        "name": "Jasmine",
+        "type": "heart"
+    },
+    {
+        "name": "Tuberose",
+        "type": "heart"
+    },
+    {
+        "name": "Gardenia",
+        "type": "heart"
+    },
+    {
+        "name": "Magnolia",
+        "type": "heart"
+    },
+    {
+        "name": "Orchid",
+        "type": "heart"
+    },
+    {
+        "name": "Freesia",
+        "type": "heart"
+    },
+    {
+        "name": "Violet",
+        "type": "heart"
+    },
+    {
+        "name": "Iris",
+        "type": "heart"
+    },
+    {
+        "name": "Orris Root",
+        "type": "heart"
+    },
+    {
+        "name": "Heliotrope",
+        "type": "heart"
+    },
+    {
+        "name": "Mimosa",
+        "type": "heart"
+    },
+    {
+        "name": "Osmanthus",
+        "type": "heart"
+    },
+    {
+        "name": "Hyacinth",
+        "type": "heart"
+    },
+    {
+        "name": "Lilac",
+        "type": "heart"
+    },
+    {
+        "name": "Geranium",
+        "type": "heart"
+    },
+    {
+        "name": "Carnation",
+        "type": "heart"
+    },
+    {
+        "name": "Lily-of-the-Valley",
+        "type": "heart"
+    },
+    {
+        "name": "Ylang-Ylang",
+        "type": "heart"
+    },
+    {
+        "name": "Orange Blossom",
+        "type": "heart"
+    },
+    {
+        "name": "Cardamom",
+        "type": "heart"
+    },
+    {
+        "name": "Cinnamon",
+        "type": "heart"
+    },
+    {
+        "name": "Saffron",
+        "type": "heart"
+    },
+    {
+        "name": "Black Pepper",
+        "type": "heart"
+    },
+    {
+        "name": "Pink Pepper",
+        "type": "heart"
+    },
+    {
+        "name": "Ginger",
+        "type": "heart"
+    },
+    {
+        "name": "Nutmeg",
+        "type": "heart"
+    },
+    {
+        "name": "Clove",
+        "type": "heart"
+    },
+    {
+        "name": "Coriander",
+        "type": "heart"
+    },
+    {
+        "name": "Cumin",
+        "type": "heart"
+    },
+    {
+        "name": "Star Anise",
+        "type": "heart"
+    },
+    {
+        "name": "Fennel",
+        "type": "heart"
+    },
+    {
+        "name": "Juniper Berries",
+        "type": "heart"
+    },
+    {
+        "name": "Tea",
+        "type": "heart"
+    },
+    {
+        "name": "Sandalwood",
+        "type": "base"
+    },
+    {
+        "name": "Cedarwood",
+        "type": "base"
+    },
+    {
+        "name": "Patchouli",
+        "type": "base"
+    },
+    {
+        "name": "Vetiver",
+        "type": "base"
+    },
+    {
+        "name": "Oud",
+        "type": "base"
+    },
+    {
+        "name": "Guaiac Wood",
+        "type": "base"
+    },
+    {
+        "name": "Birch",
+        "type": "base"
+    },
+    {
+        "name": "Ebony",
+        "type": "base"
+    },
+    {
+        "name": "Rosewood",
+        "type": "base"
+    },
+    {
+        "name": "Cypress",
+        "type": "base"
+    },
+    {
+        "name": "Pine",
+        "type": "base"
+    },
+    {
+        "name": "Fir",
+        "type": "base"
+    },
+    {
+        "name": "Oakmoss",
+        "type": "base"
+    },
+    {
+        "name": "Vanilla",
+        "type": "base"
+    },
+    {
+        "name": "Tonka Bean",
+        "type": "base"
+    },
+    {
+        "name": "Benzoin",
+        "type": "base"
+    },
+    {
+        "name": "Myrrh",
+        "type": "base"
+    },
+    {
+        "name": "Labdanum",
+        "type": "base"
+    },
+    {
+        "name": "Opoponax",
+        "type": "base"
+    },
+    {
+        "name": "Elemi",
+        "type": "base"
+    },
+    {
+        "name": "Galbanum",
+        "type": "base"
+    },
+    {
+        "name": "Incense",
+        "type": "base"
+    },
+    {
+        "name": "Olibanum",
+        "type": "base"
+    },
+    {
+        "name": "Styrax",
+        "type": "base"
+    },
+    {
+        "name": "Amber",
+        "type": "base"
+    },
+    {
+        "name": "Musk",
+        "type": "base"
+    },
+    {
+        "name": "White Musk",
+        "type": "base"
+    },
+    {
+        "name": "Civet",
+        "type": "base"
+    },
+    {
+        "name": "Castoreum",
+        "type": "base"
+    },
+    {
+        "name": "Ambergris",
+        "type": "base"
+    },
+    {
+        "name": "Leather",
+        "type": "base"
+    },
+    {
+        "name": "Suede",
+        "type": "base"
+    },
+    {
+        "name": "Tobacco",
+        "type": "base"
+    },
+    {
+        "name": "Rum",
+        "type": "base"
+    },
+    {
+        "name": "Cognac",
+        "type": "base"
+    },
+    {
+        "name": "Whisky",
+        "type": "base"
+    },
+    {
+        "name": "Chocolate",
+        "type": "base"
+    },
+    {
+        "name": "Cacao",
+        "type": "base"
+    },
+    {
+        "name": "Caramel",
+        "type": "base"
+    },
+    {
+        "name": "Coffee",
+        "type": "base"
+    },
+    {
+        "name": "Honey",
+        "type": "base"
+    },
+    {
+        "name": "Beeswax",
+        "type": "base"
+    },
+    {
+        "name": "Almond",
+        "type": "base"
+    },
+    {
+        "name": "Milk",
+        "type": "base"
+    },
+    {
+        "name": "Sugar",
+        "type": "base"
+    },
+    {
+        "name": "Praline",
+        "type": "base"
+    },
+    {
+        "name": "Marshmallow",
+        "type": "base"
+    },
+    {
+        "name": "Ambroxan",
+        "type": "base"
+    },
+    {
+        "name": "Iso E Super",
+        "type": "base"
+    },
+    {
+        "name": "Cashmeran",
+        "type": "base"
+    },
+    {
+        "name": "Aldehydes",
+        "type": "top"
+    },
+    {
+        "name": "Sea Notes",
+        "type": "top"
+    },
+    {
+        "name": "Salt",
+        "type": "top"
+    },
+    {
+        "name": "Metallic Notes",
+        "type": "top"
+    },
+    {
+        "name": "Solar Notes",
+        "type": "heart"
+    }
+]

@@ -1,0 +1,854 @@
+[
+    {
+        "name": "Sauvage",
+        "description": "A radically fresh composition, dictated by a name that has the ring of a manifesto. That was the way François Demachy, Dior Perfumer-Creator, wanted it: raw and noble all at once.",
+        "price": 6200,
+        "original_price": 7500,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.31861.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.31861.jpg"
+        ],
+        "badge": "Best Seller",
+        "badge_color": "bg-blue-600",
+        "category": "Men",
+        "concentration": "EDT",
+        "gender": "male",
+        "brand_slug": "dior",
+        "notes": [
+            "Bergamot",
+            "Black Pepper",
+            "Ambroxan"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 100,
+                "unit": "ml",
+                "price": 6200,
+                "quantity": 20
+            },
+            {
+                "type": "Bottle",
+                "capacity": 60,
+                "unit": "ml",
+                "price": 4500,
+                "quantity": 15
+            },
+            {
+                "type": "Decant",
+                "capacity": 10,
+                "unit": "ml",
+                "price": 800,
+                "quantity": 50
+            },
+            {
+                "type": "Sample",
+                "capacity": 2,
+                "unit": "ml",
+                "price": 250,
+                "quantity": 100
+            }
+        ]
+    },
+    {
+        "name": "Dior Homme Intense",
+        "description": "A woody ambery fragrance with a sophisticated trail, sensual and invited. Iris, Lavender, and Ambrette seed create a powdery, musky signature.",
+        "price": 6800,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.12620.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.12620.jpg"
+        ],
+        "badge": "Sophisticated",
+        "badge_color": "bg-slate-800",
+        "category": "Men",
+        "concentration": "EDP",
+        "gender": "male",
+        "brand_slug": "dior",
+        "notes": [
+            "Iris",
+            "Lavender",
+            "Amber"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 100,
+                "unit": "ml",
+                "price": 6800,
+                "quantity": 10
+            },
+            {
+                "type": "Bottle",
+                "capacity": 50,
+                "unit": "ml",
+                "price": 4200,
+                "quantity": 10
+            },
+            {
+                "type": "Decant",
+                "capacity": 5,
+                "unit": "ml",
+                "price": 450,
+                "quantity": 30
+            }
+        ]
+    },
+    {
+        "name": "Miss Dior",
+        "description": "A hymn to love, emblematic of Dior's femininity and couture spirit. A hand-crafted scent with a modern, rebellious elegance.",
+        "price": 6500,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.69830.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.69830.jpg"
+        ],
+        "badge": "Classic",
+        "badge_color": "bg-pink-500",
+        "category": "Women",
+        "concentration": "EDP",
+        "gender": "female",
+        "brand_slug": "dior",
+        "notes": [
+            "Rose",
+            "Lily-of-the-Valley",
+            "Peony"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 100,
+                "unit": "ml",
+                "price": 6500,
+                "quantity": 10
+            },
+            {
+                "type": "Bottle",
+                "capacity": 50,
+                "unit": "ml",
+                "price": 4000,
+                "quantity": 10
+            },
+            {
+                "type": "Sample",
+                "capacity": 2,
+                "unit": "ml",
+                "price": 250,
+                "quantity": 50
+            }
+        ]
+    },
+    {
+        "name": "Chanel No. 5",
+        "description": "The very essence of femininity. A powdery floral bouquet housed in an iconic bottle. A legendary, timeless fragrance.",
+        "price": 7800,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.608.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.608.jpg"
+        ],
+        "badge": "Legendary",
+        "badge_color": "bg-yellow-600",
+        "category": "Women",
+        "concentration": "EDP",
+        "gender": "female",
+        "brand_slug": "chanel",
+        "notes": [
+            "Aldehydes",
+            "Ylang-Ylang",
+            "Jasmine"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 100,
+                "unit": "ml",
+                "price": 7800,
+                "quantity": 5
+            },
+            {
+                "type": "Bottle",
+                "capacity": 35,
+                "unit": "ml",
+                "price": 3500,
+                "quantity": 5
+            }
+        ]
+    },
+    {
+        "name": "Bleu de Chanel",
+        "description": "A woody, aromatic fragrance for the man who defies convention; a provocative blend of citrus and woods that liberates the senses.",
+        "price": 7200,
+        "original_price": 8000,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.25791.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.25791.jpg"
+        ],
+        "badge": "Popular",
+        "badge_color": "bg-blue-900",
+        "category": "Men",
+        "concentration": "Parfum",
+        "gender": "male",
+        "brand_slug": "chanel",
+        "notes": [
+            "Grapefruit",
+            "Incense",
+            "Amber"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 100,
+                "unit": "ml",
+                "price": 7200,
+                "quantity": 15
+            },
+            {
+                "type": "Bottle",
+                "capacity": 50,
+                "unit": "ml",
+                "price": 4500,
+                "quantity": 10
+            },
+            {
+                "type": "Decant",
+                "capacity": 10,
+                "unit": "ml",
+                "price": 900,
+                "quantity": 40
+            },
+            {
+                "type": "Sample",
+                "capacity": 2,
+                "unit": "ml",
+                "price": 300,
+                "quantity": 80
+            }
+        ]
+    },
+    {
+        "name": "Coco Mademoiselle",
+        "description": "The essence of a bold, free woman. An amber-y oriental fragrance with a strong personality yet surprisingly fresh.",
+        "price": 7500,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.611.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.611.jpg"
+        ],
+        "badge": "Chic",
+        "badge_color": "bg-pink-300",
+        "category": "Women",
+        "concentration": "EDP",
+        "gender": "female",
+        "brand_slug": "chanel",
+        "notes": [
+            "Orange",
+            "Patchouli",
+            "Rose"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 100,
+                "unit": "ml",
+                "price": 7500,
+                "quantity": 10
+            },
+            {
+                "type": "Bottle",
+                "capacity": 50,
+                "unit": "ml",
+                "price": 4800,
+                "quantity": 10
+            }
+        ]
+    },
+    {
+        "name": "Tobacco Vanille",
+        "description": "Opulent. Warm. Iconic. Reminiscent of an English Gentleman’s Club and blended with rich spices, vanilla and tobacco flower.",
+        "price": 14500,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.610.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.610.jpg"
+        ],
+        "badge": "Luxury",
+        "badge_color": "bg-amber-900",
+        "category": "Niche",
+        "concentration": "EDP",
+        "gender": "unisex",
+        "brand_slug": "tom-ford",
+        "notes": [
+            "Tobacco",
+            "Vanilla",
+            "Tonka Bean"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 100,
+                "unit": "ml",
+                "price": 14500,
+                "quantity": 5
+            },
+            {
+                "type": "Bottle",
+                "capacity": 50,
+                "unit": "ml",
+                "price": 8500,
+                "quantity": 5
+            },
+            {
+                "type": "Decant",
+                "capacity": 10,
+                "unit": "ml",
+                "price": 1800,
+                "quantity": 20
+            },
+            {
+                "type": "Decant",
+                "capacity": 5,
+                "unit": "ml",
+                "price": 1000,
+                "quantity": 20
+            }
+        ]
+    },
+    {
+        "name": "Oud Wood",
+        "description": "Rare. Exotic. Distinctive. One of the most rare, precious, and expensive ingredients in a perfumer’s arsenal.",
+        "price": 15000,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.609.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.609.jpg"
+        ],
+        "badge": "Bestseller",
+        "badge_color": "bg-stone-700",
+        "category": "Niche",
+        "concentration": "EDP",
+        "gender": "unisex",
+        "brand_slug": "tom-ford",
+        "notes": [
+            "Oud",
+            "Sandalwood",
+            "Cardamom"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 100,
+                "unit": "ml",
+                "price": 15000,
+                "quantity": 5
+            },
+            {
+                "type": "Decant",
+                "capacity": 10,
+                "unit": "ml",
+                "price": 1900,
+                "quantity": 30
+            },
+            {
+                "type": "Sample",
+                "capacity": 2,
+                "unit": "ml",
+                "price": 500,
+                "quantity": 50
+            }
+        ]
+    },
+    {
+        "name": "Lost Cherry",
+        "description": "Luscious. Tempting. Insatiable. A full-bodied journey into the once-forbidden.",
+        "price": 16500,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.52140.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.52140.jpg"
+        ],
+        "badge": "Seductive",
+        "badge_color": "bg-red-800",
+        "category": "Niche",
+        "concentration": "EDP",
+        "gender": "unisex",
+        "brand_slug": "tom-ford",
+        "notes": [
+            "Cherry",
+            "Almond",
+            "Tonka Bean"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 50,
+                "unit": "ml",
+                "price": 16500,
+                "quantity": 8
+            },
+            {
+                "type": "Decant",
+                "capacity": 5,
+                "unit": "ml",
+                "price": 2000,
+                "quantity": 20
+            }
+        ]
+    },
+    {
+        "name": "Aventus",
+        "description": "The exceptional Aventus was inspired by the dramatic life of a historic emperor, celebrating strength, power and success.",
+        "price": 18500,
+        "original_price": 21000,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.8345.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.8345.jpg"
+        ],
+        "badge": "King",
+        "badge_color": "bg-black",
+        "category": "Men",
+        "concentration": "EDP",
+        "gender": "male",
+        "brand_slug": "creed",
+        "notes": [
+            "Pineapple",
+            "Birch",
+            "Musk"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 100,
+                "unit": "ml",
+                "price": 18500,
+                "quantity": 10
+            },
+            {
+                "type": "Bottle",
+                "capacity": 50,
+                "unit": "ml",
+                "price": 12000,
+                "quantity": 5
+            },
+            {
+                "type": "Decant",
+                "capacity": 10,
+                "unit": "ml",
+                "price": 2500,
+                "quantity": 30
+            },
+            {
+                "type": "Sample",
+                "capacity": 2,
+                "unit": "ml",
+                "price": 600,
+                "quantity": 50
+            }
+        ]
+    },
+    {
+        "name": "Silver Mountain Water",
+        "description": "Inspired by the exhilarating crispness of alpine air, Silver Mountain Water by Creed is a fresh and contemporary scent.",
+        "price": 16000,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.134.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.134.jpg"
+        ],
+        "badge": "Fresh",
+        "badge_color": "bg-white text-black border border-gray-200",
+        "category": "Unisex",
+        "concentration": "EDP",
+        "gender": "unisex",
+        "brand_slug": "creed",
+        "notes": [
+            "Tea",
+            "Black Currant",
+            "Musk"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 100,
+                "unit": "ml",
+                "price": 16000,
+                "quantity": 8
+            },
+            {
+                "type": "Decant",
+                "capacity": 10,
+                "unit": "ml",
+                "price": 2200,
+                "quantity": 20
+            }
+        ]
+    },
+    {
+        "name": "Baccarat Rouge 540",
+        "description": "Luminous and sophisticated, Baccarat Rouge 540 lays on the skin like an amber, floral and woody breeze.",
+        "price": 15500,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.33519.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.33519.jpg"
+        ],
+        "badge": "Masterpiece",
+        "badge_color": "bg-red-600",
+        "category": "Niche",
+        "concentration": "Extrait",
+        "gender": "unisex",
+        "brand_slug": "mfk",
+        "notes": [
+            "Saffron",
+            "Jasmine",
+            "Amber"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 70,
+                "unit": "ml",
+                "price": 15500,
+                "quantity": 10
+            },
+            {
+                "type": "Bottle",
+                "capacity": 35,
+                "unit": "ml",
+                "price": 9500,
+                "quantity": 5
+            },
+            {
+                "type": "Decant",
+                "capacity": 5,
+                "unit": "ml",
+                "price": 1500,
+                "quantity": 30
+            }
+        ]
+    },
+    {
+        "name": "Grand Soir",
+        "description": "Dress in your finest attire and polish your look. Wander in an endless night and enjoy the daring radiance of a magnificent Parisian evening.",
+        "price": 11000,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.39578.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.39578.jpg"
+        ],
+        "badge": "Elegant",
+        "badge_color": "bg-amber-600",
+        "category": "Niche",
+        "concentration": "EDP",
+        "gender": "unisex",
+        "brand_slug": "mfk",
+        "notes": [
+            "Amber",
+            "Tonka Bean",
+            "Vanilla"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 70,
+                "unit": "ml",
+                "price": 11000,
+                "quantity": 10
+            },
+            {
+                "type": "Decant",
+                "capacity": 10,
+                "unit": "ml",
+                "price": 1600,
+                "quantity": 20
+            },
+            {
+                "type": "Sample",
+                "capacity": 2,
+                "unit": "ml",
+                "price": 400,
+                "quantity": 40
+            }
+        ]
+    },
+    {
+        "name": "Black Opium",
+        "description": "A captivating floral gourmand scent, twisted with an overdose of black coffee.",
+        "price": 5800,
+        "original_price": 6500,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.26378.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.26378.jpg"
+        ],
+        "badge": "Addictive",
+        "badge_color": "bg-pink-700",
+        "category": "Women",
+        "concentration": "EDP",
+        "gender": "female",
+        "brand_slug": "ysl",
+        "notes": [
+            "Coffee",
+            "Vanilla",
+            "Orange Blossom"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 90,
+                "unit": "ml",
+                "price": 5800,
+                "quantity": 15
+            },
+            {
+                "type": "Bottle",
+                "capacity": 50,
+                "unit": "ml",
+                "price": 4200,
+                "quantity": 10
+            }
+        ]
+    },
+    {
+        "name": "Y Eau de Parfum",
+        "description": "An authentic fragrance expression capturing the essence of modern men. Y is a testament to the YSL modern man characteristic.",
+        "price": 5200,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.50854.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.50854.jpg"
+        ],
+        "badge": "Modern",
+        "badge_color": "bg-blue-700",
+        "category": "Men",
+        "concentration": "EDP",
+        "gender": "male",
+        "brand_slug": "ysl",
+        "notes": [
+            "Apple",
+            "Sage",
+            "Vetiver"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 100,
+                "unit": "ml",
+                "price": 5200,
+                "quantity": 20
+            },
+            {
+                "type": "Bottle",
+                "capacity": 60,
+                "unit": "ml",
+                "price": 3800,
+                "quantity": 15
+            },
+            {
+                "type": "Sample",
+                "capacity": 2,
+                "unit": "ml",
+                "price": 200,
+                "quantity": 60
+            }
+        ]
+    },
+    {
+        "name": "Libre",
+        "description": "The new eau de parfum by Yves Saint Laurent. The scent of freedom to live everything to the excess.",
+        "price": 6500,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.56554.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.56554.jpg"
+        ],
+        "badge": "Freedom",
+        "badge_color": "bg-yellow-500",
+        "category": "Women",
+        "concentration": "EDP",
+        "gender": "female",
+        "brand_slug": "ysl",
+        "notes": [
+            "Lavender",
+            "Orange Blossom",
+            "Musk"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 90,
+                "unit": "ml",
+                "price": 6500,
+                "quantity": 10
+            },
+            {
+                "type": "Bottle",
+                "capacity": 30,
+                "unit": "ml",
+                "price": 3200,
+                "quantity": 10
+            }
+        ]
+    },
+    {
+        "name": "Layton",
+        "description": "A fragrance with an intense olfactory signature, carried by vanilla and precious woods. Requires no introduction.",
+        "price": 13800,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.38144.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.38144.jpg"
+        ],
+        "badge": "Royal",
+        "badge_color": "bg-blue-900",
+        "category": "Niche",
+        "concentration": "EDP",
+        "gender": "male",
+        "brand_slug": "pdm",
+        "notes": [
+            "Apple",
+            "Vanilla",
+            "Cardamom"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 125,
+                "unit": "ml",
+                "price": 13800,
+                "quantity": 8
+            },
+            {
+                "type": "Bottle",
+                "capacity": 75,
+                "unit": "ml",
+                "price": 9500,
+                "quantity": 8
+            },
+            {
+                "type": "Decant",
+                "capacity": 10,
+                "unit": "ml",
+                "price": 1600,
+                "quantity": 25
+            }
+        ]
+    },
+    {
+        "name": "Delina",
+        "description": "A charming and firmly modern floral bouquet. Delina is a highly nuanced fragrance which is both sweet and sensual.",
+        "price": 14200,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.43953.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.43953.jpg"
+        ],
+        "badge": "Feminine",
+        "badge_color": "bg-rose-400",
+        "category": "Niche",
+        "concentration": "EDP",
+        "gender": "female",
+        "brand_slug": "pdm",
+        "notes": [
+            "Rose",
+            "Litchi",
+            "Rhubarb"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 75,
+                "unit": "ml",
+                "price": 14200,
+                "quantity": 10
+            },
+            {
+                "type": "Decant",
+                "capacity": 5,
+                "unit": "ml",
+                "price": 1200,
+                "quantity": 20
+            },
+            {
+                "type": "Sample",
+                "capacity": 2,
+                "unit": "ml",
+                "price": 450,
+                "quantity": 50
+            }
+        ]
+    },
+    {
+        "name": "Angels' Share",
+        "description": "Contains the essence of Cognac derived from the liquor to lend it a natural caramel color.",
+        "price": 16000,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.62024.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.62024.jpg"
+        ],
+        "badge": "Boozy",
+        "badge_color": "bg-amber-700",
+        "category": "Niche",
+        "concentration": "EDP",
+        "gender": "unisex",
+        "brand_slug": "kilian",
+        "notes": [
+            "Cognac",
+            "Cinnamon",
+            "Vanilla"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 50,
+                "unit": "ml",
+                "price": 16000,
+                "quantity": 5
+            },
+            {
+                "type": "Decant",
+                "capacity": 5,
+                "unit": "ml",
+                "price": 1900,
+                "quantity": 15
+            }
+        ]
+    },
+    {
+        "name": "Naxos",
+        "description": "Naxos celebrates Sicily and its beauty, and underlines its Mediterranean character with the composition.",
+        "price": 12800,
+        "original_price": null,
+        "image": "https://fimgs.net/mdimg/perfume/375x500.31773.jpg",
+        "images": [
+            "https://fimgs.net/mdimg/perfume/375x500.31773.jpg"
+        ],
+        "badge": "Rich",
+        "badge_color": "bg-purple-900",
+        "category": "Niche",
+        "concentration": "EDP",
+        "gender": "unisex",
+        "brand_slug": "xerjoff",
+        "notes": [
+            "Honey",
+            "Tobacco",
+            "Lavender"
+        ],
+        "variants": [
+            {
+                "type": "Bottle",
+                "capacity": 100,
+                "unit": "ml",
+                "price": 12800,
+                "quantity": 10
+            },
+            {
+                "type": "Decant",
+                "capacity": 10,
+                "unit": "ml",
+                "price": 1500,
+                "quantity": 30
+            }
+        ]
+    }
+]

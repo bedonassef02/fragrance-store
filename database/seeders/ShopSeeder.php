@@ -26,101 +26,42 @@ class ShopSeeder extends Seeder
             $catIds[$cat] = $c->id;
         }
 
-        // 2. Sample Products Data (Perfume Focused)
-        $products = [
-            [
-                'name' => 'Sauvage',
-                'description' => 'A radically fresh composition, dictated by a name that has the ring of a manifesto.',
-                'price' => 4500,
-                'original_price' => 5200,
-                'image' => 'https://fimgs.net/mdimg/perfume/375x500.31861.jpg',
-                'badge' => 'Best Seller',
-                'badge_color' => 'bg-blue-600',
-                'category' => 'Men',
-                'concentration' => 'EDT',
-                'gender' => 'male',
-                'brand_slug' => 'dior'
-            ],
-            [
-                'name' => 'Baccarat Rouge 540',
-                'description' => 'Luminous and sophisticated, Baccarat Rouge 540 lays on the skin like an amber, floral and woody breeze.',
-                'price' => 12000,
-                'original_price' => null,
-                'image' => 'https://fimgs.net/mdimg/perfume/375x500.33519.jpg',
-                'badge' => 'Luxury',
-                'badge_color' => 'bg-gold-600',
-                'category' => 'Niche',
-                'concentration' => 'Extrait',
-                'gender' => 'unisex',
-                'brand_slug' => 'mfk'
-            ],
-            [
-                'name' => 'Aventus',
-                'description' => 'The exceptional Aventus was inspired by the dramatic life of a historic emperor, celebrating strength, power and success.',
-                'price' => 14500,
-                'original_price' => 16000,
-                'image' => 'https://fimgs.net/mdimg/perfume/375x500.9828.jpg',
-                'badge' => 'Iconic',
-                'badge_color' => 'bg-gray-800',
-                'category' => 'Men',
-                'concentration' => 'EDP',
-                'gender' => 'male',
-                'brand_slug' => 'creed'
-            ],
-            [
-                'name' => 'Black Opium',
-                'description' => 'A captivating floral gourmand scent, twisted with an overdose of black coffee.',
-                'price' => 5500,
-                'original_price' => null,
-                'image' => 'https://fimgs.net/mdimg/perfume/375x500.26378.jpg',
-                'badge' => 'Popular',
-                'badge_color' => 'bg-pink-600',
-                'category' => 'Women',
-                'concentration' => 'EDP',
-                'gender' => 'female',
-                'brand_slug' => 'ysl'
-            ],
-            [
-                'name' => 'Santal 33',
-                'description' => 'A unisex fragrance that captures a defining image of the spirit of the American West and personal freedom.',
-                'price' => 9800,
-                'original_price' => null,
-                'image' => 'https://fimgs.net/mdimg/perfume/375x500.12201.jpg',
-                'badge' => null,
-                'badge_color' => null,
-                'category' => 'Unisex',
-                'concentration' => 'EDP',
-                'gender' => 'unisex',
-                'brand_slug' => 'le-labo'
-            ],
-             [
-                'name' => 'Tobacco Vanille',
-                'description' => 'Opulent. Warm. Iconic. Reminiscent of an English Gentleman’s Club.',
-                'price' => 11000,
-                'original_price' => null,
-                'image' => 'https://fimgs.net/mdimg/perfume/375x500.1825.jpg',
-                'badge' => 'Warm',
-                'badge_color' => 'bg-orange-800',
-                'category' => 'Unisex',
-                'concentration' => 'EDP',
-                'gender' => 'unisex',
-                'brand_slug' => 'tom-ford'
-            ],
-        ];
+        // 2. Load Products Data from JSON
+        $json = file_get_contents(database_path('data/products.json'));
+        $products = json_decode($json, true);
 
-        // Ensure Brands exist
-        
-        $notes = Note::all();
+        if (!$products) {
+            return;
+        }
+
+        // Cache Notes for quick lookup
+        $allNotes = Note::all()->pluck('id', 'name');
 
         foreach ($products as $p) {
             $categoryName = $p['category'];
             $brandSlug = $p['brand_slug'];
+            $noteNames = $p['notes'] ?? [];
             
             unset($p['category']);
             unset($p['brand_slug']);
+            unset($p['notes']);
+            $customVariants = $p['variants'] ?? [];
+            unset($p['variants']);
+            
+            $imagesList = $p['images'] ?? [];
+            unset($p['images']);
 
             $p['slug'] = Str::slug($p['name']);
-            $p['category_id'] = $catIds[$categoryName] ?? $catIds['Unisex'];
+            // Map Niche/Designer to Unisex if not explicit, or handle as tags? 
+            // For now, map to Gender category or fallback to Unisex
+            $mappedCat = $p['gender'] === 'female' ? 'Women' : ($p['gender'] === 'male' ? 'Men' : 'Unisex');
+            // If the JSON category is one of our main categories, use it
+            if (isset($catIds[$categoryName])) {
+                $p['category_id'] = $catIds[$categoryName];
+            } else {
+                 $p['category_id'] = $catIds[$mappedCat];
+            }
+            
             $p['type'] = 'original'; // Default type
             
             // Link Brand
@@ -133,58 +74,55 @@ class ShopSeeder extends Seeder
 
             $product = Product::create($p);
 
-            // Attach Random Notes
-            if ($notes->count() > 0) {
-                // Attach 3-5 random notes
-                $product->notes()->attach($notes->random(min($notes->count(), rand(3, 5)))->pluck('id'));
+            // Attach Notes
+            $noteIdsToAttach = [];
+            foreach ($noteNames as $noteName) {
+                if (isset($allNotes[$noteName])) {
+                    $noteIdsToAttach[] = $allNotes[$noteName];
+                }
+            }
+            if (!empty($noteIdsToAttach)) {
+                $product->notes()->attach($noteIdsToAttach);
             }
 
             // Create Variants
-            // 1. Original Bottle
-            ProductVariant::create([
-                'product_id' => $product->id,
-                'container_type' => 'Bottle',
-                'capacity' => 100,
-                'unit' => 'ml',
-                'quantity' => 10,
-                'price' => $product->price // Base price
-            ]);
+            if (!empty($customVariants)) {
+                foreach ($customVariants as $variant) {
+                    ProductVariant::create([
+                        'product_id' => $product->id,
+                        'container_type' => $variant['type'], // 'Bottle', 'Decant', 'Sample'
+                        'capacity' => $variant['capacity'],
+                        'unit' => $variant['unit'],
+                        'quantity' => $variant['quantity'] ?? 50,
+                        'price' => $variant['price']
+                    ]);
+                }
+            } else {
+                // Default fallback if no variants specified
+                 ProductVariant::create([
+                    'product_id' => $product->id,
+                    'container_type' => 'Bottle',
+                    'capacity' => 100,
+                    'unit' => 'ml',
+                    'quantity' => 10,
+                    'price' => $product->price
+                ]);
+            }
 
-            ProductVariant::create([
-                'product_id' => $product->id,
-                'container_type' => 'Bottle',
-                'capacity' => 50,
-                'unit' => 'ml',
-                'quantity' => 15,
-                'price' => $product->price - 1000 // Cheaper
-            ]);
-
-            // 2. Decants / Samples
-            ProductVariant::create([
-                'product_id' => $product->id,
-                'container_type' => 'Decant',
-                'capacity' => 10,
-                'unit' => 'ml',
-                'quantity' => 50,
-                'price' => $product->price * 0.15 // Significantly cheaper
-            ]);
-
-             ProductVariant::create([
-                'product_id' => $product->id,
-                'container_type' => 'Sample',
-                'capacity' => 2,
-                'unit' => 'ml',
-                'quantity' => 100,
-                'price' => $product->price * 0.05 // Very cheap
-            ]);
-
-            // Create Image
-            ProductImage::create([
-                'product_id' => $product->id,
-                'image_path' => $p['image']
-            ]);
+            // Create Images
+            $images = !empty($imagesList) ? $imagesList : (isset($p['image']) ? [$p['image']] : []);
             
-            $product->update(['image' => $p['image']]);
+            foreach ($images as $index => $imgUrl) {
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => $imgUrl
+                ]);
+                
+                // Set first image as main if not already set or updated
+                if ($index === 0) {
+                    $product->update(['image' => $imgUrl]);
+                }
+            }
         }
     }
 }

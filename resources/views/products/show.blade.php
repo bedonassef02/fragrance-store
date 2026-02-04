@@ -97,7 +97,19 @@
 
                     <div class="space-y-6 mb-10">
                         <!-- Capacity Selector -->
-                        <div id="product-variants-data" data-variants="{{ json_encode($product->variants->map(fn($v) => ['id' => $v->id, 'capacity' => $v->capacity . ' ' . $v->unit, 'price' => number_format($v->price), 'raw_price' => $v->price, 'qty' => $v->quantity])) }}" class="hidden"></div>
+                        <div id="product-variants-data" data-variants="{{ json_encode($product->variants->map(function($v) {
+                            $label = $v->capacity . ' ' . $v->unit;
+                            if (in_array($v->container_type, ['Sample', 'Decant'])) {
+                               $label .= ' ' . $v->container_type;
+                            }
+                            return [
+                                'id' => $v->id,
+                                'capacity' => $label,
+                                'price' => number_format($v->price),
+                                'raw_price' => $v->price,
+                                'qty' => $v->quantity
+                            ];
+                        })) }}" class="hidden"></div>
                         
                         @if($uniqueCapacities->isNotEmpty())
                         <div>
@@ -105,7 +117,7 @@
                             <div class="flex flex-wrap gap-3" id="capacity-container">
                                 @foreach($uniqueCapacities as $variant)
                                 <button type="button" 
-                                    class="product-capacity-btn px-5 py-3 border border-neutral-300 text-neutral-600 font-medium text-sm hover:border-charcoal hover:text-charcoal transition-all duration-300" 
+                                    class="product-capacity-btn px-5 py-3 border border-neutral-300 text-neutral-600 font-medium text-sm hover:border-charcoal hover:text-charcoal transition-all duration-300 {{ isset($variant['type']) && $variant['type'] === 'Sample' ? 'bg-neutral-50 border-dashed' : '' }}" 
                                     data-capacity="{{ $variant['label'] }}">
                                     {{ $variant['label'] }}
                                 </button>

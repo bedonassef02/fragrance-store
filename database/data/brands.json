@@ -1,0 +1,457 @@
+[
+    {
+        "name": "Dior",
+        "slug": "dior",
+        "is_luxury": true
+    },
+    {
+        "name": "Chanel",
+        "slug": "chanel",
+        "is_luxury": true
+    },
+    {
+        "name": "Tom Ford",
+        "slug": "tom-ford",
+        "is_luxury": true
+    },
+    {
+        "name": "Creed",
+        "slug": "creed",
+        "is_luxury": true
+    },
+    {
+        "name": "Maison Francis Kurkdjian",
+        "slug": "mfk",
+        "is_luxury": true
+    },
+    {
+        "name": "Byredo",
+        "slug": "byredo",
+        "is_luxury": true
+    },
+    {
+        "name": "Le Labo",
+        "slug": "le-labo",
+        "is_luxury": true
+    },
+    {
+        "name": "Yves Saint Laurent",
+        "slug": "ysl",
+        "is_luxury": true
+    },
+    {
+        "name": "Versace",
+        "slug": "versace",
+        "is_luxury": false
+    },
+    {
+        "name": "Giorgio Armani",
+        "slug": "armani",
+        "is_luxury": true
+    },
+    {
+        "name": "Parfums de Marly",
+        "slug": "pdm",
+        "is_luxury": true
+    },
+    {
+        "name": "Kilian",
+        "slug": "kilian",
+        "is_luxury": true
+    },
+    {
+        "name": "Roja Parfums",
+        "slug": "roja",
+        "is_luxury": true
+    },
+    {
+        "name": "Xerjoff",
+        "slug": "xerjoff",
+        "is_luxury": true
+    },
+    {
+        "name": "Amouage",
+        "slug": "amouage",
+        "is_luxury": true
+    },
+    {
+        "name": "Gucci",
+        "slug": "gucci",
+        "is_luxury": true
+    },
+    {
+        "name": "Prada",
+        "slug": "prada",
+        "is_luxury": true
+    },
+    {
+        "name": "Dolce & Gabbana",
+        "slug": "dg",
+        "is_luxury": false
+    },
+    {
+        "name": "Givenchy",
+        "slug": "givenchy",
+        "is_luxury": true
+    },
+    {
+        "name": "Guerlain",
+        "slug": "guerlain",
+        "is_luxury": true
+    },
+    {
+        "name": "Hermès",
+        "slug": "hermes",
+        "is_luxury": true
+    },
+    {
+        "name": "Cartier",
+        "slug": "cartier",
+        "is_luxury": true
+    },
+    {
+        "name": "Bvlgari",
+        "slug": "bvlgari",
+        "is_luxury": true
+    },
+    {
+        "name": "Burberry",
+        "slug": "burberry",
+        "is_luxury": false
+    },
+    {
+        "name": "Calvin Klein",
+        "slug": "ck",
+        "is_luxury": false
+    },
+    {
+        "name": "Hugo Boss",
+        "slug": "hugo-boss",
+        "is_luxury": false
+    },
+    {
+        "name": "Lacoste",
+        "slug": "lacoste",
+        "is_luxury": false
+    },
+    {
+        "name": "Ralph Lauren",
+        "slug": "ralph-lauren",
+        "is_luxury": false
+    },
+    {
+        "name": "Azzaro",
+        "slug": "azzaro",
+        "is_luxury": false
+    },
+    {
+        "name": "Paco Rabanne",
+        "slug": "paco-rabanne",
+        "is_luxury": false
+    },
+    {
+        "name": "Jean Paul Gaultier",
+        "slug": "jpg",
+        "is_luxury": false
+    },
+    {
+        "name": "Viktor&Rolf",
+        "slug": "viktor-rolf",
+        "is_luxury": true
+    },
+    {
+        "name": "Mugler",
+        "slug": "mugler",
+        "is_luxury": false
+    },
+    {
+        "name": "Kenzo",
+        "slug": "kenzo",
+        "is_luxury": false
+    },
+    {
+        "name": "Issey Miyake",
+        "slug": "issey-miyake",
+        "is_luxury": false
+    },
+    {
+        "name": "Valentino",
+        "slug": "valentino",
+        "is_luxury": true
+    },
+    {
+        "name": "Nishane",
+        "slug": "nishane",
+        "is_luxury": true
+    },
+    {
+        "name": "Mancera",
+        "slug": "mancera",
+        "is_luxury": true
+    },
+    {
+        "name": "Montale",
+        "slug": "montale",
+        "is_luxury": true
+    },
+    {
+        "name": "Initio Parfums",
+        "slug": "initio",
+        "is_luxury": true
+    },
+    {
+        "name": "Frederic Malle",
+        "slug": "frederic-malle",
+        "is_luxury": true
+    },
+    {
+        "name": "Diptyque",
+        "slug": "diptyque",
+        "is_luxury": true
+    },
+    {
+        "name": "Penhaligon's",
+        "slug": "penhaligons",
+        "is_luxury": true
+    },
+    {
+        "name": "Tiziana Terenzi",
+        "slug": "tiziana-terenzi",
+        "is_luxury": true
+    },
+    {
+        "name": "Memo Paris",
+        "slug": "memo",
+        "is_luxury": true
+    },
+    {
+        "name": "Acqua di Parma",
+        "slug": "acqua-di-parma",
+        "is_luxury": true
+    },
+    {
+        "name": "Juliette Has A Gun",
+        "slug": "jhag",
+        "is_luxury": true
+    },
+    {
+        "name": "Bond No. 9",
+        "slug": "bond-no-9",
+        "is_luxury": true
+    },
+    {
+        "name": "Nasomatto",
+        "slug": "nasomatto",
+        "is_luxury": true
+    },
+    {
+        "name": "Orto Parisi",
+        "slug": "orto-parisi",
+        "is_luxury": true
+    },
+    {
+        "name": "Zoologist",
+        "slug": "zoologist",
+        "is_luxury": true
+    },
+    {
+        "name": "Louis Vuitton",
+        "slug": "louis-vuitton",
+        "is_luxury": true
+    },
+    {
+        "name": "Christian Louboutin",
+        "slug": "louboutin",
+        "is_luxury": true
+    },
+    {
+        "name": "Clive Christian",
+        "slug": "clive-christian",
+        "is_luxury": true
+    },
+    {
+        "name": "Jo Malone",
+        "slug": "jo-malone",
+        "is_luxury": true
+    },
+    {
+        "name": "Maison Margiela",
+        "slug": "maison-margiela",
+        "is_luxury": true
+    },
+    {
+        "name": "Carolina Herrera",
+        "slug": "carolina-herrera",
+        "is_luxury": false
+    },
+    {
+        "name": "Moschino",
+        "slug": "moschino",
+        "is_luxury": false
+    },
+    {
+        "name": "Davidoff",
+        "slug": "davidoff",
+        "is_luxury": false
+    },
+    {
+        "name": "Montblanc",
+        "slug": "montblanc",
+        "is_luxury": false
+    },
+    {
+        "name": "Dunhill",
+        "slug": "dunhill",
+        "is_luxury": false
+    },
+    {
+        "name": "Lalique",
+        "slug": "lalique",
+        "is_luxury": true
+    },
+    {
+        "name": "Bentley",
+        "slug": "bentley",
+        "is_luxury": false
+    },
+    {
+        "name": "Mercedes-Benz",
+        "slug": "mercedes-benz",
+        "is_luxury": false
+    },
+    {
+        "name": "Tiffany & Co.",
+        "slug": "tiffany",
+        "is_luxury": true
+    },
+    {
+        "name": "Narciso Rodriguez",
+        "slug": "narciso-rodriguez",
+        "is_luxury": false
+    },
+    {
+        "name": "Elie Saab",
+        "slug": "elie-saab",
+        "is_luxury": true
+    },
+    {
+        "name": "Chloé",
+        "slug": "chloe",
+        "is_luxury": true
+    },
+    {
+        "name": "Marc Jacobs",
+        "slug": "marc-jacobs",
+        "is_luxury": false
+    },
+    {
+        "name": "Lanvin",
+        "slug": "lanvin",
+        "is_luxury": false
+    },
+    {
+        "name": "Boucheron",
+        "slug": "boucheron",
+        "is_luxury": true
+    },
+    {
+        "name": "Van Cleef & Arpels",
+        "slug": "vca",
+        "is_luxury": true
+    },
+    {
+        "name": "Serge Lutens",
+        "slug": "serge-lutens",
+        "is_luxury": true
+    },
+    {
+        "name": "Histoires de Parfums",
+        "slug": "histoires-de-parfums",
+        "is_luxury": true
+    },
+    {
+        "name": "L'Artisan Parfumeur",
+        "slug": "lartisan",
+        "is_luxury": true
+    },
+    {
+        "name": "Vilhelm Parfumerie",
+        "slug": "vilhelm",
+        "is_luxury": true
+    },
+    {
+        "name": "Goldfield & Banks",
+        "slug": "goldfield-banks",
+        "is_luxury": true
+    },
+    {
+        "name": "Ex Nihilo",
+        "slug": "ex-nihilo",
+        "is_luxury": true
+    },
+    {
+        "name": "Fragrance Du Bois",
+        "slug": "fragrance-du-bois",
+        "is_luxury": true
+    },
+    {
+        "name": "Stephane Humbert Lucas 777",
+        "slug": "shl-777",
+        "is_luxury": true
+    },
+    {
+        "name": "Lorenzo Pazzaglia",
+        "slug": "lorenzo-pazzaglia",
+        "is_luxury": true
+    },
+    {
+        "name": "Kajal",
+        "slug": "kajal",
+        "is_luxury": true
+    },
+    {
+        "name": "Thameen",
+        "slug": "thameen",
+        "is_luxury": true
+    },
+    {
+        "name": "Essential Parfums",
+        "slug": "essential-parfums",
+        "is_luxury": false
+    },
+    {
+        "name": "Armaf",
+        "slug": "armaf",
+        "is_luxury": false
+    },
+    {
+        "name": "Afnan",
+        "slug": "afnan",
+        "is_luxury": false
+    },
+    {
+        "name": "Lattafa",
+        "slug": "lattafa",
+        "is_luxury": false
+    },
+    {
+        "name": "Rasasi",
+        "slug": "rasasi",
+        "is_luxury": false
+    },
+    {
+        "name": "Al Haramain",
+        "slug": "al-haramain",
+        "is_luxury": false
+    },
+    {
+        "name": "Ajmal",
+        "slug": "ajmal",
+        "is_luxury": false
+    },
+    {
+        "name": "Swiss Arabian",
+        "slug": "swiss-arabian",
+        "is_luxury": false
+    }
+]

@@ -47,13 +47,21 @@ class ProductController extends Controller
 
         // Perfume specific variants extraction
         $uniqueCapacities = $product->variants->map(function ($variant) {
+            $label = $variant->capacity . ' ' . $variant->unit;
+            
+            // Append type for non-bottles to distinguish logic
+            if (in_array($variant->container_type, ['Sample', 'Decant'])) {
+                $label .= ' ' . $variant->container_type;
+            }
+
             return [
-                'id' => $variant->capacity, // Key by capacity
-                'label' => $variant->capacity . ' ' . $variant->unit,
+                'id' => $variant->id, 
+                'label' => $label,
                 'capacity' => $variant->capacity,
-                'unit' => $variant->unit
+                'unit' => $variant->unit,
+                'type' => $variant->container_type
             ];
-        })->unique('id')->values();
+        }); // Removed unique by capacity to allow same capacity different types if needed
 
         return view('products.show', compact('product', 'relatedProducts', 'uniqueCapacities'));
     }
