@@ -19,6 +19,7 @@ class ProductService
         $this->applyCollectionFilter($query, $filters['collection'] ?? null);
         $this->applyCategoryFilter($query, $filters['category'] ?? null);
         $this->applyPriceRangeFilter($query, $filters['price_range'] ?? null);
+        $this->applyBrandFilter($query, $filters['brand'] ?? null);
         
         // Perfume Filters
         $this->applyCapacityFilter($query, $filters['capacity'] ?? null);
@@ -146,6 +147,14 @@ class ProductService
             $query->whereHas('variants', function ($q) {
                 $q->where('quantity', '>', 0);
             });
+        }
+    }
+
+    private function applyBrandFilter(Builder $query, $brands): void
+    {
+        if (!empty($brands)) {
+            $brandIds = is_array($brands) ? $brands : explode(',', $brands);
+            $query->whereIn('brand_id', $brandIds);
         }
     }
 

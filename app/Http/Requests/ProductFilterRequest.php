@@ -28,8 +28,8 @@ class ProductFilterRequest extends FormRequest
             'category.*'       => 'string|max:50',
             'price_range'      => 'nullable|array',
             'price_range.*'    => ['string', 'regex:/^\d+-\d+$|^\d+\+$/'],
-            'brands'            => 'nullable|array',
-            'brands.*'          => 'string|max:50',
+            'brand'            => 'nullable|array',
+            'brand.*'          => 'string|max:50',
             'notes'           => 'nullable|array',
             'notes.*'         => 'string|max:50',
             'capacity'        => 'nullable|array', // Added

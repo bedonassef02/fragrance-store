@@ -52,7 +52,9 @@
                 <!-- Product Info -->
                 <div class="flex flex-col lg:sticky lg:top-32 h-fit">
                     @if($product->brand)
-                        <h2 class="text-moon-gold uppercase tracking-[0.2em] text-sm mb-2">{{ $product->brand->name }}</h2>
+                        <a href="{{ route('shop', ['brand[]' => $product->brand_id]) }}" class="hover:text-white transition-colors block w-fit">
+                            <h2 class="text-moon-gold uppercase tracking-[0.2em] text-sm mb-2">{{ $product->brand->name }}</h2>
+                        </a>
                     @endif
                     <h1 class="text-3xl md:text-5xl font-serif text-white mb-2 leading-tight">{{ $product->name }}</h1>
                     @if($product->concentration)
