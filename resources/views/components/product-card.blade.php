@@ -14,16 +14,6 @@
             <span class="absolute top-4 left-4 {{ $product->badge_color ?? 'bg-moon-gold' }} text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-widest">{{ $product->badge }}</span>
         @endif
 
-        <button 
-            type="button" 
-            class="wishlist-toggle absolute top-4 right-4 text-white hover:text-moon-gold hover:scale-110 transition-transform duration-300 z-20 p-2"
-            data-id="{{ $product->id }}"
-            aria-label="Add to Wishlist">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-        </button>
-
         @php
             // We pass full variants data based on capacity for "Smart Popup" logic in quick-add.js
             $variantsData = $product->variants->map(fn($v) => [
@@ -34,20 +24,35 @@
             ]);
         @endphp
 
-        @if(!$product->isOutOfStock())
-        <button 
-            data-id="{{ $product->id }}" 
-            data-name="{{ $product->name }}"
-            data-price="{{ number_format($product->price) }} LE"
-            data-variants="{{ json_encode($variantsData) }}"
-            class="quick-add-btn absolute bottom-0 w-full bg-moon-gold text-moon-dark py-4 font-bold uppercase text-xs tracking-widest translate-y-0 opacity-100 md:opacity-0 md:translate-y-full md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-300 hover:bg-white border-t border-moon-dark/10">
-            Add to Bag
-        </button>
-        @else
-        <button disabled class="absolute bottom-0 w-full bg-gray-800 text-gray-400 py-4 font-bold uppercase text-xs tracking-widest cursor-not-allowed border-t border-white/5">
-            Sold Out
-        </button>
-        @endif
+        <div class="absolute bottom-0 left-0 w-full flex z-20">
+            @if(!$product->isOutOfStock())
+            <button 
+                data-id="{{ $product->id }}" 
+                data-name="{{ $product->name }}"
+                data-price="{{ number_format($product->price) }} LE"
+                data-variants='{{ json_encode($variantsData) }}'
+                class="quick-add-btn flex-1 bg-moon-gold text-moon-dark py-3 font-bold uppercase text-[10px] tracking-widest hover:bg-white transition-colors border-t border-moon-dark/10 flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <span class="hidden sm:inline">Add</span>
+            </button>
+            @else
+            <button disabled class="flex-1 bg-gray-800 text-gray-400 py-3 font-bold uppercase text-[10px] tracking-widest cursor-not-allowed border-t border-white/5 flex items-center justify-center gap-2">
+                <span>Sold Out</span>
+            </button>
+            @endif
+
+            <button 
+                type="button" 
+                class="wishlist-toggle w-12 bg-black/80 text-white hover:text-moon-gold transition-colors flex items-center justify-center border-l border-white/10"
+                data-id="{{ $product->id }}"
+                aria-label="Add to Wishlist">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+            </button>
+        </div>
     </div>
     <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
         @if($product->brand)

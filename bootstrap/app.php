@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\TrackPageVisits::class,
         ]);
+        $middleware->encryptCookies(except: [
+            'moon_wishlist',
+        ]);
         $middleware->redirectGuestsTo(function (Illuminate\Http\Request $request) {
             return route('admin.login');
         });

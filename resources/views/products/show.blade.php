@@ -39,7 +39,9 @@
                     <!-- Thumbnails -->
                     @if($product->images->count() > 0)
                     <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                         <img src="{{ $product->image }}" class="gallery-thumb w-20 h-24 object-cover border-2 border-moon-gold cursor-pointer hover:opacity-80 transition-all" onclick="document.getElementById('main-image').src=this.src; document.querySelectorAll('.gallery-thumb').forEach(el => el.classList.remove('border-moon-gold')); this.classList.add('border-moon-gold');">
+                         @if($product->image && $product->images->where('image_path', $product->getRawOriginal('image'))->isEmpty())
+                            <img src="{{ $product->image }}" class="gallery-thumb w-20 h-24 object-cover border-2 border-moon-gold cursor-pointer hover:opacity-80 transition-all" onclick="document.getElementById('main-image').src=this.src; document.querySelectorAll('.gallery-thumb').forEach(el => el.classList.remove('border-moon-gold')); this.classList.add('border-moon-gold');">
+                         @endif
                          @foreach($product->images as $img)
                          <img src="{{ $img->image_path }}" 
                               class="gallery-thumb w-20 h-24 object-cover border-2 border-transparent hover:border-moon-gold cursor-pointer hover:opacity-80 transition-all"

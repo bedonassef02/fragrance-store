@@ -41,8 +41,17 @@ class WishlistController extends Controller
         // Re-index array
         $wishlistIds = array_values($wishlistIds);
 
-        // Queue cookie for 1 year
-        Cookie::queue('moon_wishlist', json_encode($wishlistIds), 60 * 24 * 365);
+        // Queue cookie for 1 year, explicitly allowing JS access (httpOnly = false)
+        $cookie = cookie(
+            'moon_wishlist', 
+            json_encode($wishlistIds), 
+            60 * 24 * 365, // 1 year
+            '/',           // path
+            null,          // domain
+            null,          // secure
+            false          // httpOnly (FALSE so JS can read it)
+        );
+        Cookie::queue($cookie);
 
         return response()->json([
             'status' => $status,

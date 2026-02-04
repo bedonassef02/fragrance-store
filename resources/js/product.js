@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- DOM Elements ---
     const capacityContainer = document.getElementById('capacity-container');
-    const addToBagBtn = document.getElementById('add-to-bag-btn');
+    const addToBagBtn = document.getElementById('add-to-cart-btn');
     const mainImage = document.getElementById('main-image');
     const galleryThumbs = document.querySelectorAll('.gallery-thumb');
     const qtyInput = document.getElementById('quantity-input');

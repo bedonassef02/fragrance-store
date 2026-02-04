@@ -7,19 +7,37 @@ document.addEventListener('DOMContentLoaded', function () {
         const parts = value.split(`; moon_wishlist=`);
         if (parts.length === 2) {
             try {
-                return JSON.parse(decodeURIComponent(parts.pop().split(';').shift()));
+                // Now that cookie is unencrypted, it should be a JSON string or URL-encoded JSON
+                let cookieVal = parts.pop().split(';').shift();
+                return JSON.parse(decodeURIComponent(cookieVal));
             } catch (e) {
+                console.error("Error parsing wishlist cookie", e);
                 return [];
             }
         }
         return [];
     };
 
+    const updateWishlistBadge = (count) => {
+        const badge = document.getElementById('wishlist-count');
+        if (!badge) return;
+
+        badge.textContent = count;
+        if (count > 0) {
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+    };
+
     const wishlist = getWishlist();
+    updateWishlistBadge(wishlist.length);
+
     wishlistButtons.forEach(btn => {
         if (wishlist.includes(parseInt(btn.dataset.id))) {
             btn.classList.add('active');
-            btn.querySelector('svg').classList.add('fill-moon-gold', 'text-moon-gold');
+            const svg = btn.querySelector('svg');
+            if (svg) svg.classList.add('fill-moon-gold', 'text-moon-gold');
         }
     });
 
@@ -49,8 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
                 .then(response => response.json())
                 .then(data => {
-                    // optional: update a wishlist count in header if it exists
-                    console.log('Wishlist updated:', data);
+                    updateWishlistBadge(data.count);
                 })
                 .catch(error => {
                     console.error('Error:', error);

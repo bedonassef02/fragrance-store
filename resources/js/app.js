@@ -2,11 +2,15 @@ import './bootstrap';
 import './shop';
 import './product';
 import './cart';
+import './quick-add';
 import './wishlist';
 import Alpine from 'alpinejs';
 import './size-guide';
 import './image-zoom';
 import './admin';
+
+window.Alpine = Alpine;
+Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
     // Mobile Menu
