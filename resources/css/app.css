@@ -82,44 +82,80 @@ html {
     scroll-behavior: smooth;
 }
 
-body {
+/* ===== STOREFRONT STYLES ===== */
+/* These styles only apply to storefront pages, NOT admin panel */
+body:not(.admin-panel) {
     background-color: var(--color-cream);
     color: var(--color-charcoal);
     font-family: var(--font-sans);
 }
 
-/* ===== TYPOGRAPHY ===== */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+body:not(.admin-panel) h1,
+body:not(.admin-panel) h2,
+body:not(.admin-panel) h3,
+body:not(.admin-panel) h4,
+body:not(.admin-panel) h5,
+body:not(.admin-panel) h6 {
     font-family: var(--font-serif);
     font-weight: 400;
     letter-spacing: -0.01em;
 }
 
-/* ===== SCROLLBAR ===== */
-::-webkit-scrollbar {
+/* Storefront scrollbar */
+body:not(.admin-panel)::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
 
-::-webkit-scrollbar-track {
+body:not(.admin-panel)::-webkit-scrollbar-track {
     background: var(--color-neutral-200);
 }
 
-::-webkit-scrollbar-thumb {
+body:not(.admin-panel)::-webkit-scrollbar-thumb {
     background: var(--color-neutral-400);
     border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+body:not(.admin-panel)::-webkit-scrollbar-thumb:hover {
     background: var(--color-neutral-500);
 }
 
-/* ===== UTILITIES ===== */
+/* ===== ADMIN PANEL STYLES ===== */
+body.admin-panel {
+    background-color: #0f172a;
+    color: #94a3b8;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+body.admin-panel h1,
+body.admin-panel h2,
+body.admin-panel h3,
+body.admin-panel h4,
+body.admin-panel h5,
+body.admin-panel h6 {
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Admin scrollbar (dark theme) */
+body.admin-panel::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+body.admin-panel::-webkit-scrollbar-track {
+    background: #1e293b;
+}
+
+body.admin-panel::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 4px;
+}
+
+body.admin-panel::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+/* ===== SHARED UTILITIES ===== */
 .section-padding {
     padding-top: 6rem;
     padding-bottom: 6rem;
@@ -219,13 +255,20 @@ h6 {
 }
 
 /* Glass Panel (for modals) */
-.glass-panel {
+/* Glass Panel (for modals) */
+body:not(.admin-panel) .glass-panel {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);
     border: 1px solid var(--color-neutral-300);
 }
 
-/* ===== ADMIN STYLES (kept for compatibility) ===== */
+body.admin-panel .glass-panel {
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ===== ADMIN SIDEBAR STYLES ===== */
 .sidebar-link {
     position: relative;
     transition: all 0.2s ease-in-out;

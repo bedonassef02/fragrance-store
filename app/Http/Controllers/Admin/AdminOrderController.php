@@ -46,11 +46,9 @@ class AdminOrderController extends Controller
     /**
      * Update the specified order in storage.
      */
-    public function update(Request $request, Order $order)
+    public function update(\App\Http\Requests\Admin\UpdateOrderStatusRequest $request, Order $order)
     {
-        $validated = $request->validate([
-            'status' => 'required|in:pending,processing,shipped,delivered,returned,replaced,cancelled',
-        ]);
+        $validated = $request->validated();
 
         $order->update(['status' => $validated['status']]);
 

@@ -9,7 +9,7 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('moon-icon.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 </head>
-<body class="bg-[#0f172a] text-slate-300 antialiased min-h-screen flex selection:bg-blue-500 selection:text-white">
+<body class="admin-panel bg-[#0f172a] text-slate-300 antialiased min-h-screen flex selection:bg-blue-500 selection:text-white">
 
     <!-- Sidebar -->
     <aside class="fixed inset-y-0 left-0 w-72 bg-[#1e293b]/50 border-r border-[#334155] z-50 flex flex-col backdrop-blur-xl transition-transform duration-300 transform lg:translate-x-0 -translate-x-full" id="sidebar">

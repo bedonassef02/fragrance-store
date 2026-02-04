@@ -20,13 +20,9 @@ class AdminNoteController extends Controller
         return view('admin.notes.create');
     }
 
-    public function store(Request $request)
+    public function store(\App\Http\Requests\Admin\StoreNoteRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'type' => 'required|in:top,heart,base,general',
-            'image' => 'nullable|image|max:2048',
-        ]);
+        $validated = $request->validated();
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('notes', 'public');
@@ -42,13 +38,9 @@ class AdminNoteController extends Controller
         return view('admin.notes.edit', compact('note'));
     }
 
-    public function update(Request $request, Note $note)
+    public function update(\App\Http\Requests\Admin\UpdateNoteRequest $request, Note $note)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'type' => 'required|in:top,heart,base,general',
-            'image' => 'nullable|image|max:2048',
-        ]);
+        $validated = $request->validated();
 
         if ($request->hasFile('image')) {
             if ($note->image) {

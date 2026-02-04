@@ -17,27 +17,19 @@ class AdminProfileController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(\App\Http\Requests\Admin\UpdateAdminProfileRequest $request)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
-        ]);
-
-        $user->update($validated);
+        $user->update($request->validated());
 
         return back()->with('status', 'profile-updated');
     }
 
-    public function updatePassword(Request $request)
+    public function updatePassword(\App\Http\Requests\Admin\UpdateAdminPasswordRequest $request)
     {
-        $validated = $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::defaults()],
-        ]);
+        $validated = $request->validated();
 
         /** @var \App\Models\User $user */
         $user = Auth::user();

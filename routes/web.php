@@ -106,5 +106,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Payment Settings
         Route::get('/payments', [App\Http\Controllers\Admin\AdminPaymentController::class, 'index'])->name('payments.index');
+        Route::post('/payments/toggle', [App\Http\Controllers\Admin\AdminPaymentController::class, 'toggle'])->name('payments.toggle');
     });
 });

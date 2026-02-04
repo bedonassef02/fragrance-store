@@ -21,7 +21,7 @@
                 Payment Methods
             </h3>
 
-            <div class="space-y-4">
+            <div class="space-y-4" x-data="paymentSettings()">
                 <!-- COD -->
                 <div class="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-slate-700">
                     <div class="flex items-center gap-4">
@@ -35,11 +35,17 @@
                             <p class="text-xs text-slate-500">Pay when order is delivered</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs {{ config('paymob.methods.cod') ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 bg-slate-500/10' }} px-2 py-1 rounded">
-                            {{ config('paymob.methods.cod') ? 'Enabled' : 'Disabled' }}
-                        </span>
-                    </div>
+                    <button 
+                        @click="toggle('cod')"
+                        :disabled="loading"
+                        class="relative w-12 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                        :class="methods.cod ? 'bg-emerald-500' : 'bg-slate-600'"
+                    >
+                        <span 
+                            class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform"
+                            :class="methods.cod ? 'translate-x-6' : 'translate-x-0'"
+                        ></span>
+                    </button>
                 </div>
 
                 <!-- Card -->
@@ -53,18 +59,22 @@
                         <div>
                             <h4 class="font-medium text-white">Credit / Debit Card</h4>
                             <p class="text-xs text-slate-500">Visa, Mastercard, Meeza via Paymob</p>
+                            @if(!$paymentMethods['card']['configured'])
+                                <span class="text-xs text-amber-400">⚠️ Paymob not configured</span>
+                            @endif
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        @if(config('paymob.secret_key'))
-                            <span class="text-xs text-emerald-400">Configured</span>
-                        @else
-                            <span class="text-xs text-amber-400">Not Configured</span>
-                        @endif
-                        <span class="text-xs {{ config('paymob.methods.card') ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 bg-slate-500/10' }} px-2 py-1 rounded">
-                            {{ config('paymob.methods.card') ? 'Enabled' : 'Disabled' }}
-                        </span>
-                    </div>
+                    <button 
+                        @click="toggle('card')"
+                        :disabled="loading"
+                        class="relative w-12 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                        :class="methods.card ? 'bg-emerald-500' : 'bg-slate-600'"
+                    >
+                        <span 
+                            class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform"
+                            :class="methods.card ? 'translate-x-6' : 'translate-x-0'"
+                        ></span>
+                    </button>
                 </div>
 
                 <!-- Wallet -->
@@ -78,18 +88,22 @@
                         <div>
                             <h4 class="font-medium text-white">Mobile Wallet</h4>
                             <p class="text-xs text-slate-500">Vodafone Cash, Orange Money</p>
+                            @if(!$paymentMethods['wallet']['configured'])
+                                <span class="text-xs text-amber-400">⚠️ Paymob wallet not configured</span>
+                            @endif
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        @if(config('paymob.integrations.wallet'))
-                            <span class="text-xs text-emerald-400">Configured</span>
-                        @else
-                            <span class="text-xs text-amber-400">Not Configured</span>
-                        @endif
-                        <span class="text-xs {{ config('paymob.methods.wallet') ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 bg-slate-500/10' }} px-2 py-1 rounded">
-                            {{ config('paymob.methods.wallet') ? 'Enabled' : 'Disabled' }}
-                        </span>
-                    </div>
+                    <button 
+                        @click="toggle('wallet')"
+                        :disabled="loading"
+                        class="relative w-12 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                        :class="methods.wallet ? 'bg-emerald-500' : 'bg-slate-600'"
+                    >
+                        <span 
+                            class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform"
+                            :class="methods.wallet ? 'translate-x-6' : 'translate-x-0'"
+                        ></span>
+                    </button>
                 </div>
 
                 <!-- Fawry -->
@@ -103,23 +117,23 @@
                             <p class="text-xs text-slate-500">Pay at any Fawry outlet</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs text-emerald-400">Reference Mode</span>
-                        <span class="text-xs {{ config('paymob.methods.fawry') ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 bg-slate-500/10' }} px-2 py-1 rounded">
-                            {{ config('paymob.methods.fawry') ? 'Enabled' : 'Disabled' }}
-                        </span>
-                    </div>
+                    <button 
+                        @click="toggle('fawry')"
+                        :disabled="loading"
+                        class="relative w-12 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                        :class="methods.fawry ? 'bg-emerald-500' : 'bg-slate-600'"
+                    >
+                        <span 
+                            class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform"
+                            :class="methods.fawry ? 'translate-x-6' : 'translate-x-0'"
+                        ></span>
+                    </button>
                 </div>
-            </div>
 
-            <div class="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                <p class="text-sm text-blue-300">
-                    <strong>Note:</strong> To enable/disable payment methods, update your <code class="bg-black/30 px-1 rounded">.env</code> file:
-                </p>
-                <pre class="mt-2 text-xs text-slate-400 bg-black/30 p-3 rounded overflow-x-auto">PAYMENT_COD_ENABLED=true
-PAYMENT_CARD_ENABLED=true
-PAYMENT_WALLET_ENABLED=true
-PAYMENT_FAWRY_ENABLED=true</pre>
+                <!-- Status message -->
+                <div x-show="message" x-transition class="p-3 rounded-lg text-sm" :class="messageType === 'success' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'">
+                    <span x-text="message"></span>
+                </div>
             </div>
         </x-admin.ui.glass-panel>
 
@@ -212,8 +226,9 @@ PAYMOB_HMAC_SECRET=</pre>
                                     'awaiting_payment' => 'blue',
                                     'failed' => 'rose',
                                 ];
+                                $color = $statusColors[$order->payment_status] ?? 'slate';
                             @endphp
-                            <span class="px-2 py-1 text-xs rounded bg-{{ $statusColors[$order->payment_status] ?? 'slate' }}-500/20 text-{{ $statusColors[$order->payment_status] ?? 'slate' }}-400">
+                            <span class="px-2 py-1 text-xs rounded bg-{{ $color }}-500/20 text-{{ $color }}-400">
                                 {{ ucfirst(str_replace('_', ' ', $order->payment_status)) }}
                             </span>
                         </td>
@@ -230,4 +245,60 @@ PAYMOB_HMAC_SECRET=</pre>
             </table>
         </div>
     </x-admin.ui.glass-panel>
+
+    <script>
+        function paymentSettings() {
+            return {
+                methods: {
+                    cod: {{ $paymentMethods['cod']['enabled'] ? 'true' : 'false' }},
+                    card: {{ $paymentMethods['card']['enabled'] ? 'true' : 'false' }},
+                    wallet: {{ $paymentMethods['wallet']['enabled'] ? 'true' : 'false' }},
+                    fawry: {{ $paymentMethods['fawry']['enabled'] ? 'true' : 'false' }},
+                },
+                loading: false,
+                message: '',
+                messageType: 'success',
+
+                async toggle(method) {
+                    this.loading = true;
+                    this.message = '';
+
+                    try {
+                        const response = await fetch('{{ route("admin.payments.toggle") }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            },
+                            body: JSON.stringify({
+                                method: method,
+                                enabled: !this.methods[method]
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            this.methods[method] = !this.methods[method];
+                            this.message = data.message;
+                            this.messageType = 'success';
+                        } else {
+                            this.message = data.error || 'Failed to update setting';
+                            this.messageType = 'error';
+                        }
+                    } catch (error) {
+                        this.message = 'Network error. Please try again.';
+                        this.messageType = 'error';
+                    }
+
+                    this.loading = false;
+
+                    // Clear message after 3 seconds
+                    setTimeout(() => {
+                        this.message = '';
+                    }, 3000);
+                }
+            }
+        }
+    </script>
 @endsection

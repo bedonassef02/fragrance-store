@@ -255,14 +255,14 @@ class PaymobService
     }
 
     /**
-     * Get available payment methods based on configuration
+     * Get available payment methods based on database settings (with config fallback)
      */
     public function getPaymentMethods(): array
     {
         $methods = [];
 
-        // COD is always available
-        if (config('paymob.methods.cod', true)) {
+        // COD - always available unless disabled
+        if ($this->isPaymentMethodEnabled('cod')) {
             $methods[] = [
                 'id' => 'cod',
                 'name' => 'Cash on Delivery',
@@ -272,7 +272,7 @@ class PaymobService
         }
 
         // Card payments require Paymob configuration
-        if (config('paymob.methods.card', true) && $this->isConfigured() && config('paymob.integrations.card')) {
+        if ($this->isPaymentMethodEnabled('card') && $this->isConfigured() && config('paymob.integrations.card')) {
             $methods[] = [
                 'id' => 'card',
                 'name' => 'Credit / Debit Card',
@@ -282,7 +282,7 @@ class PaymobService
         }
 
         // Mobile wallet requires Paymob configuration
-        if (config('paymob.methods.wallet', true) && $this->isConfigured() && config('paymob.integrations.wallet')) {
+        if ($this->isPaymentMethodEnabled('wallet') && $this->isConfigured() && config('paymob.integrations.wallet')) {
             $methods[] = [
                 'id' => 'wallet',
                 'name' => 'Mobile Wallet',
@@ -292,7 +292,7 @@ class PaymobService
         }
 
         // Fawry reference code
-        if (config('paymob.methods.fawry', true)) {
+        if ($this->isPaymentMethodEnabled('fawry')) {
             $methods[] = [
                 'id' => 'fawry',
                 'name' => 'Fawry Reference Code',
@@ -302,6 +302,56 @@ class PaymobService
         }
 
         return $methods;
+    }
+
+    /**
+     * Check if a payment method is enabled
+     * Uses database setting first, then falls back to config
+     */
+    public function isPaymentMethodEnabled(string $method): bool
+    {
+        // Check database setting first
+        $dbSetting = \App\Models\Setting::getValue("payment_{$method}_enabled");
+        
+        if ($dbSetting !== null) {
+            return filter_var($dbSetting, FILTER_VALIDATE_BOOLEAN);
+        }
+        
+        // Fall back to config
+        return config("paymob.methods.{$method}", true);
+    }
+
+    /**
+     * Get all payment method statuses for admin panel
+     */
+    public function getPaymentMethodStatuses(): array
+    {
+        return [
+            'cod' => [
+                'enabled' => $this->isPaymentMethodEnabled('cod'),
+                'name' => 'Cash on Delivery',
+                'icon' => 'cash',
+                'configured' => true,
+            ],
+            'card' => [
+                'enabled' => $this->isPaymentMethodEnabled('card'),
+                'name' => 'Credit / Debit Card',
+                'icon' => 'card',
+                'configured' => $this->isConfigured() && !empty(config('paymob.integrations.card')),
+            ],
+            'wallet' => [
+                'enabled' => $this->isPaymentMethodEnabled('wallet'),
+                'name' => 'Mobile Wallet',
+                'icon' => 'wallet',
+                'configured' => $this->isConfigured() && !empty(config('paymob.integrations.wallet')),
+            ],
+            'fawry' => [
+                'enabled' => $this->isPaymentMethodEnabled('fawry'),
+                'name' => 'Fawry Reference Code',
+                'icon' => 'fawry',
+                'configured' => true,
+            ],
+        ];
     }
 
     /**

@@ -16,12 +16,9 @@ class AdminAuthController extends Controller
         return view('admin.auth.login');
     }
 
-    public function authenticate(Request $request)
+    public function authenticate(\App\Http\Requests\Admin\AdminLoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $credentials = $request->validated();
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
