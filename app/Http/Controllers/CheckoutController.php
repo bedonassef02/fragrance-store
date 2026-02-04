@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\CartService;
 use App\Services\OrderService;
 use App\Services\PaymobService;
+use App\Services\FawryService;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -14,12 +15,18 @@ class CheckoutController extends Controller
     protected CartService $cartService;
     protected OrderService $orderService;
     protected PaymobService $paymobService;
+    protected FawryService $fawryService;
 
-    public function __construct(CartService $cartService, OrderService $orderService, PaymobService $paymobService)
-    {
+    public function __construct(
+        CartService $cartService, 
+        OrderService $orderService, 
+        PaymobService $paymobService,
+        FawryService $fawryService
+    ) {
         $this->cartService = $cartService;
         $this->orderService = $orderService;
         $this->paymobService = $paymobService;
+        $this->fawryService = $fawryService;
     }
 
     public function index()
@@ -105,25 +112,33 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Process Fawry payment - generate reference code
+     * Process Fawry payment - call Fawry API for reference code
      */
     protected function processFawryPayment(Order $order)
     {
-        // Generate a secure unique Fawry reference code
-        $referenceCode = $this->paymobService->generateFawryReferenceCode($order);
-        
-        // Store reference code in payment_meta
+        // Call FawryPay API to get real reference number
+        $result = $this->fawryService->createPayAtFawryCharge($order);
+
+        if (!$result['success']) {
+            // Fawry API call failed
+            $order->update(['payment_status' => 'failed']);
+            return redirect()->route('checkout.payment.failed', $order->id)
+                ->with('error', $result['error'] ?? 'Failed to generate Fawry reference');
+        }
+
+        // Store reference code from Fawry API
         $order->update([
             'payment_meta' => [
-                'fawry_reference' => $referenceCode,
-                'fawry_expires_at' => now()->addHours(48)->toIso8601String(),
+                'fawry_reference' => $result['reference_number'],
+                'fawry_merchant_ref' => $result['merchant_ref_number'] ?? $order->order_number,
+                'fawry_expires_at' => $result['expiry_date'] ?? now()->addHours(48)->toIso8601String(),
             ]
         ]);
 
         return view('checkout.fawry-reference', [
             'order' => $order,
-            'referenceCode' => $referenceCode,
-            'expiresAt' => now()->addHours(48),
+            'referenceCode' => $result['reference_number'],
+            'expiresAt' => $result['expiry_date'] ? \Carbon\Carbon::parse($result['expiry_date']) : now()->addHours(48),
             'totalAmount' => $order->total_amount,
         ]);
     }

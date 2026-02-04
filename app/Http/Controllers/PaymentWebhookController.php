@@ -4,16 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Services\PaymobService;
+use App\Services\FawryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class PaymentWebhookController extends Controller
 {
     protected PaymobService $paymobService;
+    protected FawryService $fawryService;
 
-    public function __construct(PaymobService $paymobService)
+    public function __construct(PaymobService $paymobService, FawryService $fawryService)
     {
         $this->paymobService = $paymobService;
+        $this->fawryService = $fawryService;
     }
 
     /**
@@ -153,14 +156,96 @@ class PaymentWebhookController extends Controller
     /**
      * Handle Fawry webhook callback
      * 
-     * TODO: Implement when Fawry API integration is added
-     * For now, Fawry payments are manual reference codes
+     * Security: Verifies signature and updates order payment status
      */
     public function fawry(Request $request)
     {
-        // TODO: Implement Fawry webhook handling
-        // This would verify payment via Fawry's API callback
-        Log::info('Fawry webhook received', $request->all());
+        $data = $request->all();
+        $receivedSignature = $data['messageSignature'] ?? '';
+
+        Log::info('Fawry webhook received', [
+            'ip' => $request->ip(),
+            'has_signature' => !empty($receivedSignature),
+            'order_status' => $data['orderStatus'] ?? 'unknown',
+        ]);
+
+        // Security: Verify webhook signature if Fawry is configured
+        if ($this->fawryService->isConfigured()) {
+            if (empty($receivedSignature)) {
+                Log::warning('Fawry webhook: Missing signature', ['ip' => $request->ip()]);
+                return response()->json(['error' => 'Missing signature'], 401);
+            }
+
+            if (!$this->fawryService->verifyWebhookSignature($data, $receivedSignature)) {
+                Log::warning('Fawry webhook: Signature verification failed', [
+                    'ip' => $request->ip(),
+                ]);
+                return response()->json(['error' => 'Invalid signature'], 403);
+            }
+        }
+
+        // Process webhook data
+        $result = $this->fawryService->processWebhook($data);
+        $orderNumber = $result['order_number'];
+
+        if (!$orderNumber) {
+            Log::error('Fawry webhook: No merchant reference found');
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+
+        // Find order by order number (merchantRefNum)
+        $order = Order::where('order_number', $orderNumber)->first();
+
+        if (!$order) {
+            Log::error('Fawry webhook: Order not found', ['order_number' => $orderNumber]);
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+
+        // Idempotency check
+        if ($order->payment_status === 'paid' && $result['status'] === 'PAID') {
+            Log::info('Fawry webhook: Already processed', ['order_id' => $order->id]);
+            return response()->json(['success' => true, 'message' => 'Already processed']);
+        }
+
+        // Map Fawry status to our payment status
+        $paymentStatus = match (strtoupper($result['status'])) {
+            'PAID' => 'paid',
+            'NEW' => 'awaiting_payment',
+            'UNPAID' => 'awaiting_payment',
+            'EXPIRED' => 'expired',
+            'CANCELED' => 'cancelled',
+            'REFUNDED' => 'refunded',
+            'PARTIAL_REFUNDED' => 'partially_refunded',
+            default => 'failed',
+        };
+
+        // Update order
+        $order->update([
+            'payment_status' => $paymentStatus,
+            'transaction_id' => $result['fawry_reference'],
+            'payment_meta' => array_merge($order->payment_meta ?? [], [
+                'fawry_reference' => $result['fawry_reference'],
+                'fawry_status' => $result['status'],
+                'fawry_amount' => $result['amount'],
+                'processed_at' => now()->toIso8601String(),
+            ]),
+        ]);
+
+        // If payment successful, confirm order
+        if ($paymentStatus === 'paid') {
+            $order->update(['status' => 'confirmed']);
+            Log::info('Fawry payment successful', [
+                'order_id' => $order->id,
+                'fawry_ref' => $result['fawry_reference'],
+                'amount' => $result['amount'],
+            ]);
+        } else {
+            Log::info('Fawry payment status update', [
+                'order_id' => $order->id,
+                'status' => $paymentStatus,
+            ]);
+        }
+
         return response()->json(['success' => true]);
     }
 }

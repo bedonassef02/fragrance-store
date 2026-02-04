@@ -59,7 +59,9 @@ class OrderService
                 'subtotal'        => $this->cartService->getSubtotal(),
                 'discount_amount' => $this->cartService->getDiscount(),
                 'coupon_code'     => $this->cartService->getCoupon()['code'] ?? null,
-                'payment_method'  => 'cod',
+                'payment_method'  => $data['payment_method'] ?? 'cod',
+                'payment_status'  => $data['payment_status'] ?? 'pending',
+                'payment_gateway' => $data['payment_gateway'] ?? null,
                 'status'          => 'pending',
             ]);
 

@@ -139,9 +139,27 @@ Placed on <span class="text-white font-medium">{{ $order->created_at->format('F 
             </div>
             <div class="flex items-center justify-between">
                 <span class="text-slate-400 text-sm">Payment Status</span>
-                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-xs font-bold uppercase tracking-wider">
-                    Paid
-                </span>
+                @if($order->payment_status === 'paid')
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-xs font-bold uppercase tracking-wider">
+                        Paid
+                    </span>
+                @elseif($order->payment_status === 'failed')
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-red-500/10 text-red-500 border border-red-500/20 text-xs font-bold uppercase tracking-wider">
+                        Failed
+                    </span>
+                @elseif($order->payment_status === 'pending' || $order->payment_status === 'awaiting_payment')
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 text-xs font-bold uppercase tracking-wider">
+                        Pending
+                    </span>
+                @elseif($order->payment_status === 'refunded')
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-purple-500/10 text-purple-500 border border-purple-500/20 text-xs font-bold uppercase tracking-wider">
+                        Refunded
+                    </span>
+                 @else
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-slate-500/10 text-slate-500 border border-slate-500/20 text-xs font-bold uppercase tracking-wider">
+                        {{ ucfirst(str_replace('_', ' ', $order->payment_status)) }}
+                    </span>
+                @endif
             </div>
         </div>
 

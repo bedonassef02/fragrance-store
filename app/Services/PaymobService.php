@@ -291,8 +291,9 @@ class PaymobService
             ];
         }
 
-        // Fawry reference code
-        if ($this->isPaymentMethodEnabled('fawry')) {
+        // Fawry reference code - requires FawryPay credentials
+        $fawryConfigured = !empty(config('fawry.merchant_code')) && !empty(config('fawry.secure_key'));
+        if ($this->isPaymentMethodEnabled('fawry') && $fawryConfigured) {
             $methods[] = [
                 'id' => 'fawry',
                 'name' => 'Fawry Reference Code',
@@ -349,24 +350,9 @@ class PaymobService
                 'enabled' => $this->isPaymentMethodEnabled('fawry'),
                 'name' => 'Fawry Reference Code',
                 'icon' => 'fawry',
-                'configured' => true,
+                'configured' => !empty(config('fawry.merchant_code')) && !empty(config('fawry.secure_key')),
             ],
         ];
     }
-
-    /**
-     * Generate a secure Fawry reference code
-     * 
-     * Security: Uses cryptographically secure random generation
-     */
-    public function generateFawryReferenceCode(Order $order): string
-    {
-        // Format: MOON + timestamp suffix + random hex
-        // This ensures uniqueness even if order IDs collide
-        $timestamp = substr(dechex(time()), -4);
-        $random = strtoupper(Str::random(4));
-        $orderId = str_pad($order->id, 4, '0', STR_PAD_LEFT);
-        
-        return "MOON{$orderId}{$timestamp}{$random}";
-    }
 }
+
