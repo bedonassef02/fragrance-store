@@ -35,11 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nav) {
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
-                nav.classList.add('py-0', 'shadow-lg');
-                nav.classList.remove('py-4');
+                nav.classList.add('py-0', 'shadow-sm', 'bg-cream/95');
+                nav.classList.remove('py-4', 'bg-transparent');
             } else {
-                nav.classList.remove('shadow-lg');
-                nav.classList.add('py-4');
+                nav.classList.remove('shadow-sm', 'bg-cream/95');
+                nav.classList.add('py-4', 'bg-transparent');
             }
         });
     }

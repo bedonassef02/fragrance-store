@@ -3,45 +3,47 @@
 @section('title', 'Shop | MOON')
 
 @section('content')
-    <div class="pt-44 pb-16 bg-moon-dark min-h-screen">
+    <div class="pt-28 pb-20 bg-cream min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Header (Centered) -->
-            <div class="text-center mb-12 border-b border-gray-800 pb-10">
+            <!-- Header -->
+            <div class="text-center mb-12 pb-10 border-b border-neutral-200">
                 @if($activeCollection)
-                    <div class="mb-6 relative h-64 md:h-80 w-full overflow-hidden rounded-sm animate-fadeInUp">
-                        <div class="absolute inset-0 bg-black/40 z-10"></div>
+                    <div class="mb-8 relative h-56 md:h-72 w-full overflow-hidden bg-neutral-100">
                         <img src="{{ $activeCollection->image }}" alt="{{ $activeCollection->title }}" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center p-4">
-                             <span class="text-moon-gold text-sm uppercase tracking-widest mb-2 block">{{ $activeCollection->subtitle }}</span>
-                             <h1 class="text-4xl md:text-5xl font-serif text-white">{{ $activeCollection->title }}</h1>
+                        <div class="absolute inset-0 bg-charcoal/30"></div>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center p-4">
+                            <span class="text-accent text-xs uppercase tracking-[0.3em] mb-3">{{ $activeCollection->subtitle }}</span>
+                            <h1 class="text-4xl md:text-5xl font-serif text-white">{{ $activeCollection->title }}</h1>
                         </div>
                     </div>
                 @else
-                    <h1 class="text-4xl md:text-5xl font-serif text-white mb-4 animate-fadeInUp">Shop All</h1>
-                    <p class="text-gray-400 font-light tracking-wide animate-fadeInUp delay-100">Thinking of you. Designed for you.</p>
+                    <p class="text-accent uppercase tracking-[0.3em] text-xs font-medium mb-3">Discover</p>
+                    <h1 class="text-4xl md:text-5xl font-serif text-charcoal mb-4">Shop All</h1>
+                    <p class="text-neutral-500 font-light">Curated scents for every occasion</p>
                 @endif
             </div>
             
             <!-- Controls Bar -->
-            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 relative py-4">
-                 <!-- Mobile Filter Toggle -->
-                 <button id="filter-toggle" class="lg:hidden w-full md:w-auto flex justify-center items-center text-moon-gold uppercase tracking-widest text-xs font-bold border border-moon-gold px-8 py-3 hover:bg-moon-gold hover:text-black transition-colors duration-300">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 py-4">
+                <!-- Mobile Filter Toggle -->
+                <button id="filter-toggle" class="lg:hidden w-full md:w-auto flex justify-center items-center text-charcoal uppercase tracking-[0.15em] text-xs font-medium border border-charcoal px-8 py-3 hover:bg-charcoal hover:text-cream transition-colors duration-300">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                    </svg>
                     Filters
                 </button>
 
-                <div class="text-gray-400 text-sm hidden md:block">
+                <div class="text-neutral-500 text-sm hidden md:block">
                     Showing {{ $products->firstItem() ?? 0 }} - {{ $products->lastItem() ?? 0 }} of {{ $products->total() }} products
                 </div>
 
                 <div class="w-full md:w-auto relative">
-                    <select name="sort" form="filter-form" onchange="this.form.submit()" class="w-full md:w-auto appearance-none bg-moon-dark text-gray-300 border border-gray-700 pl-6 pr-10 py-3 text-xs uppercase tracking-wider focus:border-moon-gold focus:outline-none transition-colors cursor-pointer hover:border-gray-500">
-                        <option value="-created_at" class="bg-moon-dark text-gray-300" {{ request('sort') == '-created_at' ? 'selected' : '' }}>Sort by: Newest</option>
-                        <option value="price" class="bg-moon-dark text-gray-300" {{ request('sort') == 'price' ? 'selected' : '' }}>Price: Low to High</option>
-                        <option value="-price" class="bg-moon-dark text-gray-300" {{ request('sort') == '-price' ? 'selected' : '' }}>Price: High to Low</option>
+                    <select name="sort" form="filter-form" onchange="this.form.submit()" class="w-full md:w-auto appearance-none bg-cream text-charcoal border border-neutral-300 pl-4 pr-10 py-2.5 text-xs uppercase tracking-wider focus:border-charcoal focus:outline-none transition-colors cursor-pointer hover:border-neutral-400">
+                        <option value="-created_at" {{ request('sort') == '-created_at' ? 'selected' : '' }}>Sort by: Newest</option>
+                        <option value="price" {{ request('sort') == 'price' ? 'selected' : '' }}>Price: Low to High</option>
+                        <option value="-price" {{ request('sort') == '-price' ? 'selected' : '' }}>Price: High to Low</option>
                     </select>
-                    <!-- Custom Arrow -->
-                    <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">
+                    <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-neutral-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/>
                         </svg>
@@ -51,92 +53,86 @@
 
             <div class="flex flex-col lg:flex-row gap-12 relative">
                 <!-- Sidebar Filters -->
-                <aside id="shop-sidebar" class="fixed inset-0 z-50 lg:z-0 bg-moon-dark p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 lg:relative lg:translate-x-0 lg:w-64 lg:inset-auto lg:p-0 lg:overflow-visible lg:bg-transparent lg:block">
-                     <!-- Mobile Close Button -->
-                    <div class="lg:hidden flex justify-between items-center mb-8 border-b border-gray-800 pb-4">
-                        <span class="text-white font-serif text-xl">Filters</span>
-                        <button id="filter-close" class="text-gray-400 hover:text-white p-2">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <aside id="shop-sidebar" class="fixed inset-0 z-50 lg:z-0 bg-cream p-6 overflow-y-auto transform -translate-x-full transition-transform duration-300 lg:relative lg:translate-x-0 lg:w-64 lg:inset-auto lg:p-0 lg:overflow-visible lg:block">
+                    <!-- Mobile Close Button -->
+                    <div class="lg:hidden flex justify-between items-center mb-8 border-b border-neutral-200 pb-4">
+                        <span class="text-charcoal font-serif text-xl">Filters</span>
+                        <button id="filter-close" class="text-neutral-400 hover:text-charcoal p-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
                         </button>
                     </div>
 
                     <form action="{{ route('shop') }}" method="GET" id="filter-form">
-                        <div class="space-y-10">
+                        <div class="space-y-8">
                             <!-- Search -->
                             <div>
-                                <h3 class="text-white font-serif text-lg mb-4">Search</h3>
+                                <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Search</h3>
                                 <div class="relative">
-                                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search..." class="w-full bg-transparent border border-gray-700 px-4 py-2 text-sm text-white focus:border-moon-gold outline-none">
-                                    <button type="submit" class="absolute right-3 top-2.5 text-gray-500 hover:text-moon-gold">
-                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search fragrances..." class="w-full bg-transparent border border-neutral-300 px-4 py-2.5 text-sm text-charcoal placeholder-neutral-400 focus:border-charcoal outline-none">
+                                    <button type="submit" class="absolute right-3 top-3 text-neutral-400 hover:text-charcoal">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
 
                             <!-- Categories -->
                             <div>
-                                <h3 class="text-white font-serif text-lg mb-4 flex items-center justify-between group cursor-pointer">
-                                    Categories
-                                </h3>
+                                <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Categories</h3>
                                 <div class="space-y-3">
                                     @foreach($categories as $category)
-                                        <x-forms.checkbox 
-                                            name="category[]" 
-                                            :value="$category->slug" 
-                                            :label="$category->name" 
-                                            :checked="in_array($category->slug, (array)request('category', []))" />
+                                        <label class="flex items-center cursor-pointer group">
+                                            <input type="checkbox" name="category[]" value="{{ $category->slug }}" 
+                                                   {{ in_array($category->slug, (array)request('category', [])) ? 'checked' : '' }}
+                                                   class="w-4 h-4 rounded-sm border-neutral-300 text-charcoal focus:ring-charcoal focus:ring-offset-0">
+                                            <span class="ml-3 text-sm text-neutral-600 group-hover:text-charcoal transition-colors">{{ $category->name }}</span>
+                                        </label>
                                     @endforeach
                                 </div>
                             </div>
 
                             <!-- Brands -->
                             <div>
-                                <h3 class="text-white font-serif text-lg mb-4">Brands</h3>
-                                
-                                <input type="text" id="brand-search" placeholder="Search brands..." class="w-full bg-transparent border border-gray-700 font-light px-3 py-2 text-xs text-white focus:border-moon-gold outline-none mb-4 placeholder-gray-500">
-                                
-                                <div class="space-y-3" id="brand-list">
+                                <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Brands</h3>
+                                <input type="text" id="brand-search" placeholder="Search brands..." class="w-full bg-transparent border border-neutral-300 px-3 py-2 text-xs text-charcoal focus:border-charcoal outline-none mb-4 placeholder-neutral-400">
+                                <div class="space-y-3 max-h-48 overflow-y-auto" id="brand-list">
                                     @foreach($brands as $brand)
-                                    <div class="flex items-center brand-item" data-name="{{ strtolower($brand->name) }}">
+                                    <label class="flex items-center cursor-pointer group brand-item" data-name="{{ strtolower($brand->name) }}">
                                         <input type="checkbox" id="brand-{{ $brand->id }}" name="brand[]" value="{{ $brand->id }}" 
                                                {{ in_array($brand->id, (array)request('brand', [])) ? 'checked' : '' }}
-                                               class="w-4 h-4 rounded border-gray-700 bg-transparent text-moon-gold focus:ring-moon-gold focus:ring-offset-0 focus:ring-1">
-                                        <label for="brand-{{ $brand->id }}" class="ml-3 text-sm text-gray-400 hover:text-white transition-colors cursor-pointer">
-                                            {{ $brand->name }}
-                                        </label>
-                                    </div>
+                                               class="w-4 h-4 rounded-sm border-neutral-300 text-charcoal focus:ring-charcoal focus:ring-offset-0">
+                                        <span class="ml-3 text-sm text-neutral-600 group-hover:text-charcoal transition-colors">{{ $brand->name }}</span>
+                                    </label>
                                     @endforeach
                                 </div>
-                                <button type="button" id="brand-show-more" class="hidden text-xs text-moon-gold uppercase tracking-widest mt-4 hover:text-white transition-colors">
-                                    + Show More
-                                </button>
                             </div>
 
                             <!-- Concentration -->
                             <div>
-                                <h3 class="text-white font-serif text-lg mb-4">Concentration</h3>
+                                <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Concentration</h3>
                                 <div class="space-y-3">
                                     @foreach($uniqueConcentrations as $concentration)
-                                    <div class="flex items-center">
+                                    <label class="flex items-center cursor-pointer group">
                                         <input type="checkbox" id="conc-{{ Str::slug($concentration) }}" name="concentration[]" value="{{ $concentration }}" 
                                                {{ in_array($concentration, (array)request('concentration', [])) ? 'checked' : '' }}
-                                               class="w-4 h-4 rounded border-gray-700 bg-transparent text-moon-gold focus:ring-moon-gold focus:ring-offset-0 focus:ring-1">
-                                        <label for="conc-{{ Str::slug($concentration) }}" class="ml-3 text-sm text-gray-400 hover:text-white transition-colors cursor-pointer">
-                                            {{ $concentration }}
-                                        </label>
-                                    </div>
+                                               class="w-4 h-4 rounded-sm border-neutral-300 text-charcoal focus:ring-charcoal focus:ring-offset-0">
+                                        <span class="ml-3 text-sm text-neutral-600 group-hover:text-charcoal transition-colors">{{ $concentration }}</span>
+                                    </label>
                                     @endforeach
                                 </div>
                             </div>
 
                             <!-- Capacity -->
                             <div>
-                                <h3 class="text-white font-serif text-lg mb-4">Capacity</h3>
+                                <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Size</h3>
                                 <div class="flex flex-wrap gap-2">
                                     @foreach($uniqueCapacities as $capacity)
                                     <label class="cursor-pointer">
                                         <input type="checkbox" name="capacity[]" value="{{ $capacity }}" {{ in_array($capacity, (array)request('capacity', [])) ? 'checked' : '' }} class="peer hidden">
-                                        <span class="block px-3 py-2 border border-gray-700 text-gray-400 text-sm font-bold peer-checked:bg-moon-gold peer-checked:text-moon-dark peer-checked:border-moon-gold hover:border-moon-gold transition-all">
+                                        <span class="block px-3 py-2 border border-neutral-300 text-neutral-600 text-xs font-medium peer-checked:bg-charcoal peer-checked:text-cream peer-checked:border-charcoal hover:border-charcoal transition-all">
                                             {{ $capacity }}
                                         </span>
                                     </label>
@@ -146,28 +142,36 @@
 
                             <!-- Availability -->
                             <div>
-                                <h3 class="text-white font-serif text-lg mb-4">Availability</h3>
-                                 <x-forms.checkbox name="in_stock" value="1" label="In Stock Only" :checked="request('in_stock')" />
+                                <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Availability</h3>
+                                <label class="flex items-center cursor-pointer group">
+                                    <input type="checkbox" name="in_stock" value="1" {{ request('in_stock') ? 'checked' : '' }}
+                                           class="w-4 h-4 rounded-sm border-neutral-300 text-charcoal focus:ring-charcoal focus:ring-offset-0">
+                                    <span class="ml-3 text-sm text-neutral-600 group-hover:text-charcoal transition-colors">In Stock Only</span>
+                                </label>
                             </div>
 
                             <!-- Price Range -->
                             <div>
-                                <h3 class="text-white font-serif text-lg mb-4">Price Range</h3>
-                                <div class="space-y-3 text-sm text-gray-400">
-                                    <x-forms.checkbox name="price_range[]" value="0-1500" label="Under 1500 LE" :checked="in_array('0-1500', (array)request('price_range', []))" />
-                                    <x-forms.checkbox name="price_range[]" value="1500-3000" label="1500 LE - 3000 LE" :checked="in_array('1500-3000', (array)request('price_range', []))" />
-                                    <x-forms.checkbox name="price_range[]" value="3000-5000" label="3000 LE - 5000 LE" :checked="in_array('3000-5000', (array)request('price_range', []))" />
-                                    <x-forms.checkbox name="price_range[]" value="5000+" label="Above 5000 LE" :checked="in_array('5000+', (array)request('price_range', []))" />
+                                <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Price Range</h3>
+                                <div class="space-y-3">
+                                    @foreach([['0-1500', 'Under 1,500 LE'], ['1500-3000', '1,500 - 3,000 LE'], ['3000-5000', '3,000 - 5,000 LE'], ['5000+', 'Above 5,000 LE']] as $range)
+                                    <label class="flex items-center cursor-pointer group">
+                                        <input type="checkbox" name="price_range[]" value="{{ $range[0] }}" 
+                                               {{ in_array($range[0], (array)request('price_range', [])) ? 'checked' : '' }}
+                                               class="w-4 h-4 rounded-sm border-neutral-300 text-charcoal focus:ring-charcoal focus:ring-offset-0">
+                                        <span class="ml-3 text-sm text-neutral-600 group-hover:text-charcoal transition-colors">{{ $range[1] }}</span>
+                                    </label>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="mt-8 pt-6 border-t border-gray-800">
-                            <button type="submit" class="w-full bg-moon-gold text-moon-dark py-3 font-bold uppercase tracking-widest text-xs hover:bg-white transition-colors">
+                        <div class="mt-10 pt-6 border-t border-neutral-200">
+                            <button type="submit" class="w-full btn-primary">
                                 Apply Filters
                             </button>
                             @if(request()->anyFilled(['search', 'category', 'brand', 'concentration', 'capacity', 'price_range', 'sort', 'in_stock']))
-                            <a href="{{ route('shop') }}" class="block text-center mt-4 text-xs text-gray-500 underline hover:text-white">Clear All</a>
+                            <a href="{{ route('shop') }}" class="block text-center mt-4 text-xs text-neutral-500 underline hover:text-charcoal transition-colors">Clear All Filters</a>
                             @endif
                         </div>
                     </form>
@@ -175,23 +179,26 @@
 
                 <!-- Product Grid -->
                 <div class="flex-1">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+                    <div class="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
                         @forelse($products as $product)
                         <x-product-card :product="$product" />
                         @empty
-                        <div class="col-span-full text-center py-20 text-gray-500">
-                            <p>No products found matching your criteria.</p>
+                        <div class="col-span-full text-center py-20">
+                            <svg class="w-16 h-16 text-neutral-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <p class="text-neutral-500">No products found matching your criteria.</p>
+                            <a href="{{ route('shop') }}" class="inline-block mt-4 text-charcoal underline text-sm">Clear filters</a>
                         </div>
                         @endforelse
                     </div>
 
                     <!-- Pagination -->
-                    <div class="mt-20">
+                    <div class="mt-16">
                         {{ $products->appends(request()->query())->links() }}
                     </div>
                 </div>
+            </div>
         </div>
     </div>
-    
-
 @endsection

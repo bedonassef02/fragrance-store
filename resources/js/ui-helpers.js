@@ -21,7 +21,7 @@ export function showToast(message, isError = false) {
     }
 
     // Reset classes to base state
-    toast.className = `fixed bottom-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 z-50 transform ${isError ? 'bg-red-600' : 'bg-green-600'}`;
+    toast.className = `fixed bottom-5 right-5 text-white px-6 py-4 rounded-sm shadow-xl transition-all duration-300 z-50 transform font-medium tracking-wide text-sm ${isError ? 'bg-red-600' : 'bg-charcoal'}`;
 
     toast.textContent = message;
 

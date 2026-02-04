@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const inStockVariants = state.variants.filter(v => v.qty > 0);
 
         // 1. Direct Add: If only one variant exists and is in stock
-        // The user asked: "if it does not have options... dont show pop up"
         if (state.variants.length === 1 && inStockVariants.length === 1) {
             handleDirectAddToCart(inStockVariants[0].id);
             return;
@@ -65,10 +64,6 @@ document.addEventListener('DOMContentLoaded', function () {
             showToast('This item is out of stock.', true);
             return;
         }
-
-        // 2. Open Modal for Multiple Options
-        // Auto-select first available if desired, OR leave null to force choice.
-        // User asked: "make the user choose one". So we will NOT auto-select.
 
         ui.openModal(button.dataset.name, button.dataset.price);
         renderOptions();
@@ -129,9 +124,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function createCapacityButtons(capacities) {
         const container = document.createElement('div');
-        container.innerHTML = `<p class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Select Capacity</p>`;
+        container.innerHTML = `<p class="text-xs font-medium text-charcoal mb-3 uppercase tracking-widest">Select Size</p>`;
         const buttonsDiv = document.createElement('div');
-        buttonsDiv.className = 'flex flex-wrap gap-2';
+        buttonsDiv.className = 'flex flex-wrap gap-3';
 
         capacities.forEach(capacity => {
             const variant = state.variants.find(v => v.capacity === capacity);
@@ -139,11 +134,23 @@ document.addEventListener('DOMContentLoaded', function () {
             const isSelected = state.selectedCapacity === capacity;
 
             const btn = document.createElement('button');
-            // product-capacity-btn class can be reused if global, otherwise duplicate styles
-            btn.className = `min-w-[4rem] px-4 py-2 border text-sm font-bold transition-all rounded-sm relative ${isOutOfStock ? 'opacity-50 cursor-not-allowed border-gray-800 text-gray-600' :
-                    isSelected ? 'bg-moon-gold text-moon-dark border-moon-gold' : 'border-gray-600 text-gray-400 hover:border-moon-gold hover:text-white'
-                }`;
 
+            // Updated classes for light theme
+            // Default: border-neutral-300 text-neutral-600 hover:border-charcoal hover:text-charcoal
+            // Selected: bg-charcoal text-cream border-charcoal
+            // Disabled: opacity-50 cursor-not-allowed bg-neutral-100 text-neutral-400
+
+            let classes = 'min-w-[4rem] px-5 py-2.5 border text-sm font-medium transition-all duration-200 ';
+
+            if (isOutOfStock) {
+                classes += 'opacity-50 cursor-not-allowed bg-neutral-100 border-neutral-200 text-neutral-400';
+            } else if (isSelected) {
+                classes += 'bg-charcoal text-cream border-charcoal';
+            } else {
+                classes += 'bg-white border-neutral-300 text-neutral-600 hover:border-charcoal hover:text-charcoal';
+            }
+
+            btn.className = classes;
             btn.innerText = capacity;
             btn.disabled = isOutOfStock;
 

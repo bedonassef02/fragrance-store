@@ -3,55 +3,53 @@
 @section('content')
     <x-seo.schema-org type="organization" />
     <x-seo.schema-org type="website" />
+    
     <!-- Hero Section -->
-    <!-- Hero Section -->
-    <header id="home" class="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
-        <!-- Background Overlay -->
-        <!-- Background Overlay -->
-        <div class="absolute inset-0 z-0">
-            <!-- User requested 30% black opacity layer -->
-            <div class="absolute inset-0 bg-black/30 z-10"></div>
-            <!-- Existing gradient for bottom blending -->
-            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-moon-dark z-10"></div>
-            <img src="{{ $hero['image'] }}" 
-                 alt="Luxury Abaya Background" 
-                 class="w-full h-full object-cover object-top animate-kenburns">
-        </div>
-
-        <!-- Content -->
-        <div class="relative z-20 text-center px-4 max-w-4xl mx-auto mt-32 sm:mt-0">
-            <p class="text-moon-gold uppercase tracking-[0.4em] text-xs sm:text-sm font-light mb-6 animate-fadeInUp drop-shadow-md">{{ $hero['subtitle'] }}</p>
-            <h1 class="text-5xl sm:text-6xl md:text-8xl font-serif text-white mb-8 leading-tight font-medium animate-fadeInUp delay-200 drop-shadow-lg">
-                {{ $hero['title'] }} <span class="italic font-light text-moon-gold">{{ $hero['title_highlight'] }}</span>
-            </h1>
-            <p class="text-gray-200 text-lg sm:text-xl font-light mb-12 max-w-lg mx-auto leading-relaxed animate-fadeInUp delay-300 drop-shadow-md">
-                {{ $hero['description'] }}
-            </p>
-            <div class="flex flex-col sm:flex-row gap-6 justify-center animate-fadeInUp delay-400">
-                <a href="{{ route($hero['primary_cta']['route']) }}" class="group relative px-10 py-4 bg-moon-gold text-moon-dark font-serif tracking-widest uppercase hover:bg-white transition-all duration-300">
-                    <span class="relative z-10 font-bold">{{ $hero['primary_cta']['text'] }}</span>
-                </a>
-                <a href="{{ route($hero['secondary_cta']['route']) }}" class="group relative px-10 py-4 border border-white/30 text-white font-serif tracking-widest uppercase hover:border-moon-gold hover:text-moon-gold transition-all duration-300 backdrop-blur-sm">
-                    <span class="relative z-10">{{ $hero['secondary_cta']['text'] }}</span>
-                </a>
+    <header class="relative min-h-[90vh] flex items-center justify-center bg-cream pt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <!-- Text Content -->
+                <div class="text-center lg:text-left order-2 lg:order-1">
+                    <p class="text-accent uppercase tracking-[0.3em] text-xs font-medium mb-6 animate-fadeInUp">{{ $hero['subtitle'] }}</p>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-serif text-charcoal mb-6 leading-[1.1] animate-fadeInUp" style="animation-delay: 0.1s">
+                        {{ $hero['title'] }}
+                    </h1>
+                    <p class="text-neutral-600 text-lg font-light mb-10 max-w-md mx-auto lg:mx-0 leading-relaxed animate-fadeInUp" style="animation-delay: 0.2s">
+                        {{ $hero['description'] }}
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fadeInUp" style="animation-delay: 0.3s">
+                        <a href="{{ route($hero['primary_cta']['route']) }}" class="btn-primary">
+                            {{ $hero['primary_cta']['text'] }}
+                        </a>
+                        <a href="{{ route($hero['secondary_cta']['route']) }}" class="btn-secondary">
+                            {{ $hero['secondary_cta']['text'] }}
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Hero Image -->
+                <div class="order-1 lg:order-2 relative">
+                    <div class="aspect-[3/4] overflow-hidden rounded-sm">
+                        <img src="{{ $hero['image'] }}" 
+                             alt="Featured Fragrance" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <!-- Decorative Element -->
+                    <div class="absolute -bottom-6 -left-6 w-32 h-32 border border-accent/30 rounded-sm hidden lg:block"></div>
+                </div>
             </div>
-        </div>
-
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden sm:block animate-bounce">
-            <svg class="h-6 w-6 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
         </div>
     </header>
 
     <!-- Picked For You Section -->
     @if(isset($pickedForYou) && $pickedForYou->isNotEmpty())
-    <section class="py-24 bg-moon-dark border-b border-white/5">
+    <section class="section-padding bg-cream">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-serif text-white mb-2 text-center">Picked For You</h2>
-            <p class="text-moon-gold uppercase tracking-widest text-xs font-bold text-center mb-12">Based on your recent history</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="text-center mb-12">
+                <p class="text-accent uppercase tracking-[0.3em] text-xs font-medium mb-3">Based on Your History</p>
+                <h2 class="text-3xl md:text-4xl font-serif text-charcoal">Picked For You</h2>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                 @foreach($pickedForYou as $product)
                     <x-product-card :product="$product" />
                 @endforeach
@@ -60,37 +58,21 @@
     </section>
     @endif
 
-    <!-- Featured Section Preview -->
-    <!-- Trending Section -->
-    @if($trending->isNotEmpty())
-    <section class="py-24 bg-moon-dark border-b border-white/5">
+    <!-- Featured Collections -->
+    <section class="section-padding bg-neutral-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-end mb-12">
-                <h2 class="text-3xl md:text-4xl font-serif text-white">Trending Now</h2>
-                <a href="{{ route('shop') }}?sort=price_desc" class="hidden md:inline-block text-moon-gold uppercase tracking-widest text-xs font-bold hover:text-white transition-colors">View All</a>
+            <div class="text-center mb-12">
+                <p class="text-accent uppercase tracking-[0.3em] text-xs font-medium mb-3">Explore</p>
+                <h2 class="text-3xl md:text-4xl font-serif text-charcoal">Our Collections</h2>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                @foreach($trending as $product)
-                    <x-product-card :product="$product" />
-                @endforeach
-            </div>
-            <div class="mt-8 text-center md:hidden">
-                <a href="{{ route('shop') }}" class="text-moon-gold uppercase tracking-widest text-xs font-bold hover:text-white transition-colors">View All</a>
-            </div>
-        </div>
-    </section>
-    @endif
-
-    <!-- Collections Preview -->
-    <section class="py-24 bg-moon-dark">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl md:text-4xl font-serif text-white mb-6">Discover Our World</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 @foreach($collections as $item)
-                <a href="{{ route('shop', ['collection' => $item->slug]) }}" class="group relative h-96 overflow-hidden">
-                    <img src="{{ $item['image'] }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="{{ $item['title'] }}">
-                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                        <h3 class="text-2xl font-serif text-white border-b border-moon-gold pb-2 hover:text-moon-gold">{{ $item['title'] }}</h3>
+                <a href="{{ route('shop', ['collection' => $item->slug]) }}" class="group relative aspect-[3/4] overflow-hidden bg-neutral-200">
+                    <img src="{{ $item['image'] }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="{{ $item['title'] }}">
+                    <div class="absolute inset-0 bg-charcoal/20 group-hover:bg-charcoal/30 transition-colors duration-300"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6">
+                        <h3 class="text-xl md:text-2xl font-serif text-white text-center">{{ $item['title'] }}</h3>
+                        <span class="mt-3 text-xs uppercase tracking-[0.2em] text-white/80 border-b border-white/50 pb-1 group-hover:border-white transition-colors">Shop Now</span>
                     </div>
                 </a>
                 @endforeach
@@ -98,12 +80,59 @@
         </div>
     </section>
 
-    <!-- Featured Section -->
-    @if($featured->isNotEmpty())
-    <section class="py-24 bg-moon-dark border-t border-white/5">
+    <!-- Trending Section -->
+    @if($trending->isNotEmpty())
+    <section class="section-padding bg-cream">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-serif text-white mb-12 text-center">Curated For You</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <p class="text-accent uppercase tracking-[0.3em] text-xs font-medium mb-3">Most Loved</p>
+                    <h2 class="text-3xl md:text-4xl font-serif text-charcoal">Trending Now</h2>
+                </div>
+                <a href="{{ route('shop') }}" class="text-charcoal uppercase tracking-[0.15em] text-xs font-medium border-b border-charcoal pb-1 hover:text-accent hover:border-accent transition-colors">View All</a>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                @foreach($trending as $product)
+                    <x-product-card :product="$product" />
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+    <!-- Brand Story Teaser -->
+    <section class="section-padding bg-charcoal text-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="aspect-square overflow-hidden">
+                    <img src="{{ asset('storage/images/about-story.jpg') }}" alt="Our Story" class="w-full h-full object-cover" onerror="this.style.display='none'">
+                </div>
+                <div class="text-center lg:text-left">
+                    <p class="text-accent uppercase tracking-[0.3em] text-xs font-medium mb-6">Our Story</p>
+                    <h2 class="text-3xl md:text-4xl font-serif mb-6">Crafted with Passion</h2>
+                    <p class="text-neutral-300 text-lg font-light leading-relaxed mb-8">
+                        Every fragrance tells a story. Ours begins with a passion for exceptional scents and a dedication to craftsmanship that honors tradition while embracing innovation.
+                    </p>
+                    <a href="{{ route('about') }}" class="inline-flex items-center text-accent uppercase tracking-[0.15em] text-xs font-medium border-b border-accent pb-1 hover:text-cream hover:border-cream transition-colors">
+                        Discover More
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    @if($featured->isNotEmpty())
+    <section class="section-padding bg-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <p class="text-accent uppercase tracking-[0.3em] text-xs font-medium mb-3">Editor's Choice</p>
+                <h2 class="text-3xl md:text-4xl font-serif text-charcoal">Curated For You</h2>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                 @foreach($featured as $product)
                     <x-product-card :product="$product" />
                 @endforeach

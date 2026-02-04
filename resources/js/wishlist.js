@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const parts = value.split(`; moon_wishlist=`);
         if (parts.length === 2) {
             try {
-                // Now that cookie is unencrypted, it should be a JSON string or URL-encoded JSON
                 let cookieVal = parts.pop().split(';').shift();
                 return JSON.parse(decodeURIComponent(cookieVal));
             } catch (e) {
@@ -37,14 +36,15 @@ document.addEventListener('DOMContentLoaded', function () {
         if (wishlist.includes(parseInt(btn.dataset.id))) {
             btn.classList.add('active');
             const svg = btn.querySelector('svg');
-            if (svg) svg.classList.add('fill-moon-gold', 'text-moon-gold');
+            // Changed from moon-gold to accent (terracotta)
+            if (svg) svg.classList.add('fill-accent', 'text-accent');
         }
     });
 
     wishlistButtons.forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
-            e.stopPropagation(); // prevent triggering card link
+            e.stopPropagation();
 
             const productId = this.dataset.id;
             const icon = this.querySelector('svg');
@@ -52,9 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
             // Optimistic UI update
             const isActive = this.classList.toggle('active');
             if (isActive) {
-                icon.classList.add('fill-moon-gold', 'text-moon-gold');
+                icon.classList.add('fill-accent', 'text-accent');
             } else {
-                icon.classList.remove('fill-moon-gold', 'text-moon-gold');
+                icon.classList.remove('fill-accent', 'text-accent');
             }
 
             fetch('/wishlist/toggle', {
@@ -74,9 +74,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     // revert UI on error
                     this.classList.toggle('active');
                     if (isActive) {
-                        icon.classList.remove('fill-moon-gold', 'text-moon-gold');
+                        icon.classList.remove('fill-accent', 'text-accent');
                     } else {
-                        icon.classList.add('fill-moon-gold', 'text-moon-gold');
+                        icon.classList.add('fill-accent', 'text-accent');
                     }
                 });
         });

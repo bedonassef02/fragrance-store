@@ -19,6 +19,38 @@ class StoreOrderRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('phone')) {
+            $phone = $this->phone;
+            
+            // Remove all non-numeric characters
+            $phone = preg_replace('/[\D]/', '', $phone);
+            
+            // Normalize Egyptian numbers
+            // If starts with 20 (country code), remove it
+            if (str_starts_with($phone, '20')) {
+                $phone = substr($phone, 2);
+            }
+            // If starts with 0020, remove it
+            elseif (str_starts_with($phone, '0020')) {
+                $phone = substr($phone, 4);
+            }
+            
+            $this->merge([
+                'phone' => $phone,
+            ]);
+        }
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [

@@ -3,52 +3,61 @@
 @section('title', 'Shopping Cart | MOON')
 
 @section('content')
-    <div class="pt-44 pb-24 bg-moon-dark min-h-screen">
+    <div class="pt-28 pb-24 bg-cream min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-4xl font-serif text-white mb-12 text-center">Shopping Bag</h1>
+            <div class="text-center mb-12">
+                <p class="text-accent uppercase tracking-[0.3em] text-xs font-medium mb-3">Your Selection</p>
+                <h1 class="text-3xl md:text-4xl font-serif text-charcoal">Shopping Bag</h1>
+            </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 cart-container">
                 <!-- Cart Items -->
-                <div class="lg:col-span-2 space-y-8" id="cart-items">
+                <div class="lg:col-span-2 space-y-6" id="cart-items">
                     @forelse($cartItems as $variantId => $item)
                     <!-- Item -->
-                    <div class="cart-item-row flex gap-6 border-b border-gray-800 pb-8" id="row-{{ $variantId }}">
-                        <a href="{{ route('product.show', $item['slug']) }}" class="w-32 h-40 bg-gray-800 flex-shrink-0 block">
+                    <div class="cart-item-row flex gap-6 border-b border-neutral-200 pb-6" id="row-{{ $variantId }}">
+                        <a href="{{ route('product.show', $item['slug']) }}" class="w-24 md:w-32 h-32 md:h-40 bg-neutral-100 flex-shrink-0 block overflow-hidden">
                             <img src="{{ $item['image'] }}" class="w-full h-full object-cover">
                         </a>
                         <div class="flex-1 flex flex-col justify-between">
                             <div>
                                 <div class="flex justify-between items-start">
                                     <a href="{{ route('product.show', $item['slug']) }}">
-                                        <h3 class="text-white font-serif text-lg hover:text-moon-gold transition-colors">{{ $item['name'] }}</h3>
+                                        <h3 class="text-charcoal font-serif text-lg hover:text-accent transition-colors">{{ $item['name'] }}</h3>
                                     </a>
-                                    <span class="text-moon-gold font-bold">{{ number_format($item['price']) }} LE</span>
-                                    @if(isset($item['original_price']) && $item['original_price'] > $item['price'])
-                                        <span class="text-gray-500 line-through text-sm ml-2">{{ number_format($item['original_price']) }} LE</span>
-                                    @endif
+                                    <div class="text-right">
+                                        <span class="text-charcoal font-medium">{{ number_format($item['price']) }} LE</span>
+                                        @if(isset($item['original_price']) && $item['original_price'] > $item['price'])
+                                            <span class="text-neutral-400 line-through text-sm block">{{ number_format($item['original_price']) }} LE</span>
+                                        @endif
+                                    </div>
                                 </div>
-                                <p class="text-gray-500 text-sm mt-1">
+                                <p class="text-neutral-500 text-sm mt-2">
                                     @if(isset($item['concentration']) && $item['concentration'])
-                                    <span class="text-moon-gold/80 uppercase text-[10px] tracking-widest block mb-1">{{ $item['concentration'] }}</span>
+                                    <span class="text-accent/80 uppercase text-[10px] tracking-wider">{{ $item['concentration'] }}</span>
+                                    <span class="mx-1">·</span>
                                     @endif
-                                    Capacity: {{ $item['capacity'] }}
+                                    {{ $item['capacity'] }}
                                 </p>
                             </div>
                             
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center border border-gray-700">
-                                    <button class="cart-qty-btn px-3 py-1 text-gray-400 hover:text-white" data-action="decrease" data-id="{{ $variantId }}">-</button>
-                                    <span class="cart-qty-display px-2 text-white text-sm" id="qty-{{ $variantId }}">{{ $item['quantity'] }}</span>
-                                    <button class="cart-qty-btn px-3 py-1 text-gray-400 hover:text-white" data-action="increase" data-id="{{ $variantId }}">+</button>
+                            <div class="flex justify-between items-center mt-4">
+                                <div class="flex items-center border border-neutral-300">
+                                    <button class="cart-qty-btn px-3 py-1.5 text-neutral-500 hover:text-charcoal hover:bg-neutral-100 transition-colors" data-action="decrease" data-id="{{ $variantId }}">−</button>
+                                    <span class="cart-qty-display px-3 text-charcoal text-sm font-medium" id="qty-{{ $variantId }}">{{ $item['quantity'] }}</span>
+                                    <button class="cart-qty-btn px-3 py-1.5 text-neutral-500 hover:text-charcoal hover:bg-neutral-100 transition-colors" data-action="increase" data-id="{{ $variantId }}">+</button>
                                 </div>
-                                <button class="cart-remove-btn text-gray-500 text-xs uppercase tracking-widest hover:text-red-500 transition-colors" data-id="{{ $variantId }}">Remove</button>
+                                <button class="cart-remove-btn text-neutral-500 text-xs uppercase tracking-wider hover:text-red-500 transition-colors" data-id="{{ $variantId }}">Remove</button>
                             </div>
                         </div>
                     </div>
                     @empty
-                    <div class="text-center py-12">
-                        <p class="text-gray-400 mb-4">Your cart is empty.</p>
-                        <a href="{{ route('shop') }}" class="text-moon-gold underline">Continue Shopping</a>
+                    <div class="text-center py-16 border border-neutral-200 bg-neutral-50">
+                        <svg class="w-16 h-16 text-neutral-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        <p class="text-neutral-500 mb-4">Your cart is empty</p>
+                        <a href="{{ route('shop') }}" class="text-charcoal underline">Continue Shopping</a>
                     </div>
                     @endforelse
                 </div>
@@ -65,11 +74,11 @@
                         :coupon="session('coupon')"
                         :showCouponForm="true"
                     >
-                        <a href="{{ route('checkout.index') }}" class="block text-center w-full bg-moon-gold text-moon-dark font-bold uppercase tracking-widest py-4 hover:bg-white transition-colors mb-4">
+                        <a href="{{ route('checkout.index') }}" class="block text-center w-full btn-primary mb-4">
                             Proceed to Checkout
                         </a>
                         
-                        <a href="{{ route('shop') }}" class="block text-center text-gray-400 text-xs uppercase tracking-widest hover:text-moon-gold transition-colors">
+                        <a href="{{ route('shop') }}" class="block text-center text-neutral-500 text-xs uppercase tracking-wider hover:text-charcoal transition-colors">
                             Continue Shopping
                         </a>
                     </x-order-summary>

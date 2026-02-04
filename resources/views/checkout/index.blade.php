@@ -3,21 +3,24 @@
 @section('title', 'Checkout | MOON')
 
 @section('content')
-<div class="bg-moon-dark pt-44 pb-24 min-h-screen">
+<div class="bg-cream pt-28 pb-24 min-h-screen">
     <div class="container mx-auto px-4 max-w-6xl">
-        <h1 class="text-4xl font-serif text-white mb-12 text-center fade-in">Checkout</h1>
+        <div class="text-center mb-12">
+            <p class="text-accent uppercase tracking-[0.3em] text-xs font-medium mb-3">Final Step</p>
+            <h1 class="text-3xl md:text-4xl font-serif text-charcoal">Checkout</h1>
+        </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 slide-up">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <!-- Form -->
             <div class="lg:col-span-7 space-y-8">
                 @if(session('error'))
-                <div class="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded mb-4">
+                <div class="bg-red-50 border border-red-200 text-red-600 p-4 text-sm">
                     {{ session('error') }}
                 </div>
                 @endif
 
                 @if($errors->any())
-                <div class="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded mb-4">
+                <div class="bg-red-50 border border-red-200 text-red-600 p-4 text-sm">
                     <ul class="list-disc list-inside">
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -31,79 +34,84 @@
                     
                     <!-- Contact -->
                     <div class="space-y-4 mb-10">
-                        <h2 class="text-xl font-serif text-white mb-4 border-b border-gray-800 pb-2">Contact Information</h2>
-                        <x-forms.text-input type="email" name="email" placeholder="Email Address" required 
-                               value="{{ old('email', auth()->check() ? auth()->user()->email : '') }}" />
+                        <h2 class="text-lg font-serif text-charcoal mb-4 pb-2 border-b border-neutral-200">Contact Information</h2>
+                        <input type="email" name="email" placeholder="Email Address" required 
+                               value="{{ old('email', auth()->check() ? auth()->user()->email : '') }}"
+                               class="w-full border border-neutral-300 px-4 py-3 text-charcoal placeholder-neutral-400 focus:border-charcoal focus:outline-none transition-colors">
                     </div>
 
                     <!-- Shipping -->
                     <div class="space-y-4 mb-10">
-                        <h2 class="text-xl font-serif text-white mb-4 border-b border-gray-800 pb-2">Shipping Address</h2>
+                        <h2 class="text-lg font-serif text-charcoal mb-4 pb-2 border-b border-neutral-200">Shipping Address</h2>
                         <div class="grid grid-cols-2 gap-4">
-                            <x-forms.text-input name="first_name" placeholder="First Name" required 
-                                   value="{{ old('first_name', auth()->check() ? explode(' ', auth()->user()->name)[0] : '') }}" />
-                            <x-forms.text-input name="last_name" placeholder="Last Name" required 
-                                   value="{{ old('last_name') }}" />
+                            <input type="text" name="first_name" placeholder="First Name" required 
+                                   value="{{ old('first_name', auth()->check() ? explode(' ', auth()->user()->name)[0] : '') }}"
+                                   class="w-full border border-neutral-300 px-4 py-3 text-charcoal placeholder-neutral-400 focus:border-charcoal focus:outline-none transition-colors">
+                            <input type="text" name="last_name" placeholder="Last Name" required 
+                                   value="{{ old('last_name') }}"
+                                   class="w-full border border-neutral-300 px-4 py-3 text-charcoal placeholder-neutral-400 focus:border-charcoal focus:outline-none transition-colors">
                         </div>
-                        <x-forms.text-input name="address" placeholder="Address" required 
-                               value="{{ old('address') }}" />
+                        <input type="text" name="address" placeholder="Address" required 
+                               value="{{ old('address') }}"
+                               class="w-full border border-neutral-300 px-4 py-3 text-charcoal placeholder-neutral-400 focus:border-charcoal focus:outline-none transition-colors">
                         <div class="grid grid-cols-2 gap-4">
-                            <x-forms.text-input name="city" placeholder="City" required 
-                                   value="{{ old('city') }}" />
+                            <input type="text" name="city" placeholder="City" required 
+                                   value="{{ old('city') }}"
+                                   class="w-full border border-neutral-300 px-4 py-3 text-charcoal placeholder-neutral-400 focus:border-charcoal focus:outline-none transition-colors">
                             <div class="relative">
-                                <span class="absolute left-4 top-4 text-gray-500 select-none border-r border-gray-700 pr-3">+20</span>
-                                <x-forms.text-input name="phone" placeholder="01xxxxxxxxx" required 
-                                       class="pl-20"
+                                <input type="text" name="phone" placeholder="Phone Number (e.g. 01xxxxxxxxx)" required 
                                        value="{{ old('phone') }}"
-                                       maxlength="11" />
+                                       class="w-full border border-neutral-300 px-4 py-3 text-charcoal placeholder-neutral-400 focus:border-charcoal focus:outline-none transition-colors">
                             </div>
                         </div>
                     </div>
 
                     <!-- Payment -->
-                     <div class="space-y-4 mb-8">
-                        <h2 class="text-xl font-serif text-white mb-4 border-b border-gray-800 pb-2">Payment Method</h2>
-                        <div class="border border-moon-gold/30 bg-moon-gold/5 p-5 rounded-sm flex items-center gap-4 cursor-pointer">
-                            <div class="w-5 h-5 rounded-full border-4 border-moon-gold bg-transparent"></div>
-                            <span class="text-white font-bold tracking-wide">Cash on Delivery (COD)</span>
+                    <div class="space-y-4 mb-8">
+                        <h2 class="text-lg font-serif text-charcoal mb-4 pb-2 border-b border-neutral-200">Payment Method</h2>
+                        <div class="border-2 border-charcoal bg-neutral-50 p-5 flex items-center gap-4">
+                            <div class="w-5 h-5 rounded-full border-4 border-charcoal bg-transparent flex-shrink-0"></div>
+                            <div>
+                                <span class="text-charcoal font-medium">Cash on Delivery (COD)</span>
+                                <p class="text-sm text-neutral-500 mt-1">Pay when your order is delivered.</p>
+                            </div>
                         </div>
-                        <p class="text-sm text-gray-500 ml-9">Pay comfortably when your order is delivered to your doorstep.</p>
                     </div>
                 </form>
             </div>
 
             <!-- Summary -->
             <div class="lg:col-span-5">
-                <div class="bg-gray-800/20 p-8 sticky top-32 border border-gray-800 backdrop-blur-sm">
-                    <h2 class="text-xl font-serif text-white mb-6 border-b border-gray-700 pb-4">Order Review</h2>
-                    <div class="space-y-6 mb-8 max-h-96 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+                <div class="bg-neutral-50 p-8 sticky top-28 border border-neutral-200">
+                    <h2 class="text-lg font-serif text-charcoal mb-6 pb-4 border-b border-neutral-200">Order Review</h2>
+                    <div class="space-y-5 mb-8 max-h-80 overflow-y-auto pr-2">
                         @foreach($cart as $item)
                         <div class="flex gap-4 items-start">
-                             <div class="w-16 h-20 bg-gray-700 flex-shrink-0 overflow-hidden relative border border-gray-700">
-                                 <img src="{{ $item['image'] }}" class="w-full h-full object-cover">
-                                 <span class="absolute top-0 right-0 bg-moon-gold text-black text-[10px] font-bold px-1">{{ $item['quantity'] }}</span>
-                             </div>
-                             <div class="flex-1 min-w-0">
-                                 <h3 class="text-white font-bold truncate">{{ $item['name'] }}</h3>
-                                 <p class="text-sm text-gray-400">
-                                     @if(isset($item['concentration']) && $item['concentration'])
-                                     {{ $item['concentration'] }} | 
-                                     @endif
-                                     {{ $item['capacity'] }}
-                                 </p>
-                                 <p class="text-moon-gold mt-1">{{ number_format($item['price'] * $item['quantity']) }} LE</p>
-                             </div>
+                            <div class="w-16 h-20 bg-neutral-100 flex-shrink-0 overflow-hidden relative border border-neutral-200">
+                                <img src="{{ $item['image'] }}" class="w-full h-full object-cover">
+                                <span class="absolute top-0 right-0 bg-charcoal text-cream text-[10px] font-medium px-1.5 py-0.5">{{ $item['quantity'] }}</span>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-charcoal font-medium truncate">{{ $item['name'] }}</h3>
+                                <p class="text-sm text-neutral-500">
+                                    @if(isset($item['concentration']) && $item['concentration'])
+                                    {{ $item['concentration'] }} · 
+                                    @endif
+                                    {{ $item['capacity'] }}
+                                </p>
+                                <p class="text-charcoal mt-1 font-medium">{{ number_format($item['price'] * $item['quantity']) }} LE</p>
+                            </div>
                         </div>
                         @endforeach
                     </div>
                     
                     <x-order-summary :subtotal="$subtotal" :shipping="$shipping" :discount="$discount" :total="$total">
-                        <button type="submit" form="checkout-form" class="w-full mt-8 bg-moon-gold text-moon-dark font-bold uppercase tracking-widest py-4 hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(198,168,124,0.2)] hover:shadow-[0_0_30px_rgba(198,168,124,0.4)]">
+                        <button type="submit" form="checkout-form" class="w-full mt-6 btn-primary">
                             Complete Order
                         </button>
                     
-                        <div class="mt-6 flex justify-center">
-                            <a href="{{ route('cart.index') }}" class="text-sm text-gray-500 underline hover:text-moon-gold transition-colors">Return to Cart</a>
+                        <div class="mt-4 text-center">
+                            <a href="{{ route('cart.index') }}" class="text-sm text-neutral-500 underline hover:text-charcoal transition-colors">Return to Cart</a>
                         </div>
                     </x-order-summary>
                 </div>

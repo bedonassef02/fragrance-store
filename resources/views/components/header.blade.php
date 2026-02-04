@@ -1,67 +1,67 @@
-<nav class="fixed w-full z-50 bg-black border-b border-white/5 transition-all duration-300 py-4" id="main-nav">
-    <x-notification-bar />
+<nav id="main-nav" class="fixed w-full z-50 bg-cream/95 backdrop-blur-sm border-b border-neutral-200 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
+        <div class="flex justify-between items-center h-20">
             <!-- Mobile Menu Button -->
-            <div class="flex items-center md:hidden">
-                <button id="mobile-menu-btn" class="text-white hover:text-moon-gold transition-colors focus:outline-none p-2">
+            <div class="flex items-center lg:hidden">
+                <button id="mobile-menu-btn" class="text-charcoal hover:text-accent transition-colors focus:outline-none p-2">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 6h16M4 12h16M4 18h16" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
             </div>
 
-            <!-- Logo -->
-            <div class="flex-shrink-0 flex items-center justify-center md:justify-start w-full md:w-auto absolute md:relative left-0 right-0 pointer-events-none md:pointer-events-auto">
-                <a href="{{ route('home') }}" class="group flex items-center gap-3 text-3xl font-serif tracking-[0.3em] font-bold pointer-events-auto">
-                    <!-- Moon Icon -->
-                    <div class="relative w-8 h-8">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-full h-full text-moon-gold drop-shadow-lg transform -rotate-12 group-hover:rotate-0 transition-transform duration-500">
-                            <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd" />
-                        </svg>
-                        <!-- Glow effect -->
-                        <div class="absolute inset-0 bg-moon-gold/20 blur-md rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    </div>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-moon-gold to-white drop-shadow-sm">MÒÓN</span>
+            <!-- Desktop Navigation (Left) -->
+            <div class="hidden lg:flex lg:items-center lg:space-x-8">
+                <a href="{{ route('shop') }}" class="nav-link text-xs uppercase tracking-[0.2em] {{ request()->routeIs('shop') ? 'text-charcoal' : 'text-neutral-600' }} hover:text-charcoal transition-colors duration-300">Shop</a>
+                <a href="{{ route('collections') }}" class="nav-link text-xs uppercase tracking-[0.2em] {{ request()->routeIs('collections') ? 'text-charcoal' : 'text-neutral-600' }} hover:text-charcoal transition-colors duration-300">Collections</a>
+                <a href="{{ route('about') }}" class="nav-link text-xs uppercase tracking-[0.2em] {{ request()->routeIs('about') ? 'text-charcoal' : 'text-neutral-600' }} hover:text-charcoal transition-colors duration-300">Our Story</a>
+            </div>
+
+            <!-- Logo (Center) -->
+            <div class="flex-shrink-0 flex items-center justify-center absolute left-1/2 transform -translate-x-1/2 lg:static lg:transform-none">
+                <a href="{{ route('home') }}" class="group flex flex-col items-center">
+                    <span class="text-2xl md:text-3xl font-serif tracking-[0.25em] text-charcoal font-normal">MOON</span>
+                    <span class="text-[9px] uppercase tracking-[0.3em] text-neutral-500 mt-0.5">Fragrances</span>
                 </a>
             </div>
 
-            <!-- Desktop Links -->
-            <div class="hidden md:flex md:items-center md:space-x-8">
-                <a href="{{ route('collections') }}" class="nav-link text-sm uppercase tracking-widest {{ request()->routeIs('collections') ? 'text-moon-gold' : 'text-gray-300' }} hover:text-moon-gold transition-colors duration-300">Collections</a>
-                <a href="{{ route('shop') }}" class="nav-link text-sm uppercase tracking-widest {{ request()->routeIs('shop') ? 'text-moon-gold' : 'text-gray-300' }} hover:text-moon-gold transition-colors duration-300">Shop</a>
-                <a href="{{ route('about') }}" class="nav-link text-sm uppercase tracking-widest {{ request()->routeIs('about') ? 'text-moon-gold' : 'text-gray-300' }} hover:text-moon-gold transition-colors duration-300">Our Story</a>
-            </div>
+            <!-- Actions (Right) -->
+            <div class="flex items-center space-x-5">
+                <!-- Search -->
+                <a href="{{ route('shop') }}" class="text-neutral-600 hover:text-charcoal transition-colors hidden sm:block">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </a>
+                
+                <!-- Wishlist -->
+                <a href="{{ route('wishlist.index') }}" class="text-neutral-600 hover:text-charcoal transition-colors relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    <span id="wishlist-count" class="absolute -top-1.5 -right-1.5 bg-charcoal text-cream text-[9px] font-medium w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+                </a>
 
-            <!-- Actions -->
-            <div class="flex items-center space-x-4">
-              <a href="{{ route('shop') }}" class="text-gray-300 hover:text-white transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            </a>
-            <!-- Wishlist -->
-            <a href="{{ route('wishlist.index') }}" class="text-gray-300 hover:text-white transition-colors relative group">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:text-moon-gold transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-                <span id="wishlist-count" class="absolute -top-1 -right-1 bg-moon-gold text-moon-dark text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
-            </a>
-
-            <!-- Cart -->
-            <a href="{{ route('cart.index') }}" class="text-gray-300 hover:text-white transition-colors relative">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                <span class="cart-count-badge absolute -top-1 -right-1 bg-moon-gold text-moon-dark text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center {{ $cartCount > 0 ? '' : 'hidden' }}">{{ $cartCount }}</span>
-            </a>
+                <!-- Cart -->
+                <a href="{{ route('cart.index') }}" class="text-neutral-600 hover:text-charcoal transition-colors relative">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    <span class="cart-count-badge absolute -top-1.5 -right-1.5 bg-charcoal text-cream text-[9px] font-medium w-4 h-4 rounded-full flex items-center justify-center {{ $cartCount > 0 ? '' : 'hidden' }}">{{ $cartCount }}</span>
+                </a>
             </div>
         </div>
     </div>
 
     <!-- Mobile Menu Panel -->
-    <div id="mobile-menu" class="hidden md:hidden bg-moon-dark border-t border-white/5 absolute w-full left-0 top-full">
-        <div class="px-4 pt-2 pb-8 space-y-1">
-            <a href="{{ route('home') }}" class="block px-3 py-4 border-b border-white/5 text-base font-serif text-white uppercase tracking-wider hover:text-moon-gold">Home</a>
-            <a href="{{ route('collections') }}" class="block px-3 py-4 border-b border-white/5 text-base font-serif text-white uppercase tracking-wider hover:text-moon-gold">Collections</a>
-            <a href="{{ route('shop') }}" class="block px-3 py-4 border-b border-white/5 text-base font-serif text-white uppercase tracking-wider hover:text-moon-gold">Shop</a>
-            <a href="{{ route('about') }}" class="block px-3 py-4 border-b border-white/5 text-base font-serif text-white uppercase tracking-wider hover:text-moon-gold">About</a>
+    <div id="mobile-menu" class="hidden lg:hidden bg-cream border-t border-neutral-200 absolute w-full left-0 top-full shadow-lg">
+        <div class="px-6 py-8 space-y-1">
+            <a href="{{ route('home') }}" class="block py-3 text-lg font-serif text-charcoal border-b border-neutral-100">Home</a>
+            <a href="{{ route('shop') }}" class="block py-3 text-lg font-serif text-charcoal border-b border-neutral-100">Shop</a>
+            <a href="{{ route('collections') }}" class="block py-3 text-lg font-serif text-charcoal border-b border-neutral-100">Collections</a>
+            <a href="{{ route('about') }}" class="block py-3 text-lg font-serif text-charcoal border-b border-neutral-100">Our Story</a>
+            <a href="{{ route('wishlist.index') }}" class="block py-3 text-lg font-serif text-charcoal border-b border-neutral-100">Wishlist</a>
+            <a href="{{ route('cart.index') }}" class="block py-3 text-lg font-serif text-charcoal">Cart</a>
         </div>
     </div>
 </nav>
