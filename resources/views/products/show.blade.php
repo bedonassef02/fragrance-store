@@ -123,8 +123,20 @@
                                 <input id="quantity-input" type="number" value="1" min="1" max="10" class="flex-1 w-full bg-transparent text-center text-white font-bold h-full border-none focus:ring-0 appearance-none m-0 text-lg no-spinner">
                                 <button id="qty-plus" type="button" class="w-12 h-full text-gray-300 hover:text-white hover:bg-gray-700 transition-colors text-2xl flex items-center justify-center border-l border-gray-600 focus:outline-none active:bg-gray-600 font-light pb-1">+</button>
                             </div>
-                            <button id="add-to-bag-btn" data-id="{{ $product->id }}" class="flex-1 bg-moon-gold text-moon-dark font-bold uppercase tracking-widest hover:bg-white transition-colors h-full text-sm shadow-[0_0_20px_rgba(198,168,124,0.2)] hover:shadow-[0_0_30px_rgba(198,168,124,0.4)] px-8">
-                                Add to Bag
+                            <button 
+                                id="add-to-cart-btn"
+                                class="flex-1 bg-moon-gold text-moon-dark font-bold uppercase tracking-widest py-4 hover:bg-white transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                                Add to Cart
+                            </button>
+                            
+                            <button 
+                                type="button" 
+                                class="wishlist-toggle w-14 flex items-center justify-center border border-white/20 hover:border-moon-gold text-white hover:text-moon-gold transition-colors duration-300"
+                                data-id="{{ $product->id }}"
+                                aria-label="Add to Wishlist">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
                             </button>
                         </div>
                     </div>

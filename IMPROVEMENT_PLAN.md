@@ -41,21 +41,20 @@ Modify `ProductService::getRelatedProducts` to calculate similarity scores inste
 
 ---
 
-## Phase 3: Feature Expansion (Wishlist & Dashboard)
-**Goal**: Improve user retention and account utility.
+## Phase 3: Feature Expansion (Guest-First)
+**Goal**: Improve user retention and utility for guest users.
 
-### 3.1 Wishlist
-- **Database**: Create `wishlists` table (`user_id`, `product_id`).
-- **Backend**: `WishlistController` (Toggle, Index).
+### 3.1 Wishlist (Cookie Based)
+- **Storage**: Encrypted HTTP Cookie `moon_wishlist` (Array of Product IDs).
+- **Backend**: `WishlistController`.
+  - `index()`: Fetch products based on cookie IDs.
+  - `toggle(Request $request)`: Add/Remove ID from cookie.
 - **Frontend**:
   - Add "Heart" icon to `ProductCard` component.
   - Create `/wishlist` view (Grid of saved items).
 
-### 3.2 Enhanced User Dashboard
-- **Views**: Create dedicated views for:
-  - `account.orders` (List of past orders with status).
-  - `account.profile` (Edit Name/Email/Password).
-  - `account.addresses` (Manage shipping addresses).
+### 3.2 Guest Dashboard (Future Consideration)
+- Since we are guest-only, "My Orders" would likely need an "Order Tracking" page where users input their Email + Order ID.
 
 ---
 
