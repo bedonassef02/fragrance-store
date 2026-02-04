@@ -67,14 +67,44 @@
                     </div>
 
                     <!-- Payment -->
-                    <div class="space-y-4 mb-8">
+                    <div class="space-y-4 mb-8" x-data="{ selectedPayment: 'cod' }">
                         <h2 class="text-lg font-serif text-charcoal mb-4 pb-2 border-b border-neutral-200">Payment Method</h2>
-                        <div class="border-2 border-charcoal bg-neutral-50 p-5 flex items-center gap-4">
-                            <div class="w-5 h-5 rounded-full border-4 border-charcoal bg-transparent flex-shrink-0"></div>
-                            <div>
-                                <span class="text-charcoal font-medium">Cash on Delivery (COD)</span>
-                                <p class="text-sm text-neutral-500 mt-1">Pay when your order is delivered.</p>
-                            </div>
+                        <div class="space-y-3">
+                            @foreach($paymentMethods as $method)
+                            <label class="payment-method-option cursor-pointer block">
+                                <input type="radio" name="payment_method" value="{{ $method['id'] }}" 
+                                       class="sr-only" 
+                                       x-model="selectedPayment"
+                                       {{ $loop->first ? 'checked' : '' }}>
+                                <div class="border-2 bg-white p-5 flex items-center gap-4 transition-all hover:border-neutral-400"
+                                     :class="selectedPayment === '{{ $method['id'] }}' ? 'border-charcoal bg-neutral-50' : 'border-neutral-200'">
+                                    <div class="w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors"
+                                         :class="selectedPayment === '{{ $method['id'] }}' ? 'border-charcoal' : 'border-neutral-300'">
+                                        <div class="w-2.5 h-2.5 rounded-full bg-charcoal transition-transform"
+                                             :class="selectedPayment === '{{ $method['id'] }}' ? 'scale-100' : 'scale-0'"></div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <span class="text-charcoal font-medium">{{ $method['name'] }}</span>
+                                        <p class="text-sm text-neutral-500 mt-0.5">{{ $method['description'] }}</p>
+                                    </div>
+                                    @if($method['id'] === 'card')
+                                    <div class="flex gap-1.5">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" class="h-5 w-auto">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" class="h-5 w-auto">
+                                    </div>
+                                    @elseif($method['id'] === 'wallet')
+                                    <div class="text-xs text-neutral-400 text-right">
+                                        <span class="block">Vodafone Cash</span>
+                                        <span class="block">Orange Money</span>
+                                    </div>
+                                    @elseif($method['id'] === 'fawry')
+                                    <div class="text-xs font-medium text-accent">
+                                        Pay at 250k+ outlets
+                                    </div>
+                                    @endif
+                                </div>
+                            </label>
+                            @endforeach
                         </div>
                     </div>
                 </form>

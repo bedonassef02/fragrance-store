@@ -54,12 +54,13 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'      => 'required|email|max:255',
-            'first_name' => ['required', 'string', 'max:255', 'regex:/^[\pL\s\-]+$/u'],
-            'last_name'  => ['required', 'string', 'max:255', 'regex:/^[\pL\s\-]+$/u'],
-            'address'    => 'required|string|max:255',
-            'city'       => ['required', 'string', 'max:255', 'regex:/^[\pL\s\-]+$/u'],
-            'phone'      => ['required', 'string', 'regex:/^01[0125][0-9]{8}$/'],
+            'email'          => 'required|email|max:255',
+            'first_name'     => ['required', 'string', 'max:255', 'regex:/^[\pL\s\-]+$/u'],
+            'last_name'      => ['required', 'string', 'max:255', 'regex:/^[\pL\s\-]+$/u'],
+            'address'        => 'required|string|max:255',
+            'city'           => ['required', 'string', 'max:255', 'regex:/^[\pL\s\-]+$/u'],
+            'phone'          => ['required', 'string', 'regex:/^01[0125][0-9]{8}$/'],
+            'payment_method' => 'required|in:cod,card,wallet,fawry',
         ];
     }
 }

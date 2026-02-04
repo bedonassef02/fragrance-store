@@ -17,6 +17,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->encryptCookies(except: [
             'moon_wishlist',
         ]);
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/*',
+        ]);
         $middleware->redirectGuestsTo(function (Illuminate\Http\Request $request) {
             return route('admin.login');
         });

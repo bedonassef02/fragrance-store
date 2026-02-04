@@ -21,9 +21,17 @@ class Order extends Model
         'discount_amount',
         'coupon_code',
         'payment_method',
+        'payment_status',
+        'transaction_id',
+        'payment_gateway',
+        'payment_meta',
         'status',
         'deposit_amount',
         'deposit_proof_path',
+    ];
+
+    protected $casts = [
+        'payment_meta' => 'array',
     ];
 
     public function items()

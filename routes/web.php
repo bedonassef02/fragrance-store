@@ -38,8 +38,15 @@ Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(f
 Route::controller(CheckoutController::class)->prefix('checkout')->name('checkout.')->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/', 'store')->name('store');
+    Route::post('/pay/{order}', 'processPayment')->name('pay');
+    Route::get('/payment/success/{order}', 'paymentSuccess')->name('payment.success');
+    Route::get('/payment/failed/{order}', 'paymentFailed')->name('payment.failed');
     Route::get('/success/{orderNumber}', 'success')->name('success');
 });
+
+// Payment Webhooks (excluded from CSRF)
+Route::post('/webhooks/paymob', [App\Http\Controllers\PaymentWebhookController::class, 'paymob'])->name('webhooks.paymob');
+Route::post('/webhooks/fawry', [App\Http\Controllers\PaymentWebhookController::class, 'fawry'])->name('webhooks.fawry');
 
 // Orders
 // Orders
@@ -96,5 +103,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/action-logs', [App\Http\Controllers\Admin\AdminActionLogController::class, 'index'])->name('action-logs.index');
         Route::resource('orders', App\Http\Controllers\Admin\AdminOrderController::class)->only(['index', 'show', 'update']);
         Route::resource('coupons', App\Http\Controllers\Admin\AdminCouponController::class);
+
+        // Payment Settings
+        Route::get('/payments', [App\Http\Controllers\Admin\AdminPaymentController::class, 'index'])->name('payments.index');
     });
 });
