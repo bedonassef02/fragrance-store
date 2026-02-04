@@ -92,9 +92,12 @@
                             <!-- Brands -->
                             <div>
                                 <h3 class="text-white font-serif text-lg mb-4">Brands</h3>
-                                <div class="space-y-3">
+                                
+                                <input type="text" id="brand-search" placeholder="Search brands..." class="w-full bg-transparent border border-gray-700 font-light px-3 py-2 text-xs text-white focus:border-moon-gold outline-none mb-4 placeholder-gray-500">
+                                
+                                <div class="space-y-3" id="brand-list">
                                     @foreach($brands as $brand)
-                                    <div class="flex items-center">
+                                    <div class="flex items-center brand-item" data-name="{{ strtolower($brand->name) }}">
                                         <input type="checkbox" id="brand-{{ $brand->id }}" name="brand[]" value="{{ $brand->id }}" 
                                                {{ in_array($brand->id, (array)request('brand', [])) ? 'checked' : '' }}
                                                class="w-4 h-4 rounded border-gray-700 bg-transparent text-moon-gold focus:ring-moon-gold focus:ring-offset-0 focus:ring-1">
@@ -104,6 +107,9 @@
                                     </div>
                                     @endforeach
                                 </div>
+                                <button type="button" id="brand-show-more" class="hidden text-xs text-moon-gold uppercase tracking-widest mt-4 hover:text-white transition-colors">
+                                    + Show More
+                                </button>
                             </div>
 
                             <!-- Concentration -->
