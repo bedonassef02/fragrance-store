@@ -36,9 +36,18 @@ class HomeController extends Controller
         ];
 
         $collections = Collection::orderBy('sort_order')->take(3)->get();
+        
+        // Picked For You (Recently Viewed)
+        $recentIds = json_decode(\Illuminate\Support\Facades\Cookie::get('recently_viewed', '[]'), true);
+        $pickedForYou = collect();
+        
+        if (!empty($recentIds) && is_array($recentIds)) {
+             $pickedForYou = $this->productService->getRecentlyViewed($recentIds);
+        }
+
         $featured = $this->productService->getFeaturedProducts(8);
         $trending = $this->productService->getTrendingProducts(8);
 
-        return view('welcome', compact('hero', 'collections', 'featured', 'trending'));
+        return view('welcome', compact('hero', 'collections', 'featured', 'trending', 'pickedForYou'));
     }
 }

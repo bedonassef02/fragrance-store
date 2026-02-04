@@ -45,6 +45,21 @@
         </div>
     </header>
 
+    <!-- Picked For You Section -->
+    @if(isset($pickedForYou) && $pickedForYou->isNotEmpty())
+    <section class="py-24 bg-moon-dark border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-serif text-white mb-2 text-center">Picked For You</h2>
+            <p class="text-moon-gold uppercase tracking-widest text-xs font-bold text-center mb-12">Based on your recent history</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($pickedForYou as $product)
+                    <x-product-card :product="$product" />
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
     <!-- Featured Section Preview -->
     <!-- Trending Section -->
     @if($trending->isNotEmpty())

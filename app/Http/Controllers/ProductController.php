@@ -6,6 +6,8 @@ use App\Services\ProductService;
 use App\Models\Product;
 use App\Models\ProductView;
 
+use Illuminate\Support\Facades\Cookie;
+
 class ProductController extends Controller
 {
     protected $productService;
@@ -18,6 +20,20 @@ class ProductController extends Controller
     public function show(string $slug)
     {
         $product = $this->productService->getBySlug($slug);
+
+        // Recently Viewed Cookie Logic
+        $recentIds = json_decode(Cookie::get('recently_viewed', '[]'), true);
+        if (!is_array($recentIds)) $recentIds = [];
+        
+        // Add current product to start
+        array_unshift($recentIds, $product->id);
+        // Remove duplicates and keep indices re-indexed
+        $recentIds = array_values(array_unique($recentIds));
+        // Keep only last 10
+        $recentIds = array_slice($recentIds, 0, 10);
+        
+        // Queue cookie for 30 days (minutes)
+        Cookie::queue('recently_viewed', json_encode($recentIds), 60 * 24 * 30);
 
         // Log view
         ProductView::create([
