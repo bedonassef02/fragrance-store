@@ -14,6 +14,20 @@ class ProductFilterRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation()
+    {
+        $keys = ['category', 'brand', 'notes', 'capacity', 'concentration', 'price_range'];
+        $inputs = [];
+
+        foreach ($keys as $key) {
+            if ($this->has($key) && is_string($this->input($key))) {
+                $inputs[$key] = explode(',', $this->input($key));
+            }
+        }
+
+        $this->merge($inputs);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -37,7 +51,7 @@ class ProductFilterRequest extends FormRequest
             'concentration'   => 'nullable|array', // Added
             'concentration.*' => 'string|max:50',  // Added
             'in_stock'         => 'nullable|boolean',
-            'sort'             => 'nullable|string|in:price_asc,price_desc,newest',
+            'sort'             => ['nullable', 'string', 'regex:/^[\w\-,]+$/'],
         ];
     }
 }

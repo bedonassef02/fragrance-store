@@ -160,19 +160,26 @@ class ProductService
 
     private function applySorting(Builder $query, ?string $sort): void
     {
-        switch ($sort) {
-            case 'price_asc':
-                $query->orderBy('price', 'asc');
-                break;
-            case 'price_desc':
-                $query->orderBy('price', 'desc');
-                break;
-            case 'newest':
-                $query->orderBy('created_at', 'desc');
-                break;
-            default:
-                $query->orderBy('created_at', 'desc');
-                break;
+        if (!$sort) {
+            $query->orderBy('created_at', 'desc');
+            return;
+        }
+
+        $sortFields = explode(',', $sort);
+        $allowedSorts = ['price', 'created_at', 'name']; // Define allowed columns for safety
+
+        foreach ($sortFields as $sortField) {
+            $direction = 'asc';
+            $field = $sortField;
+
+            if (str_starts_with($sortField, '-')) {
+                $direction = 'desc';
+                $field = substr($sortField, 1);
+            }
+
+            if (in_array($field, $allowedSorts)) {
+                $query->orderBy($field, $direction);
+            }
         }
     }
 }

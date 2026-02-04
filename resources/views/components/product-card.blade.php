@@ -41,7 +41,7 @@
     </div>
     <div class="text-center group-hover:-translate-y-1 transition-transform duration-300">
         @if($product->brand)
-        <a href="{{ route('shop', ['brand[]' => $product->brand_id]) }}" class="text-xs text-gray-500 uppercase tracking-widest mb-1 hover:text-moon-gold transition-colors block">
+        <a href="{{ route('shop', ['brand' => $product->brand_id]) }}" class="text-xs text-gray-500 uppercase tracking-widest mb-1 hover:text-moon-gold transition-colors block">
             {{ $product->brand->name }}
         </a>
         @endif

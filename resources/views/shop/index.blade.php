@@ -36,9 +36,9 @@
 
                 <div class="w-full md:w-auto relative">
                     <select name="sort" form="filter-form" onchange="this.form.submit()" class="w-full md:w-auto appearance-none bg-moon-dark text-gray-300 border border-gray-700 pl-6 pr-10 py-3 text-xs uppercase tracking-wider focus:border-moon-gold focus:outline-none transition-colors cursor-pointer hover:border-gray-500">
-                        <option value="newest" class="bg-moon-dark text-gray-300" {{ request('sort') == 'newest' ? 'selected' : '' }}>Sort by: Newest</option>
-                        <option value="price_asc" class="bg-moon-dark text-gray-300" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
-                        <option value="price_desc" class="bg-moon-dark text-gray-300" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
+                        <option value="-created_at" class="bg-moon-dark text-gray-300" {{ request('sort') == '-created_at' ? 'selected' : '' }}>Sort by: Newest</option>
+                        <option value="price" class="bg-moon-dark text-gray-300" {{ request('sort') == 'price' ? 'selected' : '' }}>Price: Low to High</option>
+                        <option value="-price" class="bg-moon-dark text-gray-300" {{ request('sort') == '-price' ? 'selected' : '' }}>Price: High to Low</option>
                     </select>
                     <!-- Custom Arrow -->
                     <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">
