@@ -26,6 +26,7 @@ class UpdateBrandRequest extends FormRequest
             'description' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
             'is_luxury' => 'boolean',
+            'is_local' => 'boolean',
         ];
     }
 }

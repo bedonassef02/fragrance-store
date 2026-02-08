@@ -51,6 +51,9 @@ class AdminBrandController extends Controller
         if (!$request->has('is_luxury')) {
             $validated['is_luxury'] = false;
         }
+        if (!$request->has('is_local')) {
+            $validated['is_local'] = false;
+        }
 
         if ($request->hasFile('image')) {
             if ($brand->image) {

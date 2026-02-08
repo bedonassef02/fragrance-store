@@ -11,7 +11,10 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::withCount('products')->orderBy('name')->get();
+        $brands = Brand::where('is_local', true)
+                      ->withCount('products')
+                      ->orderBy('name')
+                      ->paginate(12);
         return view('brands.index', compact('brands'));
     }
 }

@@ -36,6 +36,13 @@
                 <p class="text-neutral-500">No local brands available at the moment.</p>
             </div>
             @endif
+
+            <!-- Pagination -->
+            @if($brands->hasPages())
+            <div class="mt-12">
+                {{ $brands->links() }}
+            </div>
+            @endif
         </div>
     </div>
 @endsection

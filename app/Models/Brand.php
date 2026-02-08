@@ -14,11 +14,13 @@ class Brand extends Model
         'slug',
         'image',
         'description',
-        'is_luxury'
+        'is_luxury',
+        'is_local'
     ];
 
     protected $casts = [
         'is_luxury' => 'boolean',
+        'is_local' => 'boolean',
     ];
 
     public function products()

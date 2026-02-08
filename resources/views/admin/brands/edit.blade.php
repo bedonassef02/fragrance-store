@@ -63,7 +63,7 @@
                 </div>
 
                 <!-- Luxury Switch -->
-                <div class="pt-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                     <label class="flex items-center gap-3 p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 cursor-pointer transition-all group">
                         <div class="relative flex items-center">
                             <input type="checkbox" name="is_luxury" value="1" {{ old('is_luxury', $brand->is_luxury) ? 'checked' : '' }} 
@@ -75,6 +75,20 @@
                         <div>
                             <span class="text-sm font-medium text-white block">Luxury Brand</span>
                             <span class="text-xs text-moon-gray-500 block">Marks this brand as a high-end luxury house.</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center gap-3 p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 cursor-pointer transition-all group">
+                        <div class="relative flex items-center">
+                            <input type="checkbox" name="is_local" value="1" {{ old('is_local', $brand->is_local) ? 'checked' : '' }} 
+                                   class="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-white/10 bg-black/40 checked:border-moon-gold checked:bg-moon-gold transition-all">
+                            <svg class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 opacity-0 peer-checked:opacity-100 text-moon-dark transition-opacity" fill="none" viewBox="0 0 14 14" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M3 7l3 3 5-5"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-white block">Local Brand</span>
+                            <span class="text-xs text-moon-gray-500 block">Marks this brand as a local Egyptian brand.</span>
                         </div>
                     </label>
                 </div>
