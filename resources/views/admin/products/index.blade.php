@@ -77,11 +77,8 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-4">
                                     <div class="w-16 h-16 rounded-xl bg-moon-dark border border-white/10 overflow-hidden relative group-hover:border-moon-gold/30 transition-colors shrink-0">
-                                        @php
-                                            $mainImage = $product->images->first();
-                                        @endphp
-                                        @if($mainImage)
-                                            <img src="{{ Storage::url($mainImage->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                                        @if($product->image)
+                                            <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
                                         @else
                                             <div class="w-full h-full flex items-center justify-center text-moon-gray-600 bg-white/5">
                                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
