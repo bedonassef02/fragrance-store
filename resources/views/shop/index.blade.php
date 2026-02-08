@@ -7,7 +7,18 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="text-center mb-12 pb-10 border-b border-neutral-200">
-                @if($activeCollection)
+                @if($activeBrand)
+                    <div class="mb-8 relative h-56 md:h-72 w-full overflow-hidden bg-neutral-100">
+                        @if($activeBrand->image)
+                        <img src="{{ asset('storage/' . $activeBrand->image) }}" alt="{{ $activeBrand->name }}" class="w-full h-full object-cover">
+                        @endif
+                        <div class="absolute inset-0 bg-charcoal/30"></div>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center p-4">
+                            <span class="text-accent text-xs uppercase tracking-[0.3em] mb-3">Local Brand</span>
+                            <h1 class="text-4xl md:text-5xl font-serif text-white">{{ $activeBrand->name }}</h1>
+                        </div>
+                    </div>
+                @elseif($activeCollection)
                     <div class="mb-8 relative h-56 md:h-72 w-full overflow-hidden bg-neutral-100">
                         <img src="{{ $activeCollection->image }}" alt="{{ $activeCollection->title }}" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-charcoal/30"></div>

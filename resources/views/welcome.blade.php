@@ -80,6 +80,39 @@
         </div>
     </section>
 
+    <!-- Local Brands Section -->
+    @if(isset($brands) && $brands->isNotEmpty())
+    <section class="section-padding bg-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <p class="text-accent uppercase tracking-[0.3em] text-xs font-medium mb-3">Our Partners</p>
+                    <h2 class="text-3xl md:text-4xl font-serif text-charcoal">Local Brands</h2>
+                </div>
+                <a href="{{ route('brands.index') }}" class="text-charcoal uppercase tracking-[0.15em] text-xs font-medium border-b border-charcoal pb-1 hover:text-accent hover:border-accent transition-colors">View All</a>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                @foreach($brands as $brand)
+                <a href="{{ route('shop', ['brand' => $brand->id]) }}" class="group block bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-md transition-all">
+                    <div class="aspect-square overflow-hidden bg-neutral-100">
+                        @if($brand->image)
+                        <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        @else
+                        <div class="w-full h-full flex items-center justify-center">
+                            <span class="text-5xl font-serif text-neutral-300">{{ substr($brand->name, 0, 1) }}</span>
+                        </div>
+                        @endif
+                    </div>
+                    <div class="p-4 text-center">
+                        <h3 class="font-serif text-lg text-charcoal group-hover:text-accent transition-colors">{{ $brand->name }}</h3>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
     <!-- Trending Section -->
     @if($trending->isNotEmpty())
     <section class="section-padding bg-cream">

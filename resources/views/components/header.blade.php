@@ -14,6 +14,7 @@
             <div class="hidden lg:flex lg:items-center lg:space-x-8">
                 <a href="{{ route('shop') }}" class="nav-link text-xs uppercase tracking-[0.2em] {{ request()->routeIs('shop') ? 'text-charcoal' : 'text-neutral-600' }} hover:text-charcoal transition-colors duration-300">Shop</a>
                 <a href="{{ route('collections') }}" class="nav-link text-xs uppercase tracking-[0.2em] {{ request()->routeIs('collections') ? 'text-charcoal' : 'text-neutral-600' }} hover:text-charcoal transition-colors duration-300">Collections</a>
+                <a href="{{ route('brands.index') }}" class="nav-link text-xs uppercase tracking-[0.2em] {{ request()->routeIs('brands.index') ? 'text-charcoal' : 'text-neutral-600' }} hover:text-charcoal transition-colors duration-300">Local Brands</a>
                 <a href="{{ route('about') }}" class="nav-link text-xs uppercase tracking-[0.2em] {{ request()->routeIs('about') ? 'text-charcoal' : 'text-neutral-600' }} hover:text-charcoal transition-colors duration-300">Our Story</a>
             </div>
 
@@ -59,6 +60,7 @@
             <a href="{{ route('home') }}" class="block py-3 text-lg font-serif text-charcoal border-b border-neutral-100">Home</a>
             <a href="{{ route('shop') }}" class="block py-3 text-lg font-serif text-charcoal border-b border-neutral-100">Shop</a>
             <a href="{{ route('collections') }}" class="block py-3 text-lg font-serif text-charcoal border-b border-neutral-100">Collections</a>
+            <a href="{{ route('brands.index') }}" class="block py-3 text-lg font-serif text-charcoal border-b border-neutral-100">Local Brands</a>
             <a href="{{ route('about') }}" class="block py-3 text-lg font-serif text-charcoal border-b border-neutral-100">Our Story</a>
             <a href="{{ route('wishlist.index') }}" class="block py-3 text-lg font-serif text-charcoal border-b border-neutral-100">Wishlist</a>
             <a href="{{ route('cart.index') }}" class="block py-3 text-lg font-serif text-charcoal">Cart</a>

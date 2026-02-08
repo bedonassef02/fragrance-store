@@ -47,7 +47,10 @@ class HomeController extends Controller
 
         $featured = $this->productService->getFeaturedProducts(8);
         $trending = $this->productService->getTrendingProducts(8);
+        
+        // Local Brands for landing page
+        $brands = \App\Models\Brand::orderBy('name')->take(4)->get();
 
-        return view('welcome', compact('hero', 'collections', 'featured', 'trending', 'pickedForYou'));
+        return view('welcome', compact('hero', 'collections', 'featured', 'trending', 'pickedForYou', 'brands'));
     }
 }
