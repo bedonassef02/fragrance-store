@@ -19,6 +19,7 @@ Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'inde
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
 Route::get('/product/{slug}/reviews', [ProductController::class, 'reviews'])->name('product.reviews');
+Route::get('/brands/{slug}', [App\Http\Controllers\BrandController::class, 'show'])->name('brands.show');
 
 // Wishlist (Guest/Cookie Based)
 Route::get('/wishlist', [App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index');
