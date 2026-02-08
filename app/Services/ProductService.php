@@ -230,8 +230,10 @@ class ProductService
     private function applyBrandFilter(Builder $query, $brands): void
     {
         if (!empty($brands)) {
-            $brandIds = is_array($brands) ? $brands : explode(',', $brands);
-            $query->whereIn('brand_id', $brandIds);
+            $brandSlugs = is_array($brands) ? $brands : explode(',', $brands);
+            $query->whereHas('brand', function ($q) use ($brandSlugs) {
+                $q->whereIn('slug', $brandSlugs);
+            });
         }
     }
 

@@ -46,10 +46,10 @@ class ProductFilterRequest extends FormRequest
             'brand.*'          => 'string|max:50',
             'notes'           => 'nullable|array',
             'notes.*'         => 'string|max:50',
-            'capacity'        => 'nullable|array', // Added
-            'capacity.*'      => 'integer|min:1',  // Added
-            'concentration'   => 'nullable|array', // Added
-            'concentration.*' => 'string|max:50',  // Added
+            'capacity'        => 'nullable|array',
+            'capacity.*'      => 'string|max:50',
+            'concentration'   => 'nullable|array',
+            'concentration.*' => 'string|max:50',
             'in_stock'         => 'nullable|boolean',
             'sort'             => ['nullable', 'string', 'regex:/^[\w\-,]+$/'],
         ];

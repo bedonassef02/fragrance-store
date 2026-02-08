@@ -48,7 +48,7 @@ class ShopController extends Controller
         // Detect if a single brand is selected for banner display
         $activeBrand = null;
         if (!empty($validated['brand']) && count($validated['brand']) === 1) {
-            $activeBrand = \App\Models\Brand::find($validated['brand'][0]);
+            $activeBrand = \App\Models\Brand::where('slug', $validated['brand'][0])->first();
         }
 
         return view('shop.index', compact(

@@ -93,7 +93,7 @@
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 @foreach($brands as $brand)
-                <a href="{{ route('shop', ['brand' => $brand->id]) }}" class="group block bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-md transition-all">
+                <a href="{{ route('shop', ['brand' => $brand->slug]) }}" class="group block bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-md transition-all">
                     <div class="aspect-square overflow-hidden bg-neutral-100">
                         @if($brand->image)
                         <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">

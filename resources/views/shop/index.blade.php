@@ -112,8 +112,8 @@
                                 <div class="space-y-3 max-h-48 overflow-y-auto" id="brand-list">
                                     @foreach($brands as $brand)
                                     <label class="flex items-center cursor-pointer group brand-item" data-name="{{ strtolower($brand->name) }}">
-                                        <input type="checkbox" id="brand-{{ $brand->id }}" name="brand[]" value="{{ $brand->id }}" 
-                                               {{ in_array($brand->id, (array)request('brand', [])) ? 'checked' : '' }}
+                                        <input type="checkbox" id="brand-{{ $brand->slug }}" name="brand[]" value="{{ $brand->slug }}" 
+                                               {{ in_array($brand->slug, (array)request('brand', [])) ? 'checked' : '' }}
                                                class="w-4 h-4 rounded-sm border-neutral-300 text-charcoal focus:ring-charcoal focus:ring-offset-0">
                                         <span class="ml-3 text-sm text-neutral-600 group-hover:text-charcoal transition-colors">{{ $brand->name }}</span>
                                     </label>
@@ -177,12 +177,14 @@
                             </div>
                         </div>
                         
-                        <div class="mt-10 pt-6 border-t border-neutral-200">
+                        <div class="mt-10 pt-6 border-t border-neutral-200 space-y-3">
                             <button type="submit" class="w-full btn-primary">
                                 Apply Filters
                             </button>
                             @if(request()->anyFilled(['search', 'category', 'brand', 'concentration', 'capacity', 'price_range', 'sort', 'in_stock']))
-                            <a href="{{ route('shop') }}" class="block text-center mt-4 text-xs text-neutral-500 underline hover:text-charcoal transition-colors">Clear All Filters</a>
+                            <a href="{{ route('shop') }}" class="block w-full text-center py-3 border border-neutral-300 text-neutral-600 text-xs uppercase tracking-wider hover:border-charcoal hover:text-charcoal transition-colors">
+                                Clear All Filters
+                            </a>
                             @endif
                         </div>
                     </form>
