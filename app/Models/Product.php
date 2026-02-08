@@ -87,6 +87,37 @@ class Product extends Model
     {
         return $query->where('trending', true);
     }
+
+    /**
+     * Get the display price (lowest variant price or base price)
+     */
+    public function getDisplayPriceAttribute()
+    {
+        // If variants exist, return the minimum variant price (excluding samples and decants)
+        if ($this->variants->isNotEmpty()) {
+            // Filter out samples (2ml) and decants
+            $nonSampleVariants = $this->variants->filter(function ($variant) {
+                $unit = strtolower($variant->unit ?? '');
+                $containerType = strtolower($variant->container_type ?? '');
+                
+                return $variant->capacity != '2' && 
+                       !str_contains($unit, 'sample') &&
+                       !str_contains($unit, 'decant') &&
+                       !str_contains($containerType, 'decant');
+            });
+            
+            // If we have non-sample/non-decant variants, use their minimum price
+            if ($nonSampleVariants->isNotEmpty()) {
+                return $nonSampleVariants->min('price');
+            }
+            
+            // Otherwise, fall back to all variants minimum
+            return $this->variants->min('price');
+        }
+        
+        // Otherwise, return the base product price
+        return $this->price;
+    }
     
     public function reviews()
     {

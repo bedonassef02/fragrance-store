@@ -163,16 +163,20 @@
 
                             <!-- Price Range -->
                             <div>
-                                <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Price Range</h3>
-                                <div class="space-y-3">
-                                    @foreach([['0-1500', 'Under 1,500 LE'], ['1500-3000', '1,500 - 3,000 LE'], ['3000-5000', '3,000 - 5,000 LE'], ['5000+', 'Above 5,000 LE']] as $range)
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="checkbox" name="price_range[]" value="{{ $range[0] }}" 
-                                               {{ in_array($range[0], (array)request('price_range', [])) ? 'checked' : '' }}
-                                               class="w-4 h-4 rounded-sm border-neutral-300 text-charcoal focus:ring-charcoal focus:ring-offset-0">
-                                        <span class="ml-3 text-sm text-neutral-600 group-hover:text-charcoal transition-colors">{{ $range[1] }}</span>
-                                    </label>
-                                    @endforeach
+                                <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Price Range (LE)</h3>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label for="price_min" class="block text-xs text-neutral-500 mb-2">Min</label>
+                                        <input type="number" name="price_min" id="price_min" value="{{ request('price_min') }}" 
+                                               placeholder="0" min="0" step="100"
+                                               class="w-full bg-transparent border border-neutral-300 px-3 py-2 text-sm text-charcoal placeholder-neutral-400 focus:border-charcoal outline-none">
+                                    </div>
+                                    <div>
+                                        <label for="price_max" class="block text-xs text-neutral-500 mb-2">Max</label>
+                                        <input type="number" name="price_max" id="price_max" value="{{ request('price_max') }}" 
+                                               placeholder="10000" min="0" step="100"
+                                               class="w-full bg-transparent border border-neutral-300 px-3 py-2 text-sm text-charcoal placeholder-neutral-400 focus:border-charcoal outline-none">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -181,7 +185,7 @@
                             <button type="submit" class="w-full btn-primary">
                                 Apply Filters
                             </button>
-                            @if(request()->anyFilled(['search', 'category', 'brand', 'concentration', 'capacity', 'price_range', 'sort', 'in_stock']))
+                            @if(request()->anyFilled(['search', 'category', 'brand', 'concentration', 'capacity', 'price_min', 'price_max', 'sort', 'in_stock']))
                             <a href="{{ route('shop') }}" class="block w-full text-center py-3 border border-neutral-300 text-neutral-600 text-xs uppercase tracking-wider hover:border-charcoal hover:text-charcoal transition-colors">
                                 Clear All Filters
                             </a>

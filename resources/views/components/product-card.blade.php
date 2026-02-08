@@ -41,7 +41,7 @@
         <button 
             data-id="{{ $product->id }}" 
             data-name="{{ $product->name }}"
-            data-price="{{ number_format($product->price) }} LE"
+            data-price="{{ number_format($product->display_price) }} LE"
             data-variants='{{ json_encode($variantsData) }}'
             class="quick-add-btn absolute bottom-0 left-0 right-0 bg-charcoal/95 text-cream py-3.5 text-[10px] font-medium uppercase tracking-[0.15em] opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-charcoal">
             Add to Bag
@@ -73,7 +73,7 @@
             @if($product->original_price)
             <span class="line-through text-neutral-400 mr-1.5">{{ number_format($product->original_price) }} LE</span>
             @endif
-            <span class="text-charcoal font-medium">{{ number_format($product->price) }} LE</span>
+            <span class="text-charcoal font-medium">{{ number_format($product->display_price) }} LE</span>
         </p>
     </div>
 </div>

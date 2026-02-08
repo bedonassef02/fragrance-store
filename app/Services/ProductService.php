@@ -18,7 +18,7 @@ class ProductService
         $this->applySearchFilter($query, $filters['search'] ?? null);
         $this->applyCollectionFilter($query, $filters['collection'] ?? null);
         $this->applyCategoryFilter($query, $filters['category'] ?? null);
-        $this->applyPriceRangeFilter($query, $filters['price_range'] ?? null);
+        $this->applyPriceRangeFilter($query, $filters['price_min'] ?? null, $filters['price_max'] ?? null, $filters['capacity'] ?? null);
         $this->applyBrandFilter($query, $filters['brand'] ?? null);
         
         // Perfume Filters
@@ -171,22 +171,35 @@ class ProductService
         }
     }
 
-    private function applyPriceRangeFilter(Builder $query, $ranges): void
+    private function applyPriceRangeFilter(Builder $query, $priceMin, $priceMax, $capacities = null): void
     {
-        if (!empty($ranges)) {
-            $priceRanges = is_array($ranges) ? $ranges : explode(',', $ranges);
+        // If neither min nor max is provided, skip filtering
+        if (empty($priceMin) && empty($priceMax)) {
+            return;
+        }
+
+        // If capacity filter is applied, filter by variant price
+        if (!empty($capacities)) {
+            $capacityList = is_array($capacities) ? $capacities : explode(',', $capacities);
             
-            $query->where(function ($q) use ($priceRanges) {
-                foreach ($priceRanges as $range) {
-                    if (str_contains($range, '+')) {
-                        $min = (float) str_replace('+', '', $range);
-                        $q->orWhere('price', '>=', $min);
-                    } elseif (str_contains($range, '-')) {
-                        [$min, $max] = explode('-', $range);
-                        $q->orWhereBetween('price', [(float)$min, (float)$max]);
-                    }
+            $query->whereHas('variants', function ($variantQuery) use ($priceMin, $priceMax, $capacityList) {
+                $variantQuery->whereIn('capacity', $capacityList);
+                
+                if (!empty($priceMin)) {
+                    $variantQuery->where('price', '>=', (float)$priceMin);
+                }
+                if (!empty($priceMax)) {
+                    $variantQuery->where('price', '<=', (float)$priceMax);
                 }
             });
+        } else {
+            // No capacity filter - use base product price
+            if (!empty($priceMin)) {
+                $query->where('price', '>=', (float)$priceMin);
+            }
+            if (!empty($priceMax)) {
+                $query->where('price', '<=', (float)$priceMax);
+            }
         }
     }
 
