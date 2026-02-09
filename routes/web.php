@@ -94,6 +94,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Reviews Management
         Route::resource('reviews', App\Http\Controllers\Admin\AdminReviewController::class)->only(['index', 'update', 'destroy']);
 
+        // Media Management
+        Route::delete('/media/{media}', [App\Http\Controllers\Admin\AdminMediaController::class, 'destroy'])->name('media.delete');
+
         // Customers Management
         Route::get('/customers', [App\Http\Controllers\Admin\AdminCustomerController::class, 'index'])->name('customers.index');
         Route::get('/customers/{email}', [App\Http\Controllers\Admin\AdminCustomerController::class, 'show'])->name('customers.show');

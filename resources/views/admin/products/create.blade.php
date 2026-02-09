@@ -135,8 +135,7 @@
                             <div class="text-sm text-moon-gray-500">Supports JPG, PNG, WEBP</div>
                         </div>
                         <!-- Hidden input for selecting files -->
-                        <input type="file" id="temp-image-input" multiple accept="image/*" class="hidden"
-                            onchange="handleFiles(this.files)">
+                        <input type="file" id="temp-image-input" multiple accept="image/*" class="hidden">
                     </div>
 
                     <!-- Dynamic Image List -->
@@ -275,7 +274,7 @@
                                             </svg>
                                         </div>
                                         <span
-                                            class="text-sm font-medium text-moon-gray-300 group-hover:text-white transition-colors">{{ $collection->name }}</span>
+                                            class="text-sm font-medium text-moon-gray-300 group-hover:text-white transition-colors">{{ $collection->title }}</span>
                                     </label>
                                 @endforeach
                             </div>
@@ -395,27 +394,38 @@
 </form>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tempInput = document.getElementById('temp-image-input');
+            if(tempInput) {
+                tempInput.addEventListener('change', function(e) {
+                    handleFiles(e.target.files);
+                });
+            }
+        });
+
         let imageIndex = 0;
 
-        // Image Handling
         function handleFiles(files) {
             const container = document.getElementById('images-container');
+            if (!container) return;
 
             Array.from(files).forEach(file => {
+                if (!file.type.startsWith('image/')) return;
+
                 const currentIndex = imageIndex++;
                 const reader = new FileReader();
 
                 reader.onload = function (e) {
                     const div = document.createElement('div');
-                    div.className = 'flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/5';
+                    div.className = 'flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/5 relative group';
                     div.id = `image-row-${currentIndex}`;
 
                     div.innerHTML = `
                         <div class="w-20 h-20 rounded-lg overflow-hidden border border-white/10 bg-black/50 shrink-0">
                             <img src="${e.target.result}" class="w-full h-full object-cover">
                         </div>
-                        <div class="flex-1">
-                            <div class="text-sm font-medium text-white truncate max-w-[200px]">${file.name}</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-sm font-medium text-white truncate pr-4">${file.name}</div>
                             <div class="text-xs text-moon-gray-500">${(file.size / 1024).toFixed(1)} KB</div>
                         </div>
                         <button type="button" onclick="removeImage(${currentIndex})" class="p-2 text-moon-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all">
@@ -428,20 +438,26 @@
                     container.appendChild(div);
 
                     // Assign the file object to a new DataTransfer to populate the input
-                    const dt = new DataTransfer();
-                    dt.items.add(file);
-                    const fileInput = document.getElementById(`file-input-${currentIndex}`);
-                    fileInput.files = dt.files;
+                    try {
+                        const dt = new DataTransfer();
+                        dt.items.add(file);
+                        const fileInput = document.getElementById(`file-input-${currentIndex}`);
+                        fileInput.files = dt.files;
+                    } catch (err) {
+                        console.error('DataTransfer not supported', err);
+                    }
                 }
                 reader.readAsDataURL(file);
             });
 
             // Reset main input
-            document.getElementById('temp-image-input').value = '';
+            const tempInput = document.getElementById('temp-image-input');
+            if(tempInput) tempInput.value = '';
         }
 
         function removeImage(index) {
-            document.getElementById(`image-row-${index}`).remove();
+            const el = document.getElementById(`image-row-${index}`);
+            if(el) el.remove();
         }
 
         // Variants Management

@@ -24,14 +24,17 @@ class AdminBrandController extends Controller
     public function store(\App\Http\Requests\Admin\StoreBrandRequest $request)
     {
         $validated = $request->validated();
-
         $validated['slug'] = Str::slug($validated['name']);
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('brands', 'public');
-        }
+        // Remove image from validated data as we handle it via Media Library
+        unset($validated['image']);
 
-        Brand::create($validated);
+        $brand = Brand::create($validated);
+
+        if ($request->hasFile('image')) {
+            $brand->addMediaFromRequest('image')
+                  ->toMediaCollection('logo');
+        }
 
         return redirect()->route('admin.brands.index')->with('success', 'Brand created successfully.');
     }
@@ -44,7 +47,6 @@ class AdminBrandController extends Controller
     public function update(\App\Http\Requests\Admin\UpdateBrandRequest $request, Brand $brand)
     {
         $validated = $request->validated();
-
         $validated['slug'] = Str::slug($validated['name']);
         
         // Handle checkbox unregulated state
@@ -55,14 +57,15 @@ class AdminBrandController extends Controller
             $validated['is_local'] = false;
         }
 
-        if ($request->hasFile('image')) {
-            if ($brand->image) {
-                Storage::disk('public')->delete($brand->image);
-            }
-            $validated['image'] = $request->file('image')->store('brands', 'public');
-        }
+        // Remove image from validated data
+        unset($validated['image']);
 
         $brand->update($validated);
+
+        if ($request->hasFile('image')) {
+            $brand->addMediaFromRequest('image')
+                  ->toMediaCollection('logo');
+        }
 
         return redirect()->route('admin.brands.index')->with('success', 'Brand updated successfully.');
     }

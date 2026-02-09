@@ -101,11 +101,31 @@
                 </h3>
                 
                 <!-- Existing Images -->
-                @if($product->images->count() > 0)
+                <!-- Existing Images -->
+                @if($product->images->count() > 0 || $product->getMedia('default')->count() > 0)
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                        {{-- Media Library Images --}}
+                        @foreach($product->getMedia('default') as $media)
+                            <div class="relative aspect-square rounded-xl overflow-hidden border border-white/10 group bg-black/20" id="media-{{ $media->id }}">
+                                <img src="{{ $media->getUrl('medium') }}" alt="Product Image" class="w-full h-full object-cover">
+                                
+                                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <button type="button" onclick="if(confirm('Delete this image?')) { document.getElementById('delete-media-{{ $media->id }}').submit(); }" 
+                                            class="p-2 bg-red-500/80 text-white rounded-lg hover:bg-red-600 transition-colors transform hover:scale-110 backdrop-blur-sm">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                </div>
+                                <form id="delete-media-{{ $media->id }}" action="{{ route('admin.media.delete', $media->id) }}" method="POST" class="hidden">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            </div>
+                        @endforeach
+
+                        {{-- Legacy Images --}}
                         @foreach($product->images as $image)
                             <div class="relative aspect-square rounded-xl overflow-hidden border border-white/10 group bg-black/20" id="image-{{ $image->id }}">
-                                <img src="{{ Storage::url($image->image_path) }}" alt="Product Image" class="w-full h-full object-cover">
+                                <img src="{{ $image->image_path }}" alt="Product Image" class="w-full h-full object-cover">
                                 
                                 <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <button type="button" onclick="deleteImage({{ $image->id }})" 
@@ -129,7 +149,7 @@
                         <div class="text-base text-white font-medium">Add New Images</div>
                         <div class="text-sm text-moon-gray-500">Supports JPG, PNG, WEBP</div>
                     </div>
-                    <input type="file" id="temp-image-input" multiple accept="image/*" class="hidden" onchange="handleFiles(this.files)">
+                    <input type="file" id="temp-image-input" multiple accept="image/*" class="hidden">
                 </div>
                 
                 <!-- New Image Previews Container -->
@@ -280,7 +300,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M3 7l3 3 5-5"></path>
                                         </svg>
                                     </div>
-                                    <span class="text-sm font-medium text-moon-gray-300 group-hover:text-white transition-colors">{{ $collection->name }}</span>
+                                    <span class="text-sm font-medium text-moon-gray-300 group-hover:text-white transition-colors">{{ $collection->title }}</span>
                                 </label>
                             @endforeach
                         </div>
@@ -381,27 +401,39 @@
 </form>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tempInput = document.getElementById('temp-image-input');
+        if(tempInput) {
+            tempInput.addEventListener('change', function(e) {
+                handleFiles(e.target.files);
+            });
+        }
+    });
+
     let imageIndex = 0;
     
     // Image Handling
     function handleFiles(files) {
         const container = document.getElementById('new-image-previews');
+        if (!container) return;
         
         Array.from(files).forEach(file => {
+            if (!file.type.startsWith('image/')) return;
+
             const currentIndex = imageIndex++;
             const reader = new FileReader();
             
             reader.onload = function(e) {
                 const div = document.createElement('div');
-                div.className = 'flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/5';
+                div.className = 'flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/5 relative group';
                 div.id = `new-image-row-${currentIndex}`;
                 
                 div.innerHTML = `
                     <div class="w-20 h-20 rounded-lg overflow-hidden border border-white/10 bg-black/50 shrink-0">
                         <img src="${e.target.result}" class="w-full h-full object-cover">
                     </div>
-                    <div class="flex-1">
-                        <div class="text-sm font-medium text-white truncate max-w-[200px]">${file.name}</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-white truncate pr-4">${file.name}</div>
                          <div class="text-xs text-moon-gray-500">${(file.size / 1024).toFixed(1)} KB</div>
                     </div>
                     <button type="button" onclick="removeNewImage(${currentIndex})" class="p-2 text-moon-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all">
@@ -414,20 +446,26 @@
                 container.appendChild(div);
                 
                 // Assign the file object to a new DataTransfer to populate the input
-                const dt = new DataTransfer();
-                dt.items.add(file);
-                const fileInput = document.getElementById(`new-file-input-${currentIndex}`);
-                fileInput.files = dt.files;
+                try {
+                    const dt = new DataTransfer();
+                    dt.items.add(file);
+                    const fileInput = document.getElementById(`new-file-input-${currentIndex}`);
+                    fileInput.files = dt.files;
+                } catch (err) {
+                     console.error('DataTransfer not supported', err);
+                }
             }
             reader.readAsDataURL(file);
         });
         
         // Reset main input
-        document.getElementById('temp-image-input').value = '';
+        const tempInput = document.getElementById('temp-image-input');
+        if(tempInput) tempInput.value = '';
     }
 
     function removeNewImage(index) {
-        document.getElementById(`new-image-row-${index}`).remove();
+        const el = document.getElementById(`new-image-row-${index}`);
+        if(el) el.remove();
     }
 
     function deleteImage(id) {

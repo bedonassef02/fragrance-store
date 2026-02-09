@@ -50,7 +50,7 @@
                             <td class="px-6 py-4 pl-8">
                                 <div class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden border border-white/5 shrink-0 group-hover:border-moon-gold/30 transition-colors">
                                     @if($collection->image)
-                                        <div class="w-full h-full bg-cover bg-center" style="background-image: url('{{ Str::startsWith($collection->image, ['http','https']) ? $collection->image : asset('storage/' . $collection->image) }}')"></div>
+                                        <div class="w-full h-full bg-cover bg-center" style="background-image: url('{{ $collection->image }}')"></div>
                                     @else
                                         <svg class="w-6 h-6 text-moon-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                     @endif

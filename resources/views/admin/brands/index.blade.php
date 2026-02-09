@@ -57,7 +57,7 @@
                                 <div class="flex items-center gap-4">
                                     <div class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden border border-white/5 shrink-0 group-hover:border-moon-gold/30 transition-colors">
                                         @if($brand->image)
-                                            <img src="{{ Storage::url($brand->image) }}" alt="{{ $brand->name }}" class="w-full h-full object-cover">
+                                            <img src="{{ $brand->image }}" alt="{{ $brand->name }}" class="w-full h-full object-cover">
                                         @else
                                             <span class="text-xl font-display font-bold text-moon-gold">{{ substr($brand->name, 0, 1) }}</span>
                                         @endif

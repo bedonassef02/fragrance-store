@@ -10,7 +10,7 @@
                 @if($activeBrand)
                     <div class="mb-8 relative h-56 md:h-72 w-full overflow-hidden bg-neutral-100">
                         @if($activeBrand->image)
-                        <img src="{{ asset('storage/' . $activeBrand->image) }}" alt="{{ $activeBrand->name }}" class="w-full h-full object-cover">
+                        <img src="{{ $activeBrand->image }}" alt="{{ $activeBrand->name }}" class="w-full h-full object-cover">
                         @endif
                         <div class="absolute inset-0 bg-charcoal/30"></div>
                         <div class="absolute inset-0 flex flex-col items-center justify-center p-4">

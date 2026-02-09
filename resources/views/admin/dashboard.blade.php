@@ -92,7 +92,7 @@
                         <div class="bg-white/5 rounded-xl p-3 flex flex-col items-center text-center group hover:bg-white/10 transition-colors">
                             <div class="w-12 h-12 rounded-lg bg-black/50 mb-3 overflow-hidden border border-white/10">
                                 @if($view->product)
-                                    <img src="{{ Storage::url($view->product->image) }}" class="w-full h-full object-cover">
+                                    <img src="{{ $view->product->image }}" class="w-full h-full object-cover">
                                 @endif
                             </div>
                             <div class="text-xs font-medium text-slate-200 truncate w-full mb-1">{{ $view->product->name ?? 'Unknown Product' }}</div>

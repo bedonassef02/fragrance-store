@@ -28,15 +28,22 @@ class CollectionService
      */
     public function create(array $data): Collection
     {
-        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
-            $data['image'] = $data['image']->store('collections', 'public');
-        }
+        // Remove image from data as we handle it via Media Library
+        $image = $data['image'] ?? null;
+        unset($data['image']);
 
         if (empty($data['slug'])) {
             $data['slug'] = Str::slug($data['title']);
         }
 
-        return Collection::create($data);
+        $collection = Collection::create($data);
+
+        if ($image instanceof \Illuminate\Http\UploadedFile) {
+            $collection->addMedia($image)
+                       ->toMediaCollection('banner');
+        }
+
+        return $collection;
     }
 
     /**
@@ -48,26 +55,12 @@ class CollectionService
      */
     public function update(Collection $collection, array $data): bool
     {
-        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
-            // Delete old image
-            if ($collection->image && !Str::startsWith($collection->image, ['http', 'https'])) {
-                 // The model might have an accessor that returns the implementation path. 
-                 // We should access the raw attribute if possible or handle it carefully.
-                 // For now, assuming standard storage path.
-                 // Ideally we'd store just the path and use an accessor for the URL.
-                 // Let's check if the existing image path is a full URL or relative path.
-                 // Based on typical Laravel setup, if it's stored via ->store(), it's a relative path in storage/app/public
-                 // But the accessor might return the full URL.
-                 // Let's check the model again in my head... standard Laravel behavior.
-                 // If the accessor exists, $collection->image returns the URL. 
-                 // We should probably check the raw attribute: $collection->getRawOriginal('image')
-                 
-                 $oldImage = $collection->getRawOriginal('image');
-                 if ($oldImage) {
-                    Storage::disk('public')->delete($oldImage);
-                 }
-            }
-            $data['image'] = $data['image']->store('collections', 'public');
+        $image = $data['image'] ?? null;
+        unset($data['image']);
+
+        if ($image instanceof \Illuminate\Http\UploadedFile) {
+            $collection->addMedia($image)
+                       ->toMediaCollection('banner');
         }
 
         if (empty($data['slug'])) {

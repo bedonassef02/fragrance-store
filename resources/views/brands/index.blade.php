@@ -16,7 +16,7 @@
                 <a href="{{ route('shop', ['brand' => $brand->slug]) }}" class="group block bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                     <div class="aspect-square overflow-hidden bg-neutral-100">
                         @if($brand->image)
-                        <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <img src="{{ $brand->image }}" alt="{{ $brand->name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                         @else
                         <div class="w-full h-full flex items-center justify-center">
                             <span class="text-4xl font-serif text-neutral-300">{{ substr($brand->name, 0, 1) }}</span>

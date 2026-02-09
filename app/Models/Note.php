@@ -15,6 +15,14 @@ class Note extends Model
         'image'
     ];
 
+    public function getImageAttribute($value)
+    {
+        if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://'])) {
+            return $value;
+        }
+        return $value ? asset('storage/' . $value) : null;
+    }
+
     public function products()
     {
         return $this->belongsToMany(Product::class)

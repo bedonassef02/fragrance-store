@@ -29,6 +29,14 @@ class Review extends Model
         return $this->belongsTo(Order::class);
     }
 
+    public function getImagePathAttribute($value)
+    {
+        if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://'])) {
+            return $value;
+        }
+        return $value ? asset('storage/' . $value) : null;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

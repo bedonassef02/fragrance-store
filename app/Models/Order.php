@@ -34,6 +34,14 @@ class Order extends Model
         'payment_meta' => 'array',
     ];
 
+    public function getDepositProofPathAttribute($value)
+    {
+        if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://'])) {
+            return $value;
+        }
+        return $value ? asset('storage/' . $value) : null;
+    }
+
     public function items()
     {
         return $this->hasMany(OrderItem::class);

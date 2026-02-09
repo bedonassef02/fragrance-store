@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Support\Str;
 
 class Brand extends Model implements HasMedia
 {
@@ -45,13 +46,16 @@ class Brand extends Model implements HasMedia
         }
 
         // 2. Fallback to legacy column
+        $value = trim($value ?? '');
+        
         if (!$value) {
-            return asset('images/placeholder-brand.jpg');
+            return 'https://placehold.co/200x200?text=No+Logo';
         }
 
-        if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://'])) {
+        if (\Illuminate\Support\Str::startsWith(strtolower($value), ['http://', 'https://'])) {
             return $value;
         }
+        
         return asset('storage/' . $value);
     }
 

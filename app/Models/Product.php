@@ -15,7 +15,7 @@ class Product extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('default')
-            ->useFallbackUrl(asset('images/placeholder.jpg'));
+            ->useFallbackUrl('https://placehold.co/600x400?text=No+Image');
 
         $this->addMediaCollection('scents');
     }
@@ -78,11 +78,13 @@ class Product extends Model implements HasMedia
         }
 
         // 2. Fallback to legacy column
+        $value = trim($value ?? '');
+
         if (!$value) {
-            return asset('images/placeholder.jpg'); // Or null
+            return 'https://placehold.co/600x400?text=No+Image';
         }
 
-        if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://'])) {
+        if (\Illuminate\Support\Str::startsWith(strtolower($value), ['http://', 'https://'])) {
             return $value;
         }
         return asset('storage/' . $value);

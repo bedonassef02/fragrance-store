@@ -10,6 +10,6 @@
     </div>
     <p class="text-gray-400 text-sm leading-relaxed mb-4">{{ $review->comment }}</p>
     @if($review->image_path)
-    <img src="{{ Storage::url($review->image_path) }}" class="w-20 h-20 object-cover rounded-sm border border-gray-700 cursor-zoom-in">
+    <img src="{{ $review->image_path }}" class="w-20 h-20 object-cover rounded-sm border border-gray-700 cursor-zoom-in">
     @endif
 </div>

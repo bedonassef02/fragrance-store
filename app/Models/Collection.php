@@ -44,11 +44,13 @@ class Collection extends Model implements HasMedia
             return $mediaUrl;
         }
 
+        $value = trim($value ?? '');
+
         if (!$value) {
-            return null; 
+            return 'https://placehold.co/1920x400?text=No+Collection+Banner'; 
         }
 
-        if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://'])) {
+        if (\Illuminate\Support\Str::startsWith(strtolower($value), ['http://', 'https://'])) {
             return $value;
         }
         return asset('storage/' . $value);
