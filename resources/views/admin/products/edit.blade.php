@@ -65,6 +65,7 @@
                             <option value="Parfum" {{ old('concentration', $product->concentration) == 'Parfum' ? 'selected' : '' }}>Parfum / Extrait</option>
                             <option value="Cologne" {{ old('concentration', $product->concentration) == 'Cologne' ? 'selected' : '' }}>Eau de Cologne</option>
                         </select>
+                        @error('concentration') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
                     <div>
@@ -74,6 +75,7 @@
                             <option value="male" {{ old('gender', $product->gender) == 'male' ? 'selected' : '' }}>Men</option>
                             <option value="female" {{ old('gender', $product->gender) == 'female' ? 'selected' : '' }}>Women</option>
                         </select>
+                        @error('gender') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="md:col-span-2">
@@ -89,6 +91,7 @@
                                 @endforeach
                             </div>
                         </div>
+                        @error('notes') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                     </div>
                 </div>
             </div>
@@ -186,35 +189,40 @@
                             @foreach($product->variants as $index => $variant)
                                 <tr class="group hover:bg-white/[0.02] transition-colors" id="variant-row-old-{{ $index }}">
                                     <input type="hidden" name="variants[{{ $index }}][id]" value="{{ $variant->id }}">
-                                    <td class="px-4 py-2">
+                                    <td class="px-4 py-2 align-top">
                                         <select name="variants[{{ $index }}][container_type]" required
                                                 class="w-32 bg-neutral-900 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
                                             @foreach(['Bottle', 'Decant', 'Sample', 'Tester'] as $type)
-                                                <option value="{{ $type }}" {{ $variant->container_type == $type ? 'selected' : '' }}>{{ $type }}</option>
+                                                <option value="{{ $type }}" {{ old('variants.'.$index.'.container_type', $variant->container_type) == $type ? 'selected' : '' }}>{{ $type }}</option>
                                             @endforeach
                                         </select>
+                                        @error('variants.'.$index.'.container_type') <span class="text-red-400 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                     </td>
-                                    <td class="px-4 py-2 pl-4">
-                                        <input type="number" name="variants[{{ $index }}][capacity]" value="{{ $variant->capacity }}" placeholder="100" required
+                                    <td class="px-4 py-2 pl-4 align-top">
+                                        <input type="number" name="variants[{{ $index }}][capacity]" value="{{ old('variants.'.$index.'.capacity', $variant->capacity) }}" placeholder="100" required
                                                class="w-24 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                                        @error('variants.'.$index.'.capacity') <span class="text-red-400 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                     </td>
-                                    <td class="px-4 py-2 pl-4">
+                                    <td class="px-4 py-2 pl-4 align-top">
                                          <select name="variants[{{ $index }}][unit]" required
                                                 class="w-20 bg-neutral-900 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
                                             @foreach(['ml', 'oz', 'g'] as $unit)
-                                                <option value="{{ $unit }}" {{ $variant->unit == $unit ? 'selected' : '' }}>{{ $unit }}</option>
+                                                <option value="{{ $unit }}" {{ old('variants.'.$index.'.unit', $variant->unit) == $unit ? 'selected' : '' }}>{{ $unit }}</option>
                                             @endforeach
                                         </select>
+                                        @error('variants.'.$index.'.unit') <span class="text-red-400 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                     </td>
-                                    <td class="px-4 py-2 pl-4">
-                                        <input type="number" step="0.01" name="variants[{{ $index }}][price]" value="{{ $variant->price }}" placeholder="Override"
+                                    <td class="px-4 py-2 pl-4 align-top">
+                                        <input type="number" step="0.01" name="variants[{{ $index }}][price]" value="{{ old('variants.'.$index.'.price', $variant->price) }}" placeholder="Override"
                                                class="w-28 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                                        @error('variants.'.$index.'.price') <span class="text-red-400 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                     </td>
-                                    <td class="px-4 py-2 pl-4">
-                                        <input type="number" name="variants[{{ $index }}][quantity]" value="{{ $variant->quantity }}" placeholder="0" required min="0"
+                                    <td class="px-4 py-2 pl-4 align-top">
+                                        <input type="number" name="variants[{{ $index }}][quantity]" value="{{ old('variants.'.$index.'.quantity', $variant->quantity) }}" placeholder="0" required min="0"
                                                class="w-20 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                                        @error('variants.'.$index.'.quantity') <span class="text-red-400 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                     </td>
-                                    <td class="px-4 py-2 pl-4 text-right">
+                                    <td class="px-4 py-2 pl-4 text-right align-top">
                                         <button type="button" onclick="deleteVariant('old-{{ $index }}', {{ $variant->id }})" class="p-2 text-moon-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -253,6 +261,7 @@
                             <input type="number" step="0.01" name="original_price" id="original_price" value="{{ old('original_price', $product->original_price) }}"
                                    class="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder-moon-gray-500 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all font-mono">
                          </div>
+                         @error('original_price') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                     </div>
                 </div>
             </div>
@@ -304,6 +313,7 @@
                                 </label>
                             @endforeach
                         </div>
+                        @error('collections') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                     </div>
                 </div>
             </div>

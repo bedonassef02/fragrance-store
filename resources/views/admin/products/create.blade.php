@@ -77,6 +77,7 @@
                                 <option value="Cologne" {{ old('concentration') == 'Cologne' ? 'selected' : '' }}>Eau de
                                     Cologne</option>
                             </select>
+                            @error('concentration') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
@@ -87,6 +88,7 @@
                                 <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Men</option>
                                 <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Women</option>
                             </select>
+                            @error('gender') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="md:col-span-2">
@@ -104,6 +106,7 @@
                                     @endforeach
                                 </div>
                             </div>
+                            @error('notes') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>
                 </div>
@@ -142,6 +145,7 @@
                     <div id="images-container" class="mt-6 space-y-4"></div>
 
                     @error('images') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
+                    @error('images.*.file') <span class="text-red-400 text-sm mt-1 block">One or more images are invalid.</span> @enderror
                 </div>
 
                 <!-- Variants -->
@@ -223,6 +227,7 @@
                                     value="{{ old('original_price') }}"
                                     class="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder-moon-gray-500 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all font-mono">
                             </div>
+                            @error('original_price') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>
                 </div>
@@ -278,6 +283,7 @@
                                     </label>
                                 @endforeach
                             </div>
+                            @error('collections') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>
                 </div>
@@ -437,14 +443,14 @@
 
                     container.appendChild(div);
 
-                    // Assign the file object to a new DataTransfer to populate the input
+                    // Assign the file object
                     try {
                         const dt = new DataTransfer();
                         dt.items.add(file);
                         const fileInput = document.getElementById(`file-input-${currentIndex}`);
                         fileInput.files = dt.files;
                     } catch (err) {
-                        console.error('DataTransfer not supported', err);
+                        console.error('DataTransfer failed', err);
                     }
                 }
                 reader.readAsDataURL(file);
@@ -462,44 +468,65 @@
 
         // Variants Management
         let variantIndex = 0;
+        
+        // Load old variants if validation failed
+        const oldVariants = @json(old('variants', []));
+        const validationErrors = @json($errors->get('variants.*'));
 
-        function addVariant() {
+        function addVariant(data = null, errors = null) {
             const container = document.getElementById('variants-container');
             const row = document.createElement('tr');
-            row.className = 'group hover:bg-white/[0.02] transition-colors';
+            row.className = 'group hover:bg-white/[0.02] transition-colors relative';
             row.id = `variant-${variantIndex}`;
+            
+            // Default values
+            const d = data || { container_type: 'Bottle', capacity: '', unit: 'ml', price: '', quantity: '' };
+            
+            // Helper to get error message for field
+            const getError = (field) => {
+                const key = `variants.${variantIndex}.${field}`;
+                if (validationErrors[key]) {
+                    return `<div class="text-red-500 text-[10px] mt-1">${validationErrors[key][0]}</div>`;
+                }
+                return '';
+            };
 
             row.innerHTML = `
-                <td class="px-4 py-2">
+                <td class="px-4 py-2 align-top">
                     <select name="variants[${variantIndex}][container_type]" required
                             class="w-32 bg-neutral-900 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
-                        <option value="Bottle">Bottle</option>
-                        <option value="Decant">Decant</option>
-                        <option value="Sample">Sample</option>
-                        <option value="Tester">Tester</option>
+                        <option value="Bottle" ${d.container_type == 'Bottle' ? 'selected' : ''}>Bottle</option>
+                        <option value="Decant" ${d.container_type == 'Decant' ? 'selected' : ''}>Decant</option>
+                        <option value="Sample" ${d.container_type == 'Sample' ? 'selected' : ''}>Sample</option>
+                        <option value="Tester" ${d.container_type == 'Tester' ? 'selected' : ''}>Tester</option>
                     </select>
+                    ${getError('container_type')}
                 </td>
-                <td class="px-4 py-2 pl-4">
-                     <input type="number" name="variants[${variantIndex}][capacity]" placeholder="100" required
+                <td class="px-4 py-2 pl-4 align-top">
+                     <input type="number" name="variants[${variantIndex}][capacity]" value="${d.capacity}" placeholder="100" required
                            class="w-24 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                     ${getError('capacity')}
                 </td>
-                <td class="px-4 py-2 pl-4">
+                <td class="px-4 py-2 pl-4 align-top">
                      <select name="variants[${variantIndex}][unit]" required
                             class="w-20 bg-neutral-900 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
-                        <option value="ml">ml</option>
-                        <option value="oz">oz</option>
-                        <option value="g">g</option>
+                        <option value="ml" ${d.unit == 'ml' ? 'selected' : ''}>ml</option>
+                        <option value="oz" ${d.unit == 'oz' ? 'selected' : ''}>oz</option>
+                        <option value="g" ${d.unit == 'g' ? 'selected' : ''}>g</option>
                     </select>
+                     ${getError('unit')}
                 </td>
-                <td class="px-4 py-2 pl-4">
-                    <input type="number" step="0.01" name="variants[${variantIndex}][price]" placeholder="Override"
+                <td class="px-4 py-2 pl-4 align-top">
+                    <input type="number" step="0.01" name="variants[${variantIndex}][price]" value="${d.price}" placeholder="Override"
                            class="w-28 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                    ${getError('price')}
                 </td>
-                <td class="px-4 py-2 pl-4">
-                    <input type="number" name="variants[${variantIndex}][quantity]" placeholder="0" required min="0"
+                <td class="px-4 py-2 pl-4 align-top">
+                    <input type="number" name="variants[${variantIndex}][quantity]" value="${d.quantity}" placeholder="0" required min="0"
                            class="w-20 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                    ${getError('quantity')}
                 </td>
-                <td class="px-4 py-2 pl-4 text-right">
+                <td class="px-4 py-2 pl-4 text-right align-top">
                     <button type="button" onclick="removeVariant(${variantIndex})" class="p-2 text-moon-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -515,7 +542,13 @@
             document.getElementById(`variant-${index}`).remove();
         }
 
-        // Add initial variant
-        addVariant();
+        // Initialize Data
+        if (Object.keys(oldVariants).length > 0) {
+            // Loop through old variants and add them back
+            Object.values(oldVariants).forEach(data => addVariant(data));
+        } else {
+            // Add initial empty variant
+            addVariant();
+        }
     </script>
 @endsection
