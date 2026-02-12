@@ -11,9 +11,9 @@
         
         <!-- Badges -->
         @if($product->isOutOfStock())
-            <span class="absolute top-3 left-3 bg-neutral-500 text-white text-[10px] font-medium px-2.5 py-1 uppercase tracking-wider">Sold Out</span>
+            <x-shop.ui.badge label="Sold Out" color="neutral" />
         @elseif($product->badge)
-            <span class="absolute top-3 left-3 bg-charcoal text-cream text-[10px] font-medium px-2.5 py-1 uppercase tracking-wider">{{ $product->badge }}</span>
+            <x-shop.ui.badge :label="$product->badge" />
         @endif
 
         <!-- Wishlist Button -->

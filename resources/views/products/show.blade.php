@@ -33,7 +33,7 @@
                              class="w-full h-full object-cover cursor-zoom-in transition-opacity duration-300" alt="{{ $product->name }}">
                          
                         @if($product->badge)
-                        <span class="absolute top-4 left-4 bg-charcoal text-cream text-[10px] font-medium px-3 py-1.5 uppercase tracking-wider">{{ $product->badge }}</span>
+                        <x-shop.ui.badge :label="$product->badge" position="absolute top-4 left-4" />
                         @endif
                     </div>
                     
@@ -133,11 +133,11 @@
                                 <input id="quantity-input" type="number" value="1" min="1" max="10" class="flex-1 w-full bg-transparent text-center text-charcoal font-medium h-12 border-none focus:ring-0 appearance-none text-base no-spinner">
                                 <button id="qty-plus" type="button" class="w-10 h-full text-neutral-500 hover:text-charcoal hover:bg-neutral-100 transition-colors text-xl flex items-center justify-center border-l border-neutral-300 focus:outline-none">+</button>
                             </div>
-                            <button 
+                            <x-shop.ui.button 
                                 id="add-to-cart-btn"
-                                class="flex-1 btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                                class="flex-1 disabled:opacity-50 disabled:cursor-not-allowed">
                                 Add to Cart
-                            </button>
+                            </x-shop.ui.button>
                             
                             <button 
                                 type="button" 
@@ -169,9 +169,9 @@
 
                 @if($product->reviews_count > 0)
                 <div class="text-center mb-10">
-                    <button id="toggle-reviews-btn" class="btn-secondary" data-slug="{{ $product->slug }}">
+                    <x-shop.ui.button id="toggle-reviews-btn" variant="secondary" data-slug="{{ $product->slug }}">
                         Show Customer Reviews
-                    </button>
+                    </x-shop.ui.button>
                 </div>
 
                 <div id="reviews-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden opacity-0 transition-opacity duration-500">
@@ -179,9 +179,9 @@
                 </div>
 
                 <div class="text-center mt-10 hidden" id="load-more-container">
-                    <button id="load-more-reviews-btn" class="text-neutral-500 hover:text-charcoal underline text-sm uppercase tracking-wider">
+                    <x-shop.ui.button id="load-more-reviews-btn" variant="link" class="uppercase tracking-wider">
                         Load More
-                    </button>
+                    </x-shop.ui.button>
                 </div>
                 @endif
             </div>

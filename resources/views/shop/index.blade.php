@@ -28,9 +28,12 @@
                         </div>
                     </div>
                 @else
-                    <p class="text-accent uppercase tracking-[0.3em] text-xs font-medium mb-3">Discover</p>
-                    <h1 class="text-4xl md:text-5xl font-serif text-charcoal mb-4">Shop All</h1>
-                    <p class="text-neutral-500 font-light">Curated scents for every occasion</p>
+                    <x-shop.ui.section-header 
+                        title="Shop All" 
+                        subtitle="Discover" 
+                    >
+                        Curated scents for every occasion
+                    </x-shop.ui.section-header>
                 @endif
             </div>
             
@@ -80,14 +83,13 @@
                             <!-- Search -->
                             <div>
                                 <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Search</h3>
-                                <div class="relative">
-                                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search fragrances..." class="w-full bg-transparent border border-neutral-300 px-4 py-2.5 text-sm text-charcoal placeholder-neutral-400 focus:border-charcoal outline-none">
-                                    <button type="submit" class="absolute right-3 top-3 text-neutral-400 hover:text-charcoal">
+                                <x-shop.form.input name="search" :value="request('search')" placeholder="Search fragrances...">
+                                    <button type="submit" class="hover:text-charcoal transition-colors">
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                         </svg>
                                     </button>
-                                </div>
+                                </x-shop.form.input>
                             </div>
 
                             <!-- Categories -->
@@ -95,12 +97,12 @@
                                 <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Categories</h3>
                                 <div class="space-y-3">
                                     @foreach($categories as $category)
-                                        <label class="flex items-center cursor-pointer group">
-                                            <input type="checkbox" name="category[]" value="{{ $category->slug }}" 
-                                                   {{ in_array($category->slug, (array)request('category', [])) ? 'checked' : '' }}
-                                                   class="w-4 h-4 rounded-sm border-neutral-300 text-charcoal focus:ring-charcoal focus:ring-offset-0">
-                                            <span class="ml-3 text-sm text-neutral-600 group-hover:text-charcoal transition-colors">{{ $category->name }}</span>
-                                        </label>
+                                        <x-shop.form.checkbox 
+                                            name="category[]" 
+                                            :value="$category->slug" 
+                                            :label="$category->name"
+                                            :checked="in_array($category->slug, (array)request('category', []))"
+                                        />
                                     @endforeach
                                 </div>
                             </div>
@@ -108,15 +110,18 @@
                             <!-- Brands -->
                             <div>
                                 <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Brands</h3>
-                                <input type="text" id="brand-search" placeholder="Search brands..." class="w-full bg-transparent border border-neutral-300 px-3 py-2 text-xs text-charcoal focus:border-charcoal outline-none mb-4 placeholder-neutral-400">
+                                <x-shop.form.input id="brand-search" placeholder="Search brands..." class="text-xs mb-4" />
                                 <div class="space-y-3 max-h-48 overflow-y-auto" id="brand-list">
                                     @foreach($brands as $brand)
-                                    <label class="flex items-center cursor-pointer group brand-item" data-name="{{ strtolower($brand->name) }}">
-                                        <input type="checkbox" id="brand-{{ $brand->slug }}" name="brand[]" value="{{ $brand->slug }}" 
-                                               {{ in_array($brand->slug, (array)request('brand', [])) ? 'checked' : '' }}
-                                               class="w-4 h-4 rounded-sm border-neutral-300 text-charcoal focus:ring-charcoal focus:ring-offset-0">
-                                        <span class="ml-3 text-sm text-neutral-600 group-hover:text-charcoal transition-colors">{{ $brand->name }}</span>
-                                    </label>
+                                    <x-shop.form.checkbox 
+                                        name="brand[]" 
+                                        :value="$brand->slug" 
+                                        :label="$brand->name"
+                                        :checked="in_array($brand->slug, (array)request('brand', []))"
+                                        id="brand-{{ $brand->slug }}"
+                                        class="brand-item"
+                                        data-name="{{ strtolower($brand->name) }}"
+                                    />
                                     @endforeach
                                 </div>
                             </div>
@@ -126,12 +131,13 @@
                                 <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Concentration</h3>
                                 <div class="space-y-3">
                                     @foreach($uniqueConcentrations as $concentration)
-                                    <label class="flex items-center cursor-pointer group">
-                                        <input type="checkbox" id="conc-{{ Str::slug($concentration) }}" name="concentration[]" value="{{ $concentration }}" 
-                                               {{ in_array($concentration, (array)request('concentration', [])) ? 'checked' : '' }}
-                                               class="w-4 h-4 rounded-sm border-neutral-300 text-charcoal focus:ring-charcoal focus:ring-offset-0">
-                                        <span class="ml-3 text-sm text-neutral-600 group-hover:text-charcoal transition-colors">{{ $concentration }}</span>
-                                    </label>
+                                    <x-shop.form.checkbox 
+                                        name="concentration[]" 
+                                        :value="$concentration" 
+                                        :label="$concentration"
+                                        id="conc-{{ Str::slug($concentration) }}"
+                                        :checked="in_array($concentration, (array)request('concentration', []))"
+                                    />
                                     @endforeach
                                 </div>
                             </div>
@@ -154,11 +160,12 @@
                             <!-- Availability -->
                             <div>
                                 <h3 class="text-charcoal font-medium text-sm uppercase tracking-[0.1em] mb-4">Availability</h3>
-                                <label class="flex items-center cursor-pointer group">
-                                    <input type="checkbox" name="in_stock" value="1" {{ request('in_stock') ? 'checked' : '' }}
-                                           class="w-4 h-4 rounded-sm border-neutral-300 text-charcoal focus:ring-charcoal focus:ring-offset-0">
-                                    <span class="ml-3 text-sm text-neutral-600 group-hover:text-charcoal transition-colors">In Stock Only</span>
-                                </label>
+                                <x-shop.form.checkbox 
+                                    name="in_stock" 
+                                    value="1" 
+                                    label="In Stock Only"
+                                    :checked="request()->boolean('in_stock')"
+                                />
                             </div>
 
                             <!-- Price Range -->
@@ -167,28 +174,24 @@
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
                                         <label for="price_min" class="block text-xs text-neutral-500 mb-2">Min</label>
-                                        <input type="number" name="price_min" id="price_min" value="{{ request('price_min') }}" 
-                                               placeholder="0" min="0" step="100"
-                                               class="w-full bg-transparent border border-neutral-300 px-3 py-2 text-sm text-charcoal placeholder-neutral-400 focus:border-charcoal outline-none">
+                                        <x-shop.form.input type="number" name="price_min" :value="request('price_min')" placeholder="0" min="0" step="100" />
                                     </div>
                                     <div>
                                         <label for="price_max" class="block text-xs text-neutral-500 mb-2">Max</label>
-                                        <input type="number" name="price_max" id="price_max" value="{{ request('price_max') }}" 
-                                               placeholder="10000" min="0" step="100"
-                                               class="w-full bg-transparent border border-neutral-300 px-3 py-2 text-sm text-charcoal placeholder-neutral-400 focus:border-charcoal outline-none">
+                                        <x-shop.form.input type="number" name="price_max" :value="request('price_max')" placeholder="10000" min="0" step="100" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="mt-10 pt-6 border-t border-neutral-200 space-y-3">
-                            <button type="submit" class="w-full btn-primary">
+                            <x-shop.ui.button type="submit" class="w-full">
                                 Apply Filters
-                            </button>
+                            </x-shop.ui.button>
                             @if(request()->anyFilled(['search', 'category', 'brand', 'concentration', 'capacity', 'price_min', 'price_max', 'sort', 'in_stock']))
-                            <a href="{{ route('shop') }}" class="block w-full text-center py-3 border border-neutral-300 text-neutral-600 text-xs uppercase tracking-wider hover:border-charcoal hover:text-charcoal transition-colors">
+                            <x-shop.ui.button :href="route('shop')" variant="secondary" class="w-full block text-center">
                                 Clear All Filters
-                            </a>
+                            </x-shop.ui.button>
                             @endif
                         </div>
                     </form>
@@ -205,7 +208,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <p class="text-neutral-500">No products found matching your criteria.</p>
-                            <a href="{{ route('shop') }}" class="inline-block mt-4 text-charcoal underline text-sm">Clear filters</a>
+                            <x-shop.ui.button :href="route('shop')" variant="link" class="mt-4 text-sm">Clear filters</x-shop.ui.button>
                         </div>
                         @endforelse
                     </div>
