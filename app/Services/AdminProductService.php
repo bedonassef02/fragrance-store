@@ -61,6 +61,7 @@ class AdminProductService
                 'type' => $data['type'] ?? 'original',
                 'inspired_by' => $data['inspired_by'] ?? null,
                 'original_product_id' => $data['original_product_id'] ?? null,
+                'image' => '', // Default value to satisfy database constraint
             ]);
 
             // 2. Handle Collections

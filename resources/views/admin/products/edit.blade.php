@@ -353,6 +353,7 @@
                         <label for="badge" class="block text-sm font-medium text-moon-gray-300 mb-2">Label</label>
                         <input type="text" name="badge" id="badge" value="{{ old('badge', $product->badge) }}" placeholder="e.g. New Arrival"
                                class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-moon-gray-500 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
+                        @error('badge') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                     </div>
                      <div>
                         <label for="badge_color" class="block text-sm font-medium text-moon-gray-300 mb-2">Color</label>
@@ -366,6 +367,7 @@
                                 </label>
                             @endforeach
                         </div>
+                        @error('badge_color') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                     </div>
                  </div>
              </div>
@@ -382,16 +384,19 @@
                         <input type="text" name="meta_title" id="meta_title" value="{{ old('meta_title', $product->meta_title) }}" placeholder="Custom title for search engines"
                                class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-moon-gray-500 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all">
                         <p class="text-xs text-moon-gray-500 mt-1">Leave blank to use product name.</p>
+                        @error('meta_title') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                     </div>
                      <div>
                         <label for="meta_description" class="block text-sm font-medium text-moon-gray-300 mb-2">Meta Description</label>
                         <textarea name="meta_description" id="meta_description" rows="3" placeholder="Summary for search results..."
                                   class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-moon-gray-500 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all resize-none">{{ old('meta_description', $product->meta_description) }}</textarea>
+                        @error('meta_description') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                     </div>
                      <div>
                         <label for="keywords" class="block text-sm font-medium text-moon-gray-300 mb-2">Keywords</label>
                         <textarea name="keywords" id="keywords" rows="2" placeholder="comma, separated, keywords"
                                   class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-moon-gray-500 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all resize-none">{{ old('keywords', $product->keywords) }}</textarea>
+                        @error('keywords') <span class="text-red-400 text-sm mt-1 block">{{ $message }}</span> @enderror
                     </div>
                  </div>
              </div>
@@ -493,45 +498,68 @@
 
     // Variants Management
     let variantIndex = {{ $product->variants->count() }};
+    const oldVariants = @json(old('variants', []));
+    const validationErrors = @json($errors->get('variants.*'));
     
-    function addVariant() {
+    function addVariant(data = null, errors = null, explicitIndex = null) {
         const container = document.getElementById('variants-container');
         const row = document.createElement('tr');
+        
+        // Use explicit index if provided, otherwise use counter
+        const currentIndex = explicitIndex !== null ? explicitIndex : variantIndex;
+        
         row.className = 'group hover:bg-white/[0.02] transition-colors';
-        row.id = `variant-row-new-${variantIndex}`;
+        row.id = `variant-row-new-${currentIndex}`;
+        
+        // Default values
+        const d = data || { container_type: 'Bottle', capacity: '', unit: 'ml', price: '', quantity: '' };
+
+        // Helper to get error message for field
+        const getError = (field) => {
+            const key = `variants.${currentIndex}.${field}`;
+            if (validationErrors[key]) {
+                return `<div class="text-red-500 text-[10px] mt-1">${validationErrors[key][0]}</div>`;
+            }
+            return '';
+        };
         
         row.innerHTML = `
-            <td class="px-4 py-2">
-                <select name="variants[${variantIndex}][container_type]" required
+            <td class="px-4 py-2 align-top">
+                <select name="variants[${currentIndex}][container_type]" required
                         class="w-32 bg-neutral-900 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
-                    <option value="Bottle">Bottle</option>
-                    <option value="Decant">Decant</option>
-                    <option value="Sample">Sample</option>
-                    <option value="Tester">Tester</option>
+                    <option value="Bottle" ${d.container_type == 'Bottle' ? 'selected' : ''}>Bottle</option>
+                    <option value="Decant" ${d.container_type == 'Decant' ? 'selected' : ''}>Decant</option>
+                    <option value="Sample" ${d.container_type == 'Sample' ? 'selected' : ''}>Sample</option>
+                    <option value="Tester" ${d.container_type == 'Tester' ? 'selected' : ''}>Tester</option>
                 </select>
+                ${getError('container_type')}
             </td>
-            <td class="px-4 py-2 pl-4">
-                 <input type="number" name="variants[${variantIndex}][capacity]" placeholder="100" required
+            <td class="px-4 py-2 pl-4 align-top">
+                 <input type="number" name="variants[${currentIndex}][capacity]" value="${d.capacity}" placeholder="100" required
                        class="w-24 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                 ${getError('capacity')}
             </td>
-            <td class="px-4 py-2 pl-4">
-                 <select name="variants[${variantIndex}][unit]" required
+            <td class="px-4 py-2 pl-4 align-top">
+                 <select name="variants[${currentIndex}][unit]" required
                         class="w-20 bg-neutral-900 border border-white/10 rounded-lg px-3 py-1.5 text-moon-gray-300 focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
-                    <option value="ml">ml</option>
-                    <option value="oz">oz</option>
-                    <option value="g">g</option>
+                    <option value="ml" ${d.unit == 'ml' ? 'selected' : ''}>ml</option>
+                    <option value="oz" ${d.unit == 'oz' ? 'selected' : ''}>oz</option>
+                    <option value="g" ${d.unit == 'g' ? 'selected' : ''}>g</option>
                 </select>
+                 ${getError('unit')}
             </td>
-            <td class="px-4 py-2 pl-4">
-                <input type="number" step="0.01" name="variants[${variantIndex}][price]" placeholder="Override"
+            <td class="px-4 py-2 pl-4 align-top">
+                <input type="number" step="0.01" name="variants[${currentIndex}][price]" value="${d.price}" placeholder="Override"
                        class="w-28 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                ${getError('price')}
             </td>
-            <td class="px-4 py-2 pl-4">
-                <input type="number" name="variants[${variantIndex}][quantity]" placeholder="0" required min="0"
+            <td class="px-4 py-2 pl-4 align-top">
+                <input type="number" name="variants[${currentIndex}][quantity]" value="${d.quantity}" placeholder="0" required min="0"
                        class="w-20 bg-black/20 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:border-moon-gold focus:ring-1 focus:ring-moon-gold transition-all text-sm">
+                ${getError('quantity')}
             </td>
-            <td class="px-4 py-2 pl-4 text-right">
-                <button type="button" onclick="deleteVariant('new-${variantIndex}')" class="p-2 text-moon-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all">
+            <td class="px-4 py-2 pl-4 text-right align-top">
+                <button type="button" onclick="deleteVariant('new-${currentIndex}')" class="p-2 text-moon-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                     </svg>
@@ -539,7 +567,26 @@
             </td>
         `;
         container.appendChild(row);
-        variantIndex++;
+        
+        if (explicitIndex !== null) {
+            const eIdx = parseInt(explicitIndex);
+            if (eIdx >= variantIndex) {
+                variantIndex = eIdx + 1;
+            }
+        } else {
+             variantIndex++;
+        }
+    }
+    
+    // Check for "new" variants in old() input that exceed existing count
+    if (Object.keys(oldVariants).length > 0) {
+        const initialCount = {{ $product->variants->count() }};
+        Object.keys(oldVariants).forEach(key => {
+             // If key is numeric and >= initialCount, it's a new unsaved variant
+             if (!isNaN(key) && parseInt(key) >= initialCount) {
+                 addVariant(oldVariants[key], null, key);
+             }
+        });
     }
 
     function deleteVariant(rowId, dbId = null) {
