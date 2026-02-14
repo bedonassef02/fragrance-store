@@ -197,24 +197,31 @@ class AdminProductService
                 }
             }
 
-             // Handle Image Deletions
-             if (!empty($data['deleted_images'])) {
-                // Assuming deleted_images contains Media model IDs now
-                // We need to verify if the frontend is sending Media IDs or old ProductImage IDs.
-                // If we are in a transition phase, it might be tricky.
-                // For this implementation, we assume we will start using Media IDs.
-                // However, for safely, let's assume we might still have old ProductImages to delete.
-                
-                // Case A: Deleting from Spatie Media Library
-                \Spatie\MediaLibrary\MediaCollections\Models\Media::whereIn('id', $data['deleted_images'])->delete();
+            // Handle Media Deletions (Spatie)
+            if (!empty($data['deleted_media_ids'])) {
+                \Spatie\MediaLibrary\MediaCollections\Models\Media::whereIn('id', $data['deleted_media_ids'])
+                    ->where('model_id', $product->id) // Security check: ensure ownership
+                    ->where('model_type', Product::class)
+                    ->delete();
+            }
 
-                // Case B: Deleting from legacy ProductImage (if we still support mixed usage)
-                $legacyImages = ProductImage::whereIn('id', $data['deleted_images'])->get();
+            // Handle Legacy Image Deletions
+            if (!empty($data['deleted_legacy_image_ids'])) {
+                $legacyImages = ProductImage::whereIn('id', $data['deleted_legacy_image_ids'])
+                    ->where('product_id', $product->id) // Security check: ensure ownership
+                    ->get();
+
                 foreach($legacyImages as $img) {
                     Storage::disk('public')->delete($img->image_path);
                     $img->delete();
                 }
-             }
+            }
+
+            // Fallback for backward compatibility (if needed, but safer to deprecate)
+            if (!empty($data['deleted_images'])) {
+                 // Try to guess or log warning. For safety, we will NOT delete indiscriminately.
+                 // Assuming frontend will migrate to the new keys.
+            }
 
             return $product;
         });
