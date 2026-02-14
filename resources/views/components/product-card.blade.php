@@ -4,6 +4,8 @@
     <div class="relative overflow-hidden aspect-[3/4] mb-4 bg-neutral-100">
         <a href="{{ route('product.show', $product->slug) }}" class="block w-full h-full">
             <img src="{{ $product->image }}" 
+                 srcset="{{ $product->srcset }}"
+                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                  loading="lazy"
                  class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105" 
                  alt="{{ $product->name }}">

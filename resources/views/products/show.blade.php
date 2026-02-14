@@ -30,6 +30,9 @@
                 <div class="space-y-4">
                     <div class="aspect-[3/4] overflow-hidden bg-neutral-100 relative group">
                         <img id="main-image" src="{{ $product->image }}" 
+                             srcset="{{ $product->srcset }}"
+                             sizes="(max-width: 1024px) 100vw, 50vw"
+                             loading="lazy"
                              class="w-full h-full object-cover cursor-zoom-in transition-opacity duration-300" alt="{{ $product->name }}">
                          
                         @if($product->badge)
@@ -43,7 +46,7 @@
                         @foreach($product->gallery_images as $img)
                         <img src="{{ $img->thumb }}" 
                              class="gallery-thumb w-20 h-24 object-cover border-2 border-transparent hover:border-neutral-400 cursor-pointer hover:opacity-80 transition-all {{ $loop->first ? 'border-charcoal' : '' }}"
-                             onclick="document.getElementById('main-image').src='{{ $img->url }}'; document.querySelectorAll('.gallery-thumb').forEach(el => el.classList.remove('border-charcoal')); this.classList.add('border-charcoal');">
+                             onclick="var main=document.getElementById('main-image'); main.src='{{ $img->url }}'; main.srcset='{{ $img->srcset }}'; document.querySelectorAll('.gallery-thumb').forEach(el => el.classList.remove('border-charcoal')); this.classList.add('border-charcoal');">
                         @endforeach
                     </div>
                     @endif

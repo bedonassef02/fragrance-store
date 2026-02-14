@@ -80,6 +80,7 @@ class OrderService
                     'total'              => ($variant->price ?? $variant->product->price) * $item['quantity'],
                 ]);
 
+                /** @var \App\Models\ProductVariant $variant */
                 $variant->decrement('quantity', $item['quantity']);
             }
 

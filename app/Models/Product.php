@@ -159,10 +159,19 @@ class Product extends Model implements HasMedia
         $mediaItems = $this->getMedia('default');
         
         foreach ($mediaItems as $media) {
+            $srcset = '';
+            try {
+                $srcset = implode(', ', [
+                    $media->getUrl('thumb') . ' 200w',
+                    $media->getUrl('medium') . ' 800w',
+                    $media->getUrl('large') . ' 1200w',
+                ]);
+            } catch (\Exception $e) {}
             $gallery->push((object)[
                 'url' => $media->getUrl('medium'), // View image
                 'thumb' => $media->getUrl('thumb'), // Thumbnail
                 'original' => $media->getUrl(), // Full size
+                'srcset' => $srcset,
                 'id' => $media->id,
                 'is_legacy' => false
             ]);
@@ -170,10 +179,12 @@ class Product extends Model implements HasMedia
 
         // 2. Legacy Images
         foreach ($this->images as $img) {
+            $url = asset('storage/' . $img->image_path);
             $gallery->push((object)[
-                'url' => asset('storage/' . $img->image_path),
-                'thumb' => asset('storage/' . $img->image_path),
-                'original' => asset('storage/' . $img->image_path),
+                'url' => $url,
+                'thumb' => $url,
+                'original' => $url,
+                'srcset' => '',
                 'id' => $img->id,
                 'is_legacy' => true
             ]);
@@ -186,6 +197,7 @@ class Product extends Model implements HasMedia
                 'url' => $this->image,
                 'thumb' => $this->image,
                 'original' => $this->image,
+                'srcset' => '',
                 'id' => 0, // Placeholder ID
                 'is_legacy' => true
             ]);
@@ -238,5 +250,28 @@ class Product extends Model implements HasMedia
     public function getReviewsCountAttribute()
     {
         return $this->reviews()->count();
+    }
+
+    /**
+     * Get the srcset attribute for the main product image.
+     * Returns a string of WebP URLs with width descriptors.
+     */
+    public function getSrcsetAttribute()
+    {
+        $media = $this->getFirstMedia('default');
+        
+        if (!$media) {
+            return '';
+        }
+
+        try {
+            return implode(', ', [
+                $media->getUrl('thumb') . ' 200w',
+                $media->getUrl('medium') . ' 800w',
+                $media->getUrl('large') . ' 1200w',
+            ]);
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 }

@@ -268,6 +268,7 @@ class AdminProductService
             // Process in chunks of 100 to avoid memory overload
             Product::whereIn('id', $ids)->chunkById(100, function ($products) {
                 foreach ($products as $product) {
+                    /** @var Product $product */
                     $this->deleteProduct($product);
                 }
             });
