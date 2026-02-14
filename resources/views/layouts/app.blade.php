@@ -10,6 +10,10 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="@yield('canonical', url()->current())" />
 
+    <!-- Performance Optimizations -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="@yield('og:type', 'website')" />
     <meta property="og:url" content="@yield('og:url', url()->current())" />
