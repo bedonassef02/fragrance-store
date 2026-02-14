@@ -43,8 +43,18 @@ return new class extends Migration
             // Flags
             $table->boolean('featured')->default(false);
             $table->boolean('trending')->default(false);
+
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->text('keywords')->nullable();
             
             $table->timestamps();
+
+            $table->index('price');
+            $table->index(['gender', 'price']);
+            $table->index(['brand_id', 'created_at']);
+            $table->index('featured');
+            $table->index('concentration');
         });
     }
 

@@ -19,14 +19,6 @@ return new class extends Migration
             $table->string('referral')->nullable();
             $table->timestamps();
         });
-
-        Schema::create('product_views', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
-            $table->string('ip_address')->nullable();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->timestamps();
-        });
     }
 
     /**
@@ -34,7 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_views');
         Schema::dropIfExists('page_visits');
     }
 };

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_luxury')->default(true);
+            $table->boolean('is_local')->default(false);
             $table->timestamps();
         });
     }

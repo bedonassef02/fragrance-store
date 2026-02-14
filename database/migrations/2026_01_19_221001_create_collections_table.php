@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('collections', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug')->after('title')->nullable()->unique();
             $table->string('subtitle')->nullable();
             $table->string('image');
             $table->string('route')->default('shop');

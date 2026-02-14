@@ -19,6 +19,9 @@ return new class extends Migration
             $table->decimal('price', 10, 2)->nullable(); // Specific price for this variant
             $table->integer('quantity')->default(0);
             $table->timestamps();
+
+            $table->index('quantity');
+            $table->index('capacity');
         });
     }
 

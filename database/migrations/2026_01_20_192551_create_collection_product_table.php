@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('brands', function (Blueprint $table) {
-            $table->boolean('is_local')->default(false)->after('is_luxury');
+        Schema::create('collection_product', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('collection_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('brands', function (Blueprint $table) {
-            $table->dropColumn('is_local');
-        });
+        Schema::dropIfExists('collection_product');
     }
 };
