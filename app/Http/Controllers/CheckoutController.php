@@ -112,17 +112,13 @@ class CheckoutController extends Controller
         ]);
 
         // Log pending transaction attempt
-        \Illuminate\Support\Facades\DB::table('payment_transactions')->insert([
-            'order_id' => $order->id,
-            'transaction_id' => $intention['intention_id'] ?? 'pending-' . uniqid(),
-            'gateway' => 'paymob',
-            'amount' => $order->total_amount,
-            'currency' => 'EGP',
-            'status' => 'pending',
-            'response_data' => json_encode(['method' => $paymentMethod, 'intention' => $intention]),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $this->orderService->logPaymentTransaction(
+            $order,
+            'paymob',
+            $intention['intention_id'] ?? 'pending-' . uniqid(),
+            'pending',
+            ['method' => $paymentMethod, 'intention' => $intention]
+        );
 
         // Redirect to Paymob checkout
         $checkoutUrl = $this->paymobService->getCheckoutUrl($intention['client_secret']);
@@ -207,17 +203,15 @@ class CheckoutController extends Controller
                                 Mail::to($order->email)->queue(new OrderConfirmation($order));
 
                                 // Log to strict ledger
-                                \Illuminate\Support\Facades\DB::table('payment_transactions')->insert([
-                                    'order_id' => $order->id,
-                                    'transaction_id' => $transactionId,
-                                    'gateway' => 'paymob',
-                                    'amount' => $amountCents / 100,
-                                    'currency' => $data['currency'] ?? 'EGP',
-                                    'status' => 'paid',
-                                    'response_data' => json_encode($data),
-                                    'created_at' => now(),
-                                    'updated_at' => now(),
-                                ]);
+                                $this->orderService->logPaymentTransaction(
+                                    $order,
+                                    'paymob',
+                                    $transactionId,
+                                    'paid',
+                                    $data,
+                                    $amountCents / 100,
+                                    $data['currency'] ?? 'EGP'
+                                );
                               }
                           });
                         return redirect()->route('checkout.success', $order->order_number);

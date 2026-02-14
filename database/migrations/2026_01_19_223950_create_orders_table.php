@@ -26,10 +26,10 @@ return new class extends Migration
             $table->decimal('discount_amount', 10, 2)->default(0);
             $table->string('coupon_code')->nullable();
             $table->string('payment_method')->default('cod');
-            $table->string('payment_status')->default('pending')->after('payment_method');
-            $table->string('transaction_id')->nullable()->after('payment_status');
-            $table->string('payment_gateway')->nullable()->after('transaction_id');
-            $table->json('payment_meta')->nullable()->after('payment_gateway');
+            $table->string('payment_status')->default('pending');
+            $table->string('transaction_id')->nullable();
+            $table->string('payment_gateway')->nullable();
+            $table->json('payment_meta')->nullable();
             $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'completed', 'returned', 'replaced', 'cancelled'])->default('pending')->index();
             $table->decimal('deposit_amount', 10, 2)->nullable();
             $table->string('deposit_proof_path')->nullable();

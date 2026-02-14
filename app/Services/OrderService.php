@@ -119,4 +119,19 @@ class OrderService
             'deposit_proof_path' => null,
         ]);
     }
+
+    public function logPaymentTransaction(Order $order, string $gateway, string $transactionId, string $status, array $data, float $amount = null, string $currency = 'EGP')
+    {
+        return DB::table('payment_transactions')->insert([
+            'order_id' => $order->id,
+            'transaction_id' => $transactionId,
+            'gateway' => $gateway,
+            'amount' => $amount ?? $order->total_amount,
+            'currency' => $currency,
+            'status' => $status,
+            'response_data' => json_encode($data),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
 }

@@ -3,58 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
-use App\Models\Product;
 use App\Http\Requests\StoreWishlistRequest;
 
 class WishlistController extends Controller
 {
+    protected $wishlistService;
+
+    public function __construct(\App\Services\WishlistService $wishlistService)
+    {
+        $this->wishlistService = $wishlistService;
+    }
     public function index()
     {
-        $wishlistIds = json_decode(Cookie::get('moon_wishlist', '[]'), true);
-        if (!is_array($wishlistIds)) $wishlistIds = [];
-
-        $products = Product::whereIn('id', $wishlistIds)->with(['category', 'images'])->get();
-
+        $products = $this->wishlistService->getWishlistProducts();
         return view('wishlist.index', compact('products'));
     }
 
     public function toggle(StoreWishlistRequest $request)
     {
-        // Validation handled by StoreWishlistRequest
+        $result = $this->wishlistService->toggle((int) $request->product_id);
 
-        $productId = (int) $request->product_id;
-        $wishlistIds = json_decode(Cookie::get('moon_wishlist', '[]'), true);
-        if (!is_array($wishlistIds)) $wishlistIds = [];
-
-        $index = array_search($productId, $wishlistIds);
-        $status = 'added';
-
-        if ($index !== false) {
-            unset($wishlistIds[$index]);
-            $status = 'removed';
-        } else {
-            $wishlistIds[] = $productId;
-        }
-
-        // Re-index array
-        $wishlistIds = array_values($wishlistIds);
-
-        // Queue cookie for 1 year, explicitly allowing JS access (httpOnly = false)
-        $cookie = cookie(
-            'moon_wishlist', 
-            json_encode($wishlistIds), 
-            60 * 24 * 365, // 1 year
-            '/',           // path
-            null,          // domain
-            null,          // secure
-            false          // httpOnly (FALSE so JS can read it)
-        );
-        Cookie::queue($cookie);
-
-        return response()->json([
-            'status' => $status,
-            'count' => count($wishlistIds)
-        ]);
+        return response()->json($result);
     }
 }
