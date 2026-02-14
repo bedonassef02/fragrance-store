@@ -27,7 +27,7 @@ class PaymobService
      */
     public function isConfigured(): bool
     {
-        return !empty($this->secretKey) && !empty($this->hmacSecret);
+        return !empty($this->secretKey) && !empty($this->hmacSecret) && !empty($this->apiKey);
     }
 
     /**

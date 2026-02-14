@@ -24,21 +24,25 @@ class ShopController extends Controller
         $categories = Category::all();
         $brands = \App\Models\Brand::orderBy('name')->get();
 
-        // Fetch Perfume Attributes for Filters
-        $uniqueConcentrations = Product::whereNotNull('concentration')
-            ->distinct()
-            ->orderBy('concentration')
-            ->pluck('concentration');
+        // Fetch Perfume Attributes for Filters (Cached for performance)
+        $uniqueConcentrations = \Illuminate\Support\Facades\Cache::remember('shop_filters_concentrations', 3600, function () {
+            return Product::whereNotNull('concentration')
+                ->distinct()
+                ->orderBy('concentration')
+                ->pluck('concentration');
+        });
 
-        $uniqueCapacities = ProductVariant::select('capacity', 'unit')
-            ->distinct()
-            ->orderBy('capacity')
-            ->get()
-            ->map(function ($variant) {
-                return $variant->capacity . ' ' . $variant->unit;
-            })
-            ->unique()
-            ->values();
+        $uniqueCapacities = \Illuminate\Support\Facades\Cache::remember('shop_filters_capacities', 3600, function () {
+            return ProductVariant::select('capacity', 'unit')
+                ->distinct()
+                ->orderBy('capacity')
+                ->get()
+                ->map(function ($variant) {
+                    return $variant->capacity . ' ' . $variant->unit;
+                })
+                ->unique()
+                ->values();
+        });
 
         $activeCollection = null;
         if (!empty($validated['collection'])) {
