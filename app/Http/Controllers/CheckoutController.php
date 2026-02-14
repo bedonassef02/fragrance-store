@@ -168,17 +168,24 @@ class CheckoutController extends Controller
                 if ($isPaid) {
                      $amountCents = (int) ($data['amount_cents'] ?? 0);
                      if ($this->paymobService->verifyPaymentAmount($order, $amountCents)) {
-                         $order->update([
-                            'payment_status' => 'paid',
-                            'status' => 'confirmed',
-                            'transaction_id' => $transactionId,
-                            'payment_gateway' => 'paymob',
-                            'payment_meta' => array_merge($order->payment_meta ?? [], [
-                                'transaction_id' => $transactionId,
-                                'verified_at' => now()->toIso8601String(),
-                                'source' => 'manual_verification'
-                            ])
-                        ]);
+                         \Illuminate\Support\Facades\DB::transaction(function () use ($order, $transactionId) {
+                             // Lock the order to prevent race with webhook
+                             $order = Order::where('id', $order->id)->lockForUpdate()->first();
+                             
+                             if ($order->payment_status !== 'paid') {
+                                 $order->update([
+                                    'payment_status' => 'paid',
+                                    'status' => 'confirmed',
+                                    'transaction_id' => $transactionId,
+                                    'payment_gateway' => 'paymob',
+                                    'payment_meta' => array_merge($order->payment_meta ?? [], [
+                                        'transaction_id' => $transactionId,
+                                        'verified_at' => now()->toIso8601String(),
+                                        'source' => 'manual_verification'
+                                    ])
+                                ]);
+                             }
+                         });
                         return redirect()->route('checkout.success', $order->order_number);
                      }
                 }
