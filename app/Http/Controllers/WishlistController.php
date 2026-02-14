@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use App\Models\Product;
+use App\Http\Requests\StoreWishlistRequest;
 
 class WishlistController extends Controller
 {
@@ -18,11 +19,9 @@ class WishlistController extends Controller
         return view('wishlist.index', compact('products'));
     }
 
-    public function toggle(Request $request)
+    public function toggle(StoreWishlistRequest $request)
     {
-        $request->validate([
-            'product_id' => 'required|exists:products,id'
-        ]);
+        // Validation handled by StoreWishlistRequest
 
         $productId = (int) $request->product_id;
         $wishlistIds = json_decode(Cookie::get('moon_wishlist', '[]'), true);

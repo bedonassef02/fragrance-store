@@ -9,6 +9,8 @@ use App\Services\FawryService;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderConfirmation;
 
 class CheckoutController extends Controller
 {
@@ -68,6 +70,9 @@ class CheckoutController extends Controller
 
             // If COD, redirect to success
             if ($paymentMethod === 'cod') {
+                // Queue Order Confirmation Email
+                Mail::to($order->email)->queue(new OrderConfirmation($order));
+                
                 return redirect()->route('checkout.success', $order->order_number);
             }
 
@@ -197,6 +202,9 @@ class CheckoutController extends Controller
                                         'source' => 'manual_verification'
                                     ])
                                 ]);
+
+                                // Queue Order Confirmation Email
+                                Mail::to($order->email)->queue(new OrderConfirmation($order));
 
                                 // Log to strict ledger
                                 \Illuminate\Support\Facades\DB::table('payment_transactions')->insert([

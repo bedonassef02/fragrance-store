@@ -7,6 +7,8 @@ use App\Services\PaymobService;
 use App\Services\FawryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderConfirmation;
 
 class PaymentWebhookController extends Controller
 {
@@ -127,7 +129,10 @@ class PaymentWebhookController extends Controller
             // Update order status if payment successful
             if ($success) {
                 $order->update(['status' => 'confirmed']);
-                // TODO: Send payment confirmation email
+                
+                // Send payment confirmation email
+                Mail::to($order->email)->queue(new OrderConfirmation($order));
+                
                 // TODO: Trigger inventory reservation if not already done
             }
 
@@ -243,6 +248,10 @@ class PaymentWebhookController extends Controller
              // If payment successful, confirm order
              if ($paymentStatus === 'paid') {
                  $order->update(['status' => 'confirmed']);
+                 
+                 // Send confirmation email
+                 Mail::to($order->email)->queue(new OrderConfirmation($order));
+
                  Log::info('Fawry payment successful', [
                      'order_id' => $order->id,
                      'fawry_ref' => $result['fawry_reference'],

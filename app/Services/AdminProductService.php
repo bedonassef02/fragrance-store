@@ -117,6 +117,10 @@ class AdminProductService
                  }
              }
 
+            // Invalidate Cache for Filters
+            \Illuminate\Support\Facades\Cache::forget('shop_filters_concentrations');
+            \Illuminate\Support\Facades\Cache::forget('shop_filters_capacities');
+
             return $product;
         });
     }
@@ -225,6 +229,10 @@ class AdminProductService
                  // Assuming frontend will migrate to the new keys.
             }
 
+            // Invalidate Cache for Filters
+            \Illuminate\Support\Facades\Cache::forget('shop_filters_concentrations');
+            \Illuminate\Support\Facades\Cache::forget('shop_filters_capacities');
+
             return $product;
         });
     }
@@ -244,6 +252,10 @@ class AdminProductService
             $product->images()->delete();
             $product->variants()->delete();
             $product->delete();
+
+            // Invalidate Cache for Filters
+            \Illuminate\Support\Facades\Cache::forget('shop_filters_concentrations');
+            \Illuminate\Support\Facades\Cache::forget('shop_filters_capacities');
         });
     }
 
