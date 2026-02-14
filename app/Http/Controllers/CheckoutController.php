@@ -106,6 +106,19 @@ class CheckoutController extends Controller
             ])
         ]);
 
+        // Log pending transaction attempt
+        \Illuminate\Support\Facades\DB::table('payment_transactions')->insert([
+            'order_id' => $order->id,
+            'transaction_id' => $intention['intention_id'] ?? 'pending-' . uniqid(),
+            'gateway' => 'paymob',
+            'amount' => $order->total_amount,
+            'currency' => 'EGP',
+            'status' => 'pending',
+            'response_data' => json_encode(['method' => $paymentMethod, 'intention' => $intention]),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         // Redirect to Paymob checkout
         $checkoutUrl = $this->paymobService->getCheckoutUrl($intention['client_secret']);
         return redirect()->away($checkoutUrl);
@@ -168,12 +181,12 @@ class CheckoutController extends Controller
                 if ($isPaid) {
                      $amountCents = (int) ($data['amount_cents'] ?? 0);
                      if ($this->paymobService->verifyPaymentAmount($order, $amountCents)) {
-                         \Illuminate\Support\Facades\DB::transaction(function () use ($order, $transactionId) {
-                             // Lock the order to prevent race with webhook
-                             $order = Order::where('id', $order->id)->lockForUpdate()->first();
-                             
-                             if ($order->payment_status !== 'paid') {
-                                 $order->update([
+                          \Illuminate\Support\Facades\DB::transaction(function () use ($order, $transactionId, $amountCents, $data) {
+                              // Lock the order to prevent race with webhook
+                              $order = Order::where('id', $order->id)->lockForUpdate()->first();
+                              
+                              if ($order->payment_status !== 'paid') {
+                                  $order->update([
                                     'payment_status' => 'paid',
                                     'status' => 'confirmed',
                                     'transaction_id' => $transactionId,
@@ -184,8 +197,21 @@ class CheckoutController extends Controller
                                         'source' => 'manual_verification'
                                     ])
                                 ]);
-                             }
-                         });
+
+                                // Log to strict ledger
+                                \Illuminate\Support\Facades\DB::table('payment_transactions')->insert([
+                                    'order_id' => $order->id,
+                                    'transaction_id' => $transactionId,
+                                    'gateway' => 'paymob',
+                                    'amount' => $amountCents / 100,
+                                    'currency' => $data['currency'] ?? 'EGP',
+                                    'status' => 'paid',
+                                    'response_data' => json_encode($data),
+                                    'created_at' => now(),
+                                    'updated_at' => now(),
+                                ]);
+                              }
+                          });
                         return redirect()->route('checkout.success', $order->order_number);
                      }
                 }

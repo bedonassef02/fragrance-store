@@ -131,6 +131,19 @@ class PaymentWebhookController extends Controller
                 // TODO: Trigger inventory reservation if not already done
             }
 
+            // Log to strict ledger
+            \Illuminate\Support\Facades\DB::table('payment_transactions')->insert([
+                'order_id' => $order->id,
+                'transaction_id' => $transactionId,
+                'gateway' => 'paymob',
+                'amount' => $amountCents / 100, // Convert back to main unit
+                'currency' => $transactionData['currency'] ?? 'EGP',
+                'status' => $success ? 'paid' : 'failed',
+                'response_data' => json_encode($transactionData),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
             return response()->json(['success' => true]);
         });
     }
@@ -166,68 +179,83 @@ class PaymentWebhookController extends Controller
             }
         }
 
-        // Process webhook data
-        $result = $this->fawryService->processWebhook($data);
-        $orderNumber = $result['order_number'];
+        // Process webhook data (Wrapped in transaction for safety)
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($data) {
+             $result = $this->fawryService->processWebhook($data);
+             $orderNumber = $result['order_number'];
 
-        if (!$orderNumber) {
-            Log::error('Fawry webhook: No merchant reference found');
-            return response()->json(['error' => 'Order not found'], 404);
-        }
+             if (!$orderNumber) {
+                 Log::error('Fawry webhook: No merchant reference found');
+                 return response()->json(['error' => 'Order not found'], 404);
+             }
 
-        // Find order by order number (merchantRefNum)
-        $order = Order::where('order_number', $orderNumber)->first();
+             // Find order by order number (merchantRefNum) and LOCK it
+             $order = Order::where('order_number', $orderNumber)->lockForUpdate()->first();
 
-        if (!$order) {
-            Log::error('Fawry webhook: Order not found', ['order_number' => $orderNumber]);
-            return response()->json(['error' => 'Order not found'], 404);
-        }
+             if (!$order) {
+                 Log::error('Fawry webhook: Order not found', ['order_number' => $orderNumber]);
+                 return response()->json(['error' => 'Order not found'], 404);
+             }
 
-        // Idempotency check
-        if ($order->payment_status === 'paid' && $result['status'] === 'PAID') {
-            Log::info('Fawry webhook: Already processed', ['order_id' => $order->id]);
-            return response()->json(['success' => true, 'message' => 'Already processed']);
-        }
+             // Idempotency check
+             if ($order->payment_status === 'paid' && $result['status'] === 'PAID') {
+                 Log::info('Fawry webhook: Already processed', ['order_id' => $order->id]);
+                 return response()->json(['success' => true, 'message' => 'Already processed']);
+             }
 
-        // Map Fawry status to our payment status
-        $paymentStatus = match (strtoupper($result['status'])) {
-            'PAID' => 'paid',
-            'NEW' => 'awaiting_payment',
-            'UNPAID' => 'awaiting_payment',
-            'EXPIRED' => 'expired',
-            'CANCELED' => 'cancelled',
-            'REFUNDED' => 'refunded',
-            'PARTIAL_REFUNDED' => 'partially_refunded',
-            default => 'failed',
-        };
+             // Map Fawry status to our payment status
+             $paymentStatus = match (strtoupper($result['status'])) {
+                 'PAID' => 'paid',
+                 'NEW' => 'awaiting_payment',
+                 'UNPAID' => 'awaiting_payment',
+                 'EXPIRED' => 'expired',
+                 'CANCELED' => 'cancelled',
+                 'REFUNDED' => 'refunded',
+                 'PARTIAL_REFUNDED' => 'partially_refunded',
+                 default => 'failed',
+             };
 
-        // Update order
-        $order->update([
-            'payment_status' => $paymentStatus,
-            'transaction_id' => $result['fawry_reference'],
-            'payment_meta' => array_merge($order->payment_meta ?? [], [
-                'fawry_reference' => $result['fawry_reference'],
-                'fawry_status' => $result['status'],
-                'fawry_amount' => $result['amount'],
-                'processed_at' => now()->toIso8601String(),
-            ]),
-        ]);
+             // Update order
+             $order->update([
+                 'payment_status' => $paymentStatus,
+                 'transaction_id' => $result['fawry_reference'],
+                 'payment_meta' => array_merge($order->payment_meta ?? [], [
+                     'fawry_reference' => $result['fawry_reference'],
+                     'fawry_status' => $result['status'],
+                     'fawry_amount' => $result['amount'],
+                     'processed_at' => now()->toIso8601String(),
+                 ]),
+             ]);
 
-        // If payment successful, confirm order
-        if ($paymentStatus === 'paid') {
-            $order->update(['status' => 'confirmed']);
-            Log::info('Fawry payment successful', [
+             // Log to strict ledger
+             \Illuminate\Support\Facades\DB::table('payment_transactions')->insert([
                 'order_id' => $order->id,
-                'fawry_ref' => $result['fawry_reference'],
+                'transaction_id' => $result['fawry_reference'],
+                'gateway' => 'fawry',
                 'amount' => $result['amount'],
-            ]);
-        } else {
-            Log::info('Fawry payment status update', [
-                'order_id' => $order->id,
+                'currency' => 'EGP',
                 'status' => $paymentStatus,
+                'response_data' => json_encode($data),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
-        }
 
-        return response()->json(['success' => true]);
+             // If payment successful, confirm order
+             if ($paymentStatus === 'paid') {
+                 $order->update(['status' => 'confirmed']);
+                 Log::info('Fawry payment successful', [
+                     'order_id' => $order->id,
+                     'fawry_ref' => $result['fawry_reference'],
+                     'amount' => $result['amount'],
+                 ]);
+             } else {
+                 Log::info('Fawry payment status update', [
+                     'order_id' => $order->id,
+                     'status' => $paymentStatus,
+                 ]);
+             }
+
+             return response()->json(['success' => true]);
+        });
     }
 }
