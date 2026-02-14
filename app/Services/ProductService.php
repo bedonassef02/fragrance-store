@@ -50,6 +50,7 @@ class ProductService
                       ->orWhere('brand_id', $product->brand_id);
             })
             ->take(40) 
+            ->select(['id', 'category_id', 'brand_id', 'name', 'slug', 'price', 'original_price', 'image', 'concentration']) // Memory optimization
             ->get();
 
         // 2. Calculate Similarity Scores
@@ -102,6 +103,7 @@ class ProductService
                 ->whereNotIn('id', $excludeIds)
                 ->inRandomOrder()
                 ->take($needed)
+                ->select(['id', 'category_id', 'brand_id', 'name', 'slug', 'price', 'original_price', 'image', 'concentration']) // Memory optimization
                 ->get();
 
             $related = $related->merge($fallback);

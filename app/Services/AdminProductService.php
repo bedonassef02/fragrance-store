@@ -205,16 +205,18 @@ class AdminProductService
                     ->delete();
             }
 
-            // Handle Legacy Image Deletions
+            // Handle Legacy Image Deletions (Optimized with Cursor)
             if (!empty($data['deleted_legacy_image_ids'])) {
-                $legacyImages = ProductImage::whereIn('id', $data['deleted_legacy_image_ids'])
-                    ->where('product_id', $product->id) // Security check: ensure ownership
-                    ->get();
-
-                foreach($legacyImages as $img) {
-                    Storage::disk('public')->delete($img->image_path);
-                    $img->delete();
-                }
+                // Use cursor to minimize memory usage for large deletions
+                ProductImage::whereIn('id', $data['deleted_legacy_image_ids'])
+                    ->where('product_id', $product->id)
+                    ->cursor() // <-- Optimization: Streams results one by one
+                    ->each(function ($img) {
+                        if (Storage::disk('public')->exists($img->image_path)) {
+                             Storage::disk('public')->delete($img->image_path);
+                        }
+                        $img->delete();
+                    });
             }
 
             // Fallback for backward compatibility (if needed, but safer to deprecate)
@@ -230,15 +232,33 @@ class AdminProductService
     public function deleteProduct(Product $product)
     {
         return DB::transaction(function () use ($product) {
-            // Delete images from storage
-            foreach ($product->images as $image) {
-                Storage::disk('public')->delete($image->image_path);
-            }
+            // Delete images from storage (Optimized)
+            // Use cursor to avoid loading all images into memory if there are many
+            $product->images()->cursor()->each(function ($image) {
+                if (Storage::disk('public')->exists($image->image_path)) {
+                    Storage::disk('public')->delete($image->image_path);
+                }
+            });
             
-            // Delete product (cascade will handle variants/images records in DB if set up, but let's be safe)
+            // Delete records
             $product->images()->delete();
             $product->variants()->delete();
             $product->delete();
+        });
+    }
+
+    /**
+     * Bulk Delete Products (Optimized)
+     */
+    public function bulkDelete(array $ids)
+    {
+        return DB::transaction(function () use ($ids) {
+            // Process in chunks of 100 to avoid memory overload
+            Product::whereIn('id', $ids)->chunkById(100, function ($products) {
+                foreach ($products as $product) {
+                    $this->deleteProduct($product);
+                }
+            });
         });
     }
 }
