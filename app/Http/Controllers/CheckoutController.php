@@ -146,14 +146,46 @@ class CheckoutController extends Controller
     /**
      * Payment success callback
      */
-    public function paymentSuccess(Order $order)
+    public function paymentSuccess(Request $request, Order $order)
     {
         // Double-check payment status (webhook should have updated it)
         if ($order->payment_status === 'paid') {
             return redirect()->route('checkout.success', $order->order_number);
         }
 
-        // If not yet updated by webhook, show pending state
+        // Check if we have a transaction ID in the URL to verify
+        $transactionId = $request->query('id');
+        
+        if ($transactionId && $order->payment_status !== 'paid') {
+            // Attempt to verify directly with Paymob
+            $verification = $this->paymobService->getTransaction($transactionId);
+            
+            if ($verification['success']) {
+                $data = $verification['data'];
+                $success = $data['success'] ?? false;
+                $isPaid = $success && !($data['pending'] ?? true); // Ensure not pending
+                
+                if ($isPaid) {
+                     $amountCents = (int) ($data['amount_cents'] ?? 0);
+                     if ($this->paymobService->verifyPaymentAmount($order, $amountCents)) {
+                         $order->update([
+                            'payment_status' => 'paid',
+                            'status' => 'confirmed',
+                            'transaction_id' => $transactionId,
+                            'payment_gateway' => 'paymob',
+                            'payment_meta' => array_merge($order->payment_meta ?? [], [
+                                'transaction_id' => $transactionId,
+                                'verified_at' => now()->toIso8601String(),
+                                'source' => 'manual_verification'
+                            ])
+                        ]);
+                        return redirect()->route('checkout.success', $order->order_number);
+                     }
+                }
+            }
+        }
+
+        // If still not paid, show pending
         return view('checkout.payment-pending', compact('order'));
     }
 

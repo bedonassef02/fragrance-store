@@ -354,5 +354,48 @@ class PaymobService
             ],
         ];
     }
+    /**
+     * Get transaction details from Paymob
+     */
+    public function getTransaction(string $transactionId): array
+    {
+        if (!$this->isConfigured()) {
+            return ['success' => false, 'error' => 'Not configured'];
+        }
+
+        try {
+            // Get Auth Token first (if not cached/stored, we get a new one)
+            // Ideally we should cache this, but for now we'll just request it or use the secret if allowed.
+            // Paymob V1 Authenticated API requires a token.
+            // Let's try to use the secret key directly if supported by the endpoint or get a token.
+            // Standard Paymob auth flow: POST /api/auth/tokens with api_key
+            
+            $tokenResponse = Http::post($this->baseUrl . 'api/auth/tokens', [
+                'api_key' => $this->apiKey
+            ]);
+            
+            if (!$tokenResponse->successful()) {
+                Log::error('Paymob auth failed', ['response' => $tokenResponse->json()]);
+                return ['success' => false, 'error' => 'Auth failed'];
+            }
+            
+            $token = $tokenResponse->json()['token'];
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token, // Or just Bearer token
+                'Content-Type' => 'application/json',
+            ])->get($this->baseUrl . "api/acceptance/transactions/{$transactionId}");
+
+            if ($response->successful()) {
+                return ['success' => true, 'data' => $response->json()];
+            }
+
+            return ['success' => false, 'error' => 'Transaction not found'];
+
+        } catch (\Exception $e) {
+            Log::error('Paymob getTransaction error', ['error' => $e->getMessage()]);
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
 }
 
